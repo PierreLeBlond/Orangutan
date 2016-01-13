@@ -70,6 +70,6 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-INCLUDEPATH += $$PWD/../../GLM\
+INCLUDEPATH += $$PWD/GLM\
 
 LIBS += opengl32.lib\

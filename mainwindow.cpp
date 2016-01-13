@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     std::cout << QDir::current().absolutePath().toStdString() << std::endl;
-    QDir::setCurrent("..\\Orangutan");
+    QDir::setCurrent("..");
 
 
     /*Definition d'un context global de rendu, qui sera appliqué par defaut
