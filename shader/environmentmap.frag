@@ -38,7 +38,7 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 
-uniform samplerCube diffuseMap;
+uniform samplerCube cubeMap;
 
 out vec4 color_out;
 
@@ -121,8 +121,8 @@ void main(void)
         spec_all += sPhongWithSpotLight(spotLights[i], s, v, r, normal_out);
     }
 
-    vec4 reflectColor = texture(diffuseMap, ReflectDir_out);
-    vec4 refractColor = texture(diffuseMap, RefractDir_out);
+    vec4 reflectColor = texture(cubeMap, ReflectDir_out);
+    vec4 refractColor = texture(cubeMap, RefractDir_out);
 
     color_out = mix(vec4((diffuseAndAmbient_all + spec_all)*refractColor.rgb, refractColor.a),
                     vec4((diffuseAndAmbient_all + spec_all)*reflectColor.rgb, reflectColor.a),

@@ -2,10 +2,10 @@
 
 AssetsFactory::AssetsFactory(std::shared_ptr<AssetsStorage> assetsStorage) : _assetsStorage(assetsStorage)
 {
-    Mesh cube = Mesh::createCube(2, "myCube");
+    std::shared_ptr<Mesh> cube = Mesh::createCube(2, "myCube");
     _assetsStorage->addMesh(cube);
 
-    Mesh sphere = Mesh::createSphere(4, "mySphere");
+    std::shared_ptr<Mesh> sphere = Mesh::createSphere(4, "mySphere");
     _assetsStorage->addMesh(sphere);
 }
 
@@ -15,16 +15,15 @@ AssetsFactory::~AssetsFactory()
 }
 
 int AssetsFactory::importMeshs(const char *filename){
-    std::vector<Mesh*> meshs = Parseur::parseObj(filename);
+    std::vector<std::shared_ptr<Mesh>> meshs = Parseur::parseObj(filename);
     for(unsigned int i = 0;i < meshs.size();i++) {
-        _assetsStorage->addMesh(*meshs[i]);
+        _assetsStorage->addMesh(meshs[i]);
     }
     return _assetsStorage->getNumberOfMeshs() - 1;
 }
 
 int AssetsFactory::importTexture(const char *filename){
-    QImage image(filename);
-    GLuint texture = Texture::createTexture(image.rgbSwapped());
+    std::shared_ptr<Texture> texture = std::make_shared<Texture>(filename);
     _assetsStorage->addTexture(texture);
     return _assetsStorage->getNumberOfTextures() - 1;
 }

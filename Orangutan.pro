@@ -39,7 +39,10 @@ SOURCES += main.cpp\
     camera.cpp \
     cameranode.cpp \
     renderablenode.cpp \
-    scenenode.cpp
+    scenenode.cpp \
+    windowtitlebar.cpp \
+    materialtool.cpp \
+    customsliderwidget.cpp
 
 HEADERS  += mainwindow.h \
     assetsstorage.h \
@@ -66,10 +69,16 @@ HEADERS  += mainwindow.h \
     camera.h \
     cameranode.h \
     renderablenode.h \
-    scenenode.h
+    scenenode.h \
+    windowtitlebar.h \
+    materialtool.h \
+    customsliderwidget.h
 
 FORMS    += mainwindow.ui
 
 INCLUDEPATH += $$PWD/GLM\
 
 LIBS += opengl32.lib\
+
+DISTFILES += \
+    style.qss

@@ -12,11 +12,11 @@ AssetsStorage::~AssetsStorage()
     _shaderStrategies.clear();
 }
 
-const std::vector<const Mesh>& AssetsStorage::getMeshs() const {
+const std::vector<std::shared_ptr<Mesh> > &AssetsStorage::getMeshs() const {
     return _meshs;
 }
 
-const std::vector<GLuint>& AssetsStorage::getTextures() const {
+const std::vector<std::shared_ptr<Texture> > &AssetsStorage::getTextures() const {
     return _textures;
 }
 
@@ -44,11 +44,11 @@ int AssetsStorage::getNumberOfShaderStrategies() const {
     return (int) _shaderStrategies.size();
 }
 
-const Mesh& AssetsStorage::getMesh(int index) const{
+std::shared_ptr<Mesh> AssetsStorage::getMesh(int index) const{
     return _meshs.at(index);
 }
 
-GLuint AssetsStorage::getTexture(int index) const{
+std::shared_ptr<Texture> AssetsStorage::getTexture(int index) const{
     return _textures.at(index);
 }
 
@@ -60,11 +60,11 @@ const ShaderStrategy* AssetsStorage::getShaderStrategy(int index) const{
     return _shaderStrategies.at(index);
 }
 
-void AssetsStorage::addMesh(const Mesh mesh){
+void AssetsStorage::addMesh(std::shared_ptr<Mesh> mesh){
     _meshs.push_back(mesh);
 }
 
-void AssetsStorage::addTexture(GLuint texture){
+void AssetsStorage::addTexture(std::shared_ptr<Texture> texture){
     _textures.push_back(texture);
 }
 

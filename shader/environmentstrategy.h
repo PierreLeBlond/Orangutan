@@ -17,8 +17,7 @@ private :
     GLuint                                      _indexOfViewMatrix;
     GLuint                                      _indexOfModelMatrix;
 
-    std::vector<GLuint>                         _indexOfDiffuseMap;
-    GLuint                                      _indexOfNbDiffuseMap;
+    GLuint                                      _indexOfColorMap;
 
     GLuint                                      _indexOfKs;
     GLuint                                      _indexOfKa;

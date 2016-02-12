@@ -155,8 +155,8 @@ void Mesh::copyIndexes(const GLuint *indexes){
     }
 }
 
-Mesh Mesh::createCube(GLint resolution, const std::string& name){
-    Mesh mesh(name);
+std::shared_ptr<Mesh> Mesh::createCube(GLint resolution, const std::string& name){
+    std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(name);
 
     std::vector<glm::vec3> vertexList;
     std::vector<glm::vec3> normalList;
@@ -411,23 +411,23 @@ Mesh Mesh::createCube(GLint resolution, const std::string& name){
         delete[] mat;
 
     }
-    mesh.setObj(vertexList, normalList, texCoordList, faceIndexes);
+    mesh->setObj(vertexList, normalList, texCoordList, faceIndexes);
 
 
 
     return mesh;
 }
 
-Mesh Mesh::createSphere(GLint resolution, const std::string& name){
+std::shared_ptr<Mesh> Mesh::createSphere(GLint resolution, const std::string& name){
 
-    Mesh mesh = createCube(resolution, name);
+    std::shared_ptr<Mesh> mesh = createCube(resolution, name);
 
-    GLfloat* newNormals = new GLfloat[3 * mesh.getNumberOfNormals()];
+    GLfloat* newNormals = new GLfloat[3 * mesh->getNumberOfNormals()];
 
-    GLfloat* newPositions = new GLfloat[3 * mesh.getNumberOfVertices()];
-    const GLfloat* oldPositions = mesh.getPositions();
+    GLfloat* newPositions = new GLfloat[3 * mesh->getNumberOfVertices()];
+    const GLfloat* oldPositions = mesh->getPositions();
 
-    for(unsigned int i = 0; i < mesh.getNumberOfVertices();i++){
+    for(unsigned int i = 0; i < mesh->getNumberOfVertices();i++){
         GLfloat l = sqrt(oldPositions[3*i]*oldPositions[3*i] + oldPositions[3*i+1]*oldPositions[3*i+1] + oldPositions[3*i+2]*oldPositions[3*i+2]);
         newPositions[3*i] = oldPositions[3*i]/l;
         newNormals[3*i] = oldPositions[3*i];
@@ -437,22 +437,22 @@ Mesh Mesh::createSphere(GLint resolution, const std::string& name){
         newNormals[3*i + 2] = oldPositions[3*i + 2];
     }
 
-    mesh.copyNormals(newNormals);
-    mesh.copyPositions(newPositions);
+    mesh->copyNormals(newNormals);
+    mesh->copyPositions(newPositions);
 
     return mesh;
 }
 
-Mesh Mesh::createCylinder(GLint resolution, const std::string& name){
+std::shared_ptr<Mesh> Mesh::createCylinder(GLint resolution, const std::string& name){
 
-    Mesh mesh = createCube(resolution, name);
+    std::shared_ptr<Mesh> mesh = createCube(resolution, name);
 
-    GLfloat* newNormals = new GLfloat[3 * mesh.getNumberOfNormals()];
+    GLfloat* newNormals = new GLfloat[3 * mesh->getNumberOfNormals()];
 
-    GLfloat* newPositions = new GLfloat[3 * mesh.getNumberOfVertices()];
-    const GLfloat* oldPositions = mesh.getPositions();
+    GLfloat* newPositions = new GLfloat[3 * mesh->getNumberOfVertices()];
+    const GLfloat* oldPositions = mesh->getPositions();
 
-    for(GLuint i = 0; i < mesh.getNumberOfVertices();i++){
+    for(GLuint i = 0; i < mesh->getNumberOfVertices();i++){
         if(oldPositions[3*i + 1] == 1.0 || oldPositions[3*i + 1] == -1.0){
             GLfloat l = sqrt(oldPositions[3*i]*oldPositions[3*i] + oldPositions[3*i+2]*oldPositions[3*i+2]);
             if(l > 1.0){
@@ -475,8 +475,8 @@ Mesh Mesh::createCylinder(GLint resolution, const std::string& name){
         }
     }
 
-    mesh.copyNormals(newNormals);
-    mesh.copyPositions(newPositions);
+    mesh->copyNormals(newNormals);
+    mesh->copyPositions(newPositions);
 
     return mesh;
 }

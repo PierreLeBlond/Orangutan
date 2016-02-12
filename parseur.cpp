@@ -5,9 +5,9 @@ using namespace std;
 Parseur::Parseur() {
 }
 
-vector<Material*> Parseur::parseMtl(const char* filename) {
+vector<std::shared_ptr<Material>> Parseur::parseMtl(const char* filename) {
 
-    vector<Material*> materials;
+    vector<std::shared_ptr<Material>> materials;
 
     std::cout << "-------------------------------------------------------" << std::endl;
     std::cout << "--- Loading " << filename << std::endl;
@@ -44,14 +44,14 @@ vector<Material*> Parseur::parseMtl(const char* filename) {
             if(line[0] == 'n' && line[1] == 'e' && line[2] == 'w' && line[3] == 'm' && line[4] == 't' && line[5] == 'l' && nbMaterials != 0)
             {
 
-                Material* material = new Material(name);
+                std::shared_ptr<Material> material = std::make_shared<Material>(name);
                 material->setMtl(Kd, Ks, Ka, Ns, Tr);
                 if(textureName != "")
                 {
                     std::string filename;
                     filename.append("images/");
                     filename.append(textureName);
-                    material->CreateDiffuseMap(filename.c_str());
+                    //!\material->CreateDiffuseMap(filename.c_str());
                 }
 
                 materials.push_back(material);
@@ -92,14 +92,14 @@ vector<Material*> Parseur::parseMtl(const char* filename) {
 
         }
 
-        Material* material = new Material(name);
+        std::shared_ptr<Material> material = std::make_shared<Material>(name);
         material->setMtl(Kd, Ks, Ka, Ns, Tr);
         if(textureName != "")
         {
             std::string filename;
             filename.append("images/");
             filename.append(textureName);
-            material->CreateDiffuseMap(filename.c_str());
+            //!\material->CreateDiffuseMap(filename.c_str());
         }
 
         materials.push_back(material);
@@ -109,9 +109,9 @@ vector<Material*> Parseur::parseMtl(const char* filename) {
     return materials;
 }
 
-vector<Mesh*> Parseur::parseObj(const char* filename) {
+vector<std::shared_ptr<Mesh>> Parseur::parseObj(const char* filename) {
 
-    vector<Mesh*> meshs;
+    vector<std::shared_ptr<Mesh>> meshs;
 
     std::cout << "-------------------------------------------------------" << std::endl;
     std::cout << "--- Loading " << filename << std::endl;
@@ -161,7 +161,7 @@ vector<Mesh*> Parseur::parseObj(const char* filename) {
                 }
 
 
-                Mesh* mesh = new Mesh(name);
+                std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(name);
                 mesh->setObj(duplicatedVertices, duplicatedNormals, duplicatedTexCoords, faceIndexes);
                 meshs.push_back(mesh);
                 nbMesh++;
@@ -274,7 +274,7 @@ vector<Mesh*> Parseur::parseObj(const char* filename) {
             std::cout << "/!\\ Error while loading tex coords" << std::endl;
         }
 
-        Mesh* mesh = new Mesh(name);
+        std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(name);
         mesh->setObj(duplicatedVertices, duplicatedNormals, duplicatedTexCoords, faceIndexes);
         meshs.push_back(mesh);
         nbMesh++;

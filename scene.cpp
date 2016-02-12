@@ -3,7 +3,7 @@
 Scene::Scene(std::shared_ptr<AssetsStorage> assetsStorage) : _assetsStorage(assetsStorage)
 {
     auto cubeMap = std::make_shared<Renderable>();
-    cubeMap->setMesh(&_assetsStorage->getMesh(0));
+    cubeMap->setMesh(_assetsStorage->getMesh(0));
     cubeMap->CreateCubeMap();
     cubeMap->setShaderStrategy(_assetsStorage->getShaderStrategy(1));
     cubeMap->fillInVBO();
@@ -18,11 +18,12 @@ Scene::Scene(std::shared_ptr<AssetsStorage> assetsStorage) : _assetsStorage(asse
     _sceneTree = cubeMapNode;
 
     _currentRenderable = std::make_shared<Renderable>();
-    _currentRenderable->setMesh(&_assetsStorage->getMesh(1));
+    _currentRenderable->setMesh(_assetsStorage->getMesh(0));
 
     _currentRenderable->setShaderStrategy(_assetsStorage->getShaderStrategy(0));
     _currentRenderable->setKa(0.5f);
     _currentRenderable->setColor(QColor(255, 0, 0));
+    _currentRenderable->setColorMap(_assetsStorage->getTexture(0));
     _currentRenderable->fillInVBO();
     _currentRenderable->createVertexArrayObject();
     _currentRenderable->setZPos(-10);

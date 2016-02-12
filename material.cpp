@@ -1,30 +1,54 @@
 #include "material.h"
 
 
-Material::Material(std::string name) : _name(name),
-    _ambientMapId(0), _diffuseMapId(0), _bumpMapId(0),
-    _normalMapId(0), _specularMapId(0), _shininessMapId(0),
+Material::Material(std::string name) : _name(name), _colorMap(0),
     _Kd(glm::vec3(1.0f)), _Ks(glm::vec3(1.0f)), _Ka(glm::vec3(1.0f)),
     _illum(1), _Ns(10.0f), _Tr(1.0f), _color(QColor::fromRgb(255, 255, 255)),
     _refractionRatio(0), _reflexionPercentage(100) {
-_diffuseMapId = new Texture;
-_diffuseMapId->addTexture(-1);
-_diffuseMapId->addTexture(-1);
-_diffuseMapId->addTexture(-1);
-_normalMapId = new Texture;
-}
-
-Material::~Material() {
-    delete _ambientMapId;
-    delete _diffuseMapId;
-    delete _bumpMapId;
-    delete _normalMapId;
-    delete _specularMapId;
-    delete _shininessMapId;
 }
 
 const ShaderStrategy *Material::getShaderStrategy() const{
     return _shaderStrategy;
+}
+
+std::shared_ptr<const Texture> Material::getColorMap() const{
+    return _colorMap;
+}
+
+GLuint Material::getCubeMapId() const{
+    return _cubeMapId;
+}
+
+QColor Material::getColor() const{
+    return _color;
+}
+
+glm::vec3 Material::getKd() const{
+    return _Kd;
+}
+
+glm::vec3 Material::getKa() const{
+    return _Ka;
+}
+
+glm::vec3 Material::getKs() const{
+    return _Ks;
+}
+
+GLfloat Material::getTr() const{
+    return _Tr;
+}
+
+GLfloat Material::getNs() const{
+    return _Ns;
+}
+
+GLfloat Material::getRefractionRatio() const{
+    return _refractionRatio;
+}
+
+GLfloat Material::getReflexionPercentage() const{
+    return _reflexionPercentage;
 }
 
 void Material::setShaderStrategy(const ShaderStrategy *shaderStrategy){
@@ -39,8 +63,8 @@ void Material::setMtl(glm::vec3 Kd, glm::vec3 Ks, glm::vec3 Ka, float Ns, float 
     _Tr = Tr;
 }
 
-void Material::setDiffuseMapId(Texture *texture){
-    _diffuseMapId = texture;
+void Material::setColorMap(std::shared_ptr<const Texture> texture){
+    _colorMap = texture;
 }
 
 void Material::setCubeMapId(GLuint id){
@@ -73,53 +97,6 @@ void Material::setRefractionRatio(float ratio){
 
 void Material::setReflexionPercentage(float percentage){
     _reflexionPercentage = percentage;
-}
-
-void Material::CreateAmbientMap(const char* filename) {
-    QImage image(filename);
-    image.mirrored();
-    GLuint id = Texture::createTexture(image);
-    _ambientMapId->setTexture(id, 0);
-}
-
-void Material::CreateDiffuseMap(const char* filename)
-{
-    QImage image(filename);
-    image.mirrored();
-    GLuint id = Texture::createTexture(image);
-    _diffuseMapId->setTexture(id, 0);
-}
-
-void Material::CreateBumpMap(const char* filename)
-{
-    QImage image(filename);
-    image.mirrored();
-    GLuint id = Texture::createTexture(image);
-    _bumpMapId->setTexture(id, 0);
-}
-
-void Material::CreateNormalMap(const char* filename)
-{
-    QImage image(filename);
-    image.mirrored();
-    GLuint id = Texture::createTexture(image);
-    _normalMapId->setTexture(id, 0);
-}
-
-void Material::CreateSpecularMap(const char* filename)
-{
-    QImage image(filename);
-    image.mirrored();
-    GLuint id = Texture::createTexture(image);
-    _specularMapId->setTexture(id, 0);
-}
-
-void Material::CreateShininessMap(const char* filename)
-{
-    QImage image(filename);
-    image.mirrored();
-    GLuint id = Texture::createTexture(image);
-    _shininessMapId->setTexture(id, 0);
 }
 
 void Material::CreateCubeMap()

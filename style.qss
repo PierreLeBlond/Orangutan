@@ -1,0 +1,7 @@
+MainWindow {
+    background : grey;
+}
+
+QOpenGlWidget {
+    border : 4px solid grey;
+}

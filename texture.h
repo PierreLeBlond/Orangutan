@@ -8,20 +8,19 @@
 class Texture
 {
 public:
+                                Texture(std::string path);
                                 Texture();
 
-    unsigned int                getNbTextures() const;
+    GLuint                      getId() const;
 
-    std::vector<GLuint>         getIdTextures() const;
+    void                        setId(GLuint id);
 
-    void                        addTexture(GLuint id);
-    void                        setTexture(GLuint id, int index);
-
-    static GLuint               createTexture(QImage image);
+    void                        load(std::string path);
 
 private:
-    unsigned int                _nbTextures;
-    std::vector<GLuint>         _idTextures;
+    GLuint                      _id;
+    std::string                 _path;
+    QImage                      _image;
 };
 
 #endif // TEXTURE_H

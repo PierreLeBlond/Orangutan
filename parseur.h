@@ -5,14 +5,15 @@
 #include "mesh.h"
 
 #include <vector>
+#include <memory>
 
 class Parseur
 {
 public:
                                         Parseur();
 
-    static std::vector<Material*>       parseMtl(const char* filename);
-    static std::vector<Mesh*>          parseObj(const char* filename);
+    static std::vector<std::shared_ptr<Material> > parseMtl(const char* filename);
+    static std::vector<std::shared_ptr<Mesh>>          parseObj(const char* filename);
 };
 
 #endif // PARSEUR_H

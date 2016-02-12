@@ -34,11 +34,7 @@ void EnvironmentStrategy::initUniformLocation()
     _indexOfViewMatrix = OpenGLFunction::functions().glGetUniformLocation(_programId, "viewMatrix");
     _indexOfModelMatrix = OpenGLFunction::functions().glGetUniformLocation(_programId, "modelMatrix");
 
-    _indexOfDiffuseMap.push_back(OpenGLFunction::functions().glGetUniformLocation(_programId, "firstDiffuseMap"));
-    _indexOfDiffuseMap.push_back(OpenGLFunction::functions().glGetUniformLocation(_programId, "secondDiffuseMap"));
-    _indexOfDiffuseMap.push_back(OpenGLFunction::functions().glGetUniformLocation(_programId, "ThirdDiffuseMap"));
-
-    _indexOfNbDiffuseMap = OpenGLFunction::functions().glGetUniformLocation(_programId, "nbDiffuseMap");
+    _indexOfColorMap = OpenGLFunction::functions().glGetUniformLocation(_programId, "colorMap");
 
     _indexOfNbPonctualLight = OpenGLFunction::functions().glGetUniformLocation(_programId, "nbPonctualLight");
     _indexOfNbAmbiantLight = OpenGLFunction::functions().glGetUniformLocation(_programId, "nbAmbiantLight");
@@ -120,7 +116,7 @@ void EnvironmentStrategy::initUniformLocation()
     _indexOfReflexionPercentage = OpenGLFunction::functions().glGetUniformLocation(_programId, "reflexionPercentage");
     _indexOfRefractionRatio = OpenGLFunction::functions().glGetUniformLocation(_programId, "refractionRatio");
 
-    _indexOfCubeMap = OpenGLFunction::functions().glGetUniformLocation(_programId, "diffuseMap");
+    _indexOfCubeMap = OpenGLFunction::functions().glGetUniformLocation(_programId, "cubeMap");
     OpenGLFunction::functions().glUniform1i(_indexOfCubeMap, 0);
 
     _shaderProgram->stopUseProgram();
@@ -141,9 +137,6 @@ void EnvironmentStrategy::draw(GLuint vao, GLuint idOfIndexArray, const Mesh &me
 
     OpenGLFunction::functions().glUniform1f(_indexOfRefractionRatio, material.getRefractionRatio());
     OpenGLFunction::functions().glUniform1f(_indexOfReflexionPercentage, material.getReflexionPercentage());
-
-    OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0 + 0);
-    OpenGLFunction::functions().glBindTexture(GL_TEXTURE_CUBE_MAP, material.getCubeMapId());
 
     int nbAmbiantLights = 0;
     int nbPonctualLights = 0;
@@ -202,18 +195,12 @@ void EnvironmentStrategy::draw(GLuint vao, GLuint idOfIndexArray, const Mesh &me
     OpenGLFunction::functions().glUniform1i(_indexOfNbSpotLight, nbSpotLights);
 
 
-    int nbDiffuseMap = 0;
-
-    for(int i = 0; i < material.getDiffuseMapId()->getIdTextures().size();i++){
-            if(material.getDiffuseMapId()->getIdTextures()[i] != -1){
-                OpenGLFunction::functions().glUniform1i(_indexOfDiffuseMap[i], nbDiffuseMap);
-                OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0 + nbDiffuseMap);
-                OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, material.getDiffuseMapId()->getIdTextures()[i]);
-                nbDiffuseMap++;
-            }
+    if(material.getCubeMapId() != -1){
+        OpenGLFunction::functions().glUniform1i(_indexOfCubeMap, GL_TEXTURE0);
+        OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0 + 0);
+        OpenGLFunction::functions().glBindTexture(GL_TEXTURE_CUBE_MAP, material.getCubeMapId());
+        //nbDiffuseMap++;
     }
-
-    OpenGLFunction::functions().glUniform1i(_indexOfNbDiffuseMap, nbDiffuseMap);
 
     OpenGLFunction::functions().glBindVertexArray(vao);
     OpenGLFunction::functions().glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idOfIndexArray);

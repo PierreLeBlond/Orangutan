@@ -35,9 +35,7 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 
-uniform sampler2D firstDiffuseMap;
-uniform sampler2D secondDiffuseMap;
-uniform sampler2D thirdDiffuseMap;
+uniform sampler2D colorMap;
 
 uniform int nbDiffuseMap;
 
@@ -94,15 +92,7 @@ void main(void)
         diffuseAndAmbient_all += adPhongWithSpotLight(spotLights[i], s, normal_out);
     }
 
-    vec4 d[3];
-    d[0] = texture(firstDiffuseMap, uv_out);
-    d[1] = texture(secondDiffuseMap, uv_out);
-    d[2] = texture(thirdDiffuseMap, uv_out);
-
-    vec4 c = vec4(1.0);
-    for(int i = 0; i < nbDiffuseMap;i++){
-        c = mix(c, d[i], d[i].a);
-    }
+    vec4 c = texture(colorMap, uv_out);
 
     color_out = vec4((diffuseAndAmbient_all + spec_all)*c.rgb, c.a);
 }

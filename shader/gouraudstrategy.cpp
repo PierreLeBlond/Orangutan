@@ -34,11 +34,7 @@ void GouraudStrategy::initUniformLocation()
     _indexOfViewMatrix = OpenGLFunction::functions().glGetUniformLocation(_programId, "viewMatrix");
     _indexOfModelMatrix = OpenGLFunction::functions().glGetUniformLocation(_programId, "modelMatrix");
 
-    _indexOfDiffuseMap.push_back(OpenGLFunction::functions().glGetUniformLocation(_programId, "firstDiffuseMap"));
-    _indexOfDiffuseMap.push_back(OpenGLFunction::functions().glGetUniformLocation(_programId, "secondDiffuseMap"));
-    _indexOfDiffuseMap.push_back(OpenGLFunction::functions().glGetUniformLocation(_programId, "ThirdDiffuseMap"));
-
-    _indexOfNbDiffuseMap = OpenGLFunction::functions().glGetUniformLocation(_programId, "nbDiffuseMap");
+    _indexOfColorMap = OpenGLFunction::functions().glGetUniformLocation(_programId, "colorMap");
 
     _indexOfNbPonctualLight = OpenGLFunction::functions().glGetUniformLocation(_programId, "nbPonctualLight");
     _indexOfNbAmbiantLight = OpenGLFunction::functions().glGetUniformLocation(_programId, "nbAmbiantLight");
@@ -189,18 +185,18 @@ void GouraudStrategy::draw(GLuint vao, GLuint idOfIndexArray, const Mesh &mesh, 
     OpenGLFunction::functions().glUniform1i(_indexOfNbSpotLight, nbSpotLights);
 
 
-    int nbDiffuseMap = 0;
+    //int nbColorMap = 0;
 
-    for(int i = 0; i < material.getDiffuseMapId()->getIdTextures().size();i++){
-            if(material.getDiffuseMapId()->getIdTextures()[i] != -1){
-                OpenGLFunction::functions().glUniform1i(_indexOfDiffuseMap[i], nbDiffuseMap);
-                OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0 + nbDiffuseMap);
-                OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, material.getDiffuseMapId()->getIdTextures()[i]);
-                nbDiffuseMap++;
+    //for(int i = 0; i < material.getColorMap()->getIdTextures().size();i++){
+            if(material.getColorMap()->getId() != -1){
+                OpenGLFunction::functions().glUniform1i(_indexOfColorMap, GL_TEXTURE0);
+                OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0);
+                OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, material.getColorMap()->getId());
+                //nbDiffuseMap++;
             }
-    }
+    //}
 
-    OpenGLFunction::functions().glUniform1i(_indexOfNbDiffuseMap, nbDiffuseMap);
+    //OpenGLFunction::functions().glUniform1i(_indexOfNbDiffuseMap, nbDiffuseMap);
 
     OpenGLFunction::functions().glBindVertexArray(vao);
     OpenGLFunction::functions().glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idOfIndexArray);

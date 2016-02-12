@@ -1,45 +1,44 @@
 #include "texture.h"
 
-Texture::Texture() : _nbTextures(0) {
-
+Texture::Texture() : _id(-1) {
 }
 
-unsigned int Texture::getNbTextures() const {
-    return _nbTextures;
-}
-
-std::vector<GLuint> Texture::getIdTextures() const {
-    return _idTextures;
-}
-
-void Texture::addTexture(GLuint id) {
-    _idTextures.push_back(id);
-}
-
-void Texture::setTexture(GLuint id, int index){
-    if(index < _idTextures.size()){
-        _idTextures[index] = id;
-    }else{
-        addTexture(id);
-    }
-}
-
-GLuint Texture::createTexture(QImage image) {
-    GLuint id;
-
+Texture::Texture(std::string path) : _id(-1), _path(path), _image(QString::fromStdString(_path)) {
     OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0 + 0);
     OpenGLFunction::functions().glEnable(GL_TEXTURE_2D);
 
-    OpenGLFunction::functions().glGenTextures(1, &id);
-    OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, id);
+    OpenGLFunction::functions().glGenTextures(1, &_id);
+    OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, _id);
 
-    image = image.convertToFormat(QImage::Format_ARGB32);
-    OpenGLFunction::functions().glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
+    _image = _image.convertToFormat(QImage::Format_ARGB32);
+    OpenGLFunction::functions().glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _image.width(), _image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, _image.bits());
     OpenGLFunction::functions().glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     OpenGLFunction::functions().glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
     OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, 0);
+}
 
-    return id;
+GLuint Texture::getId() const {
+    return _id;
+}
+
+void Texture::load(std::string path) {
+
+    _path = path;
+
+    _image.load(QString::fromStdString(_path));
+
+    OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0 + 0);
+    OpenGLFunction::functions().glEnable(GL_TEXTURE_2D);
+
+    OpenGLFunction::functions().glGenTextures(1, &_id);
+    OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, _id);
+
+    _image = _image.convertToFormat(QImage::Format_ARGB32);
+    OpenGLFunction::functions().glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _image.width(), _image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, _image.bits());
+    OpenGLFunction::functions().glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    OpenGLFunction::functions().glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, 0);
 }
 

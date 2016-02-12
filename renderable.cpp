@@ -88,10 +88,56 @@ void Renderable::draw(const glm::core::type::mat4 &modelMatrix, const glm::core:
     }
 }
 
+void Renderable::setMesh(std::shared_ptr<const Mesh> mesh){
+    _mesh = mesh;
+}
+
 //inherit from Materiable
 
-void Renderable::setMesh(const Mesh *mesh){
-    _mesh = mesh;
+
+
+const ShaderStrategy *Renderable::getShaderStrategy() const{
+    return _material.getShaderStrategy();
+}
+
+std::shared_ptr<const Texture> Renderable::getColorMap() const{
+    return _material.getColorMap();
+}
+
+GLuint Renderable::getCubeMapId() const{
+    return _material.getCubeMapId();
+}
+
+QColor Renderable::getColor() const{
+    return _material.getColor();
+}
+
+glm::vec3 Renderable::getKd() const{
+    return _material.getKd();
+}
+
+glm::vec3 Renderable::getKa() const{
+    return _material.getKa();
+}
+
+glm::vec3 Renderable::getKs() const{
+    return _material.getKs();
+}
+
+GLfloat Renderable::getTr() const{
+    return _material.getTr();
+}
+
+GLfloat Renderable::getNs() const{
+    return _material.getNs();
+}
+
+GLfloat Renderable::getRefractionRatio() const{
+    return _material.getRefractionRatio();
+}
+
+GLfloat Renderable::getReflexionPercentage() const{
+    return _material.getReflexionPercentage();
 }
 
 void Renderable::setShaderStrategy(const ShaderStrategy *shaderStrategy){
@@ -102,8 +148,8 @@ void Renderable::setMtl(glm::vec3 Kd, glm::vec3 Ks, glm::vec3 Ka, float Ns, floa
     _material.setMtl(Kd, Ks, Ka, Ns, Tr);
 }
 
-void Renderable::setDiffuseMapId(Texture *texture){
-    _material.setDiffuseMapId(texture);
+void Renderable::setColorMap(std::shared_ptr<const Texture> texture){
+    _material.setColorMap(texture);
 }
 
 void Renderable::CreateCubeMap(){

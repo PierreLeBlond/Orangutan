@@ -24,7 +24,7 @@ public:
 
     void                            draw(const glm::core::type::mat4& modelMatrix, const glm::mat4&	viewMatrix, const glm::mat4& projectionMatrix, const std::vector<std::shared_ptr<LightNode>> &lights);
 
-    void                            setMesh(const Mesh* mesh);
+    void                            setMesh(std::shared_ptr<const Mesh> mesh);
 
     inline void                     setMaterial(const Material& material) { _material = material;}
 
@@ -40,11 +40,25 @@ public:
     inline GLuint                   getVao()                const { return _vao; }
 
     //inherit from Materialable
+    virtual const ShaderStrategy*   getShaderStrategy() const;
+    virtual std::shared_ptr<const Texture>getColorMap() const;
+
+    virtual GLuint                  getCubeMapId() const;
+
+    virtual QColor                  getColor() const;
+    virtual glm::vec3               getKd() const;
+    virtual glm::vec3               getKa() const;
+    virtual glm::vec3               getKs() const;
+    virtual GLfloat                 getTr() const;
+    virtual GLfloat                 getNs() const;
+    virtual GLfloat                 getRefractionRatio() const;
+    virtual GLfloat                 getReflexionPercentage() const;
+
     virtual void                    setShaderStrategy(const ShaderStrategy* shaderStrategy);
 
     virtual void                    setMtl(glm::vec3 Kd, glm::vec3 Ks, glm::vec3 Ka, float Ns, float Tr);
 
-    virtual void                    setDiffuseMapId(Texture* texture);
+    virtual void                    setColorMap(std::shared_ptr<const Texture> texture);
 
     virtual void                    CreateCubeMap();
 
@@ -104,7 +118,7 @@ public:
 private:
     Transform                       _transform;
 
-    const Mesh*                     _mesh;
+    std::shared_ptr<const Mesh>     _mesh;
 
     Material                        _material;
 

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <fstream>
+#include <memory>
 
 #include "opengl.h"
 
@@ -40,9 +41,9 @@ public:
     void                                    copyTexCoords(const GLfloat* texCoord);
     void                                    copyIndexes(const GLuint* indexes);
 
-    static Mesh                             createCube(GLint resolution = 1, const std::string& name = "cube");
-    static Mesh                             createSphere(GLint resolution = 8, const std::string& name = "sphere");
-    static Mesh                             createCylinder( GLint resolution = 8, const std::string& name = "cylindre");
+    static std::shared_ptr<Mesh>            createCube(GLint resolution = 1, const std::string& name = "cube");
+    static std::shared_ptr<Mesh>            createSphere(GLint resolution = 8, const std::string& name = "sphere");
+    static std::shared_ptr<Mesh>            createCylinder( GLint resolution = 8, const std::string& name = "cylindre");
 
 private:
 
