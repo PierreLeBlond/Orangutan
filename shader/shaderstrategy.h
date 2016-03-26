@@ -24,11 +24,14 @@ public:
                                         ShaderStrategy();
     virtual                             ~ShaderStrategy() = 0;
 
-    virtual void                        draw(GLuint vao, GLuint idOfIndexArray, const Mesh &mesh, const Material &material, const glm::mat4 modelMatrix, const glm::mat4 viewMatrix, const glm::mat4 projectionMatrix, const std::vector<std::shared_ptr<LightNode>> &lights) const = 0;
+    virtual void                        draw(GLuint vao, GLuint idOfIndexArray, const Mesh &mesh, const Material &material, const glm::mat4& modelMatrix, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const std::vector<std::shared_ptr<LightNode>> &lights) const = 0;
     virtual void                        initAttribute() = 0;
     virtual void                        initUniformLocation() = 0;
 
     void                                setShaderProgram(const ShaderProgram* shaderProgram);
+
+    void                                setName(std::string name);
+    std::string                         getName() const;
 
     inline GLuint                       getVertexAttribute()            const { return _vertexAttribute; }
     inline GLuint                       getNormalAttribute()            const { return _normalAttribute; }
@@ -41,6 +44,8 @@ protected:
     GLuint                              _vertexAttribute;
     GLuint                              _normalAttribute;
     GLuint                              _textureCoordinateAttribute;
+
+    std::string                         _name;
 };
 
 

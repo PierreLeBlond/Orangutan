@@ -155,6 +155,42 @@ void Mesh::copyIndexes(const GLuint *indexes){
     }
 }
 
+std::shared_ptr<Mesh> Mesh::createSquare(const std::string& name){
+    std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(name);
+
+    std::vector<glm::vec3> vertexList;
+    std::vector<glm::vec3> normalList;
+    std::vector<glm::vec2> texCoordList;
+
+    vertexList.push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
+    vertexList.push_back(glm::vec3(1.0f, -1.0f, 0.0f));
+    vertexList.push_back(glm::vec3(-1.0f, 1.0f, 0.0f));
+    vertexList.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
+
+    normalList.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
+    normalList.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
+    normalList.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
+    normalList.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
+
+    texCoordList.push_back(glm::vec2(0.0f, 0.0f));
+    texCoordList.push_back(glm::vec2(1.0f, 0.0f));
+    texCoordList.push_back(glm::vec2(0.0f, 1.0f));
+    texCoordList.push_back(glm::vec2(1.0f, 1.0f));
+
+    std::vector<GLuint> faceIndexes;
+
+    faceIndexes.push_back(0);
+    faceIndexes.push_back(1);
+    faceIndexes.push_back(2);
+    faceIndexes.push_back(1);
+    faceIndexes.push_back(2);
+    faceIndexes.push_back(3);
+
+    mesh->setObj(vertexList, normalList, texCoordList, faceIndexes);
+
+    return mesh;
+}
+
 std::shared_ptr<Mesh> Mesh::createCube(GLint resolution, const std::string& name){
     std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(name);
 

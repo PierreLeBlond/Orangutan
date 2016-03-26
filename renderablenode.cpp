@@ -3,11 +3,11 @@
 RenderableNode::RenderableNode() {
 }
 
-RenderableNode::RenderableNode(std::shared_ptr<Renderable> renderable) {
+RenderableNode::RenderableNode(std::shared_ptr<Renderer> renderable) {
     _renderables.push_back(renderable);
 }
 
-void RenderableNode::addRenderable(std::shared_ptr<Renderable> renderable) {
+void RenderableNode::addRenderable(std::shared_ptr<Renderer> renderable) {
     _renderables.push_back(renderable);
 }
 

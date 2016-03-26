@@ -2,7 +2,7 @@
 #define MATERIALTOOL_H
 
 #include "renderable.h"
-#include "assetsStorage.h"
+#include "assetsstorage.h"
 #include "customsliderwidget.h"
 #include "material.h"
 
@@ -12,18 +12,24 @@
 #include <QColorDialog>
 
 
-class MaterialTools : public QWidget, public Materialable
+class ObjectTools : public QWidget, public Materialable
 {
     Q_OBJECT
 public:
-                                    MaterialTools(QWidget *parent = 0);
+                                    ObjectTools(QWidget *parent = 0);
+
+    void                            updateShaderList();
+    void                            updateMeshList();
+    void                            updateTextureList();
+
+    void                            setAssetsStorage(std::shared_ptr<AssetsStorage> assetsStorage);
 
 public slots:
 
     virtual const ShaderStrategy*   getShaderStrategy() const;
-    virtual std::shared_ptr<const Texture>getColorMap() const;
-
+    virtual GLuint                  getColorMapId() const;
     virtual GLuint                  getCubeMapId() const;
+    virtual GLuint                  getRenderMapId() const;
 
     virtual QColor                  getColor() const;
     virtual glm::vec3               getKd() const;
@@ -33,16 +39,15 @@ public slots:
     virtual GLfloat                 getNs() const;
     virtual GLfloat                 getRefractionRatio() const;
     virtual GLfloat                 getReflexionPercentage() const;
+    virtual GLfloat                 getEdgeFilterThreshold() const;
 
     virtual void                    setShaderStrategy(const ShaderStrategy* shaderStrategy);
 
     virtual void                    setMtl(glm::vec3 Kd, glm::vec3 Ks, glm::vec3 Ka, float Ns, float Tr);
 
-    virtual void                    setColorMap(std::shared_ptr<const Texture> texture);
-
-    virtual void                    CreateCubeMap();
-
+    virtual void                    setColorMapId(GLuint id);
     virtual void                    setCubeMapId(GLuint id);
+    virtual void                    setRenderMapId(GLuint id);
 
     virtual void                    setColor(QColor color);
     virtual void                    setKd(float Kd);
@@ -51,20 +56,34 @@ public slots:
     virtual void                    setNs(float Ns);
     virtual void                    setRefractionRatio(float ratio);
     virtual void                    setReflexionPercentage(float percentage);
+    virtual void                    setEdgeFilterThreshold(float threshold);
 
 
     void                            setCurrentMaterial(std::shared_ptr<Materialable> material);
+    void                            setCurrentRenderable(std::shared_ptr<Renderer> renderable);
     void                            changeColor(QColor);
+
+    void                            shaderHasChanged(int index);
+    void                            meshHasChanged(int index);
+    void                            textureHasChanged(int index);
 
 private:
     std::shared_ptr<Materialable>   _material;
 
+    std::shared_ptr<Renderer>     _renderable;
+
     std::shared_ptr<AssetsStorage>  _assetsStorage;
 
+    QGroupBox                       _meshGroup;
+    QGridLayout                     _meshLayout;
+    QComboBox                       _meshList;
+
     QGroupBox                       _shaderGroup;
+    QGridLayout                     _shaderLayout;
     QComboBox                       _shaderList;
 
     QGroupBox                       _textureGroup;
+    QGridLayout                     _textureLayout;
     QComboBox                       _textureList;
 
     QGroupBox                       _intensityGroup;

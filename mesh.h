@@ -41,6 +41,7 @@ public:
     void                                    copyTexCoords(const GLfloat* texCoord);
     void                                    copyIndexes(const GLuint* indexes);
 
+    static std::shared_ptr<Mesh>            createSquare(const std::string& name = "square");
     static std::shared_ptr<Mesh>            createCube(GLint resolution = 1, const std::string& name = "cube");
     static std::shared_ptr<Mesh>            createSphere(GLint resolution = 8, const std::string& name = "sphere");
     static std::shared_ptr<Mesh>            createCylinder( GLint resolution = 8, const std::string& name = "cylindre");

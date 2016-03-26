@@ -4,10 +4,12 @@
 
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), _titleBar(this), _statusBar(this), _layout(0), _centralWidget(0), _dockWidget("material", 0), _materialTool(0)
+    QMainWindow(parent), _titleBar(this), _statusBar(this), _layout(0), _centralWidget(0),
+    _objectDockWidget("object", 0), _materialTool(0),
+    _worldDockWidget("world", 0), _worldTool(0)
 {
     std::cout << QDir::current().absolutePath().toStdString() << std::endl;
-    QDir::setCurrent("..");
+    QDir::setCurrent("../Orangutan");
 
     //setCentralWidget(&_centralWidget);
     setGeometry(0, 0, 800, 400);
@@ -40,28 +42,60 @@ MainWindow::MainWindow(QWidget *parent) :
     //un appel à InitializeGl est fait automatiquement, ainsi qu'à ResizeGL et PaintGL
     show();
 
-    _dockWidget.setWidget(&_materialTool);
-    _dockWidget.setFeatures(QDockWidget::NoDockWidgetFeatures);
-    _dockWidget.setFixedWidth(200);
-    addDockWidget(Qt::RightDockWidgetArea, &_dockWidget);
+    _objectDockWidget.setWidget(&_materialTool);
+    _objectDockWidget.setFeatures(QDockWidget::NoDockWidgetFeatures);
+    addDockWidget(Qt::RightDockWidgetArea, &_objectDockWidget);
+
+    _worldDockWidget.setWidget(&_worldTool);
+    _worldDockWidget.setFeatures(QDockWidget::NoDockWidgetFeatures);
+    addDockWidget(Qt::LeftDockWidgetArea, &_worldDockWidget);
 
     _assetsStorage = std::make_shared<AssetsStorage>();
     _assetsFactory = std::make_shared<AssetsFactory>(_assetsStorage);
 
     _assetsFactory->importShader("shader/phong.vert", "shader/phong.frag");
-    _assetsFactory->createNewShaderStrategy(GOURAUD, 0, "gouraud");
+    _assetsFactory->createNewShaderStrategy(GOURAUD, 0, "phong");
     _assetsFactory->importShader("shader/skybox.vert", "shader/skybox.frag");
     _assetsFactory->createNewShaderStrategy(SKYBOX, 1, "skybox");
+    _assetsFactory->importShader("shader/environmentmap.vert", "shader/environmentmap.frag");
+    _assetsFactory->createNewShaderStrategy(ENVIRONMENTMAP, 2, "environmentmap");
+    _assetsFactory->importShader("shader/shader.vert", "shader/shader.frag");
+    _assetsFactory->createNewShaderStrategy(GOURAUD, 3, "gouraud");
+    _assetsFactory->importShader("shader/toon.vert", "shader/toon.frag");
+    _assetsFactory->createNewShaderStrategy(TOON, 4, "toon");
+    _assetsFactory->importShader("edgefilter.vert", "edgefilter.frag");
+    _assetsFactory->createNewScreenSpaceShaderStrategy(EDGEFILTER, 5, "edgeFilter");
+    _assetsFactory->importShader("edgefilter.vert", "verticalgaussianblurfilter.frag");
+    _assetsFactory->createNewScreenSpaceShaderStrategy(GAUSSIANBLURFILTER, 6, "verticalGaussianBlur");
+    _assetsFactory->importShader("edgefilter.vert", "horizontalgaussianblurfilter.frag");
+    _assetsFactory->createNewScreenSpaceShaderStrategy(GAUSSIANBLURFILTER, 7, "horizontalGaussianBlur");
 
-    _assetsFactory->importTexture("images/dice.jpg");
+    _assetsFactory->importTexture("images/dice.jpg", "dice");
+    _assetsFactory->importTexture("images/Minion.png", "minion");
+    _assetsFactory->importCubeMapTexture("images/space_", "space");
+    _assetsFactory->importCubeMapTexture("images/sky_", "sky");
+
+    _assetsFactory->importMeshs("Meshs/minion.obj");
+
+    _materialTool.setAssetsStorage(_assetsStorage);
+    _materialTool.updateShaderList();
+    _materialTool.updateMeshList();
+    _materialTool.updateTextureList();
+
+    _worldTool.setAssetsStorage(_assetsStorage);
+    _worldTool.updateSkyboxList();
 
     _scene = std::make_shared<Scene>(_assetsStorage);
     _scene->setIsReady(true);
 
-
     _renderingWindow->setScene(_scene);
+    _renderingWindow->setAssetsStorage(_assetsStorage);
     _renderingWindow->init();
     _renderingWindow->start();
+
+    _materialTool.setCurrentRenderable(_scene->getCurrentRenderable());
+    _worldTool.setScene(_scene);
+    _worldTool.setRenderingWindow(_renderingWindow);
 
 
 }

@@ -8,18 +8,26 @@ CustomSliderWidget::CustomSliderWidget(QWidget *parent) : QWidget(parent), _defa
     _valueLabel = new QLabel(this);
     _valueLabel->setText(QString::number(_defaultValue));
     _slider = new QSlider(Qt::Horizontal, this);
-    _defaultButton = new QPushButton(QIcon("images/round72.png"), "", this);
+    _defaultButton = new QPushButton(QIcon("images/refresh.png"), "", this);
+
+    _defaultButton->setObjectName("customSlider");
+    _valueLabel->setObjectName("customSlider");
 
     _slider->setValue(_defaultValue);
 
-    _layout->addWidget(_label, 0, 0, 1, 1);
-    _layout->addWidget(_valueLabel, 0, 1, 1, 1);
-    _layout->addWidget(_slider, 1, 0, 1, 1);
-    _layout->addWidget(_defaultButton, 1, 1, 1, 1);
+    _layout->setHorizontalSpacing(0);
+    _layout->setVerticalSpacing(0);
+    _layout->setContentsMargins(0, 5, 0, 0);
+
+    _layout->addWidget(_label, 0, 0, 1, 4);
+    _layout->addWidget(_slider, 1, 0, 1, 2);
+    _layout->addWidget(_valueLabel, 1, 2, 1, 1);
+    _layout->addWidget(_defaultButton, 1, 3, 1, 1);
 
     connect(_defaultButton, SIGNAL(clicked()), this, SLOT(resetValue()));
     connect(_slider, SIGNAL(valueChanged(int)), this, SLOT(changeValue(int)));
 
+    setContentsMargins(0, 0, 0, 0);
 }
 
 CustomSliderWidget::~CustomSliderWidget()

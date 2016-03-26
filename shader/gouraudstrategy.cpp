@@ -115,7 +115,7 @@ void GouraudStrategy::initUniformLocation()
     _shaderProgram->stopUseProgram();
 }
 
-void GouraudStrategy::draw(GLuint vao, GLuint idOfIndexArray, const Mesh &mesh, const Material &material, const glm::core::type::mat4 modelMatrix, const glm::core::type::mat4 viewMatrix, const glm::core::type::mat4 projectionMatrix, const std::vector<std::shared_ptr<LightNode>> &lights) const
+void GouraudStrategy::draw(GLuint vao, GLuint idOfIndexArray, const Mesh &mesh, const Material &material, const glm::core::type::mat4 &modelMatrix, const glm::core::type::mat4 &viewMatrix, const glm::core::type::mat4 &projectionMatrix, const std::vector<std::shared_ptr<LightNode>> &lights) const
 {
     _shaderProgram->startUseProgram();
 
@@ -188,10 +188,10 @@ void GouraudStrategy::draw(GLuint vao, GLuint idOfIndexArray, const Mesh &mesh, 
     //int nbColorMap = 0;
 
     //for(int i = 0; i < material.getColorMap()->getIdTextures().size();i++){
-            if(material.getColorMap()->getId() != -1){
+            if(material.getColorMapId() != -1){
                 OpenGLFunction::functions().glUniform1i(_indexOfColorMap, GL_TEXTURE0);
-                OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0);
-                OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, material.getColorMap()->getId());
+                OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0 + 0);
+                OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, material.getColorMapId());
                 //nbDiffuseMap++;
             }
     //}

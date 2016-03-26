@@ -6,7 +6,7 @@
 #include <QDebug>
 #include <QObject>
 
-#include "Scene.h"
+#include "scene.h"
 
 
 class RenderingWindow  : public QOpenGLWidget
@@ -23,6 +23,11 @@ public:
     void                                        paintGL();
 
     void                                        setScene(std::shared_ptr<Scene> scene);
+    void                                        setAssetsStorage(std::shared_ptr<AssetsStorage> assetsStorage);
+
+    void                                        enableScreenSpaceShader(int index);
+
+    void                                        createFrameBuffer(GLuint *fboHandle, GLuint *depthBuf, GLuint *renderTex1, GLuint *renderTex2);
 
     void                                        keyPressEvent(QKeyEvent *keyEvent);
 
@@ -40,6 +45,8 @@ private slots:
     void                                        timeOutSlot();
 
 private:
+    std::shared_ptr<AssetsStorage>              _assetsStorage;
+
     std::shared_ptr<Scene>                      _scene;
     GLuint                                      _width;
     GLuint                                      _height;
@@ -47,6 +54,8 @@ private:
     QTimer                                      _timer;
 
     bool                                        _asAScene;
+
+    std::vector<bool>                           _screenSpaceShader;
 
     QPoint                                      _lastMousePosition;
     bool                                        _mouseIsPressed;

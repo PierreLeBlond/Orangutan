@@ -1,10 +1,39 @@
 #include "materialtool.h"
 
-MaterialTools::MaterialTools(QWidget *parent) :
-    QWidget(parent),_toolLayout(this),  _intensityGroup("Intensity coeficient", 0), _intensityLayout(0),
+ObjectTools::ObjectTools(QWidget *parent) :
+    QWidget(parent), _toolLayout(this),
+    _shaderGroup("Shaders", 0), _shaderLayout(0), _shaderList(0),
+    _meshGroup("Meshs", 0), _meshLayout(0), _meshList(0),
+    _textureGroup("Textures", 0), _textureLayout(0), _textureList(0),
+    _intensityGroup("Intensity coeficient", 0), _intensityLayout(0),
     _colorPicker(0), _colorButton("Set color", this), _KdSlider(0), _KaSlider(0), _KsSlider(0), _NsSlider(0),
     _refractionGroup("Refraction & reflexion", 0), _refractionLayout(0), _refractionRatioSlider(0), _reflexionPercentageSlider(0)
 {   
+
+    _shaderGroup.setLayout(&_shaderLayout);
+
+    _shaderLayout.addWidget(&_shaderList, 0, 0, 1, 1);
+
+    connect(&_shaderList, SIGNAL(activated(int)), this, SLOT(shaderHasChanged(int)));
+
+    _toolLayout.addWidget(&_shaderGroup, 0, 0, 1, 1);
+
+    _meshGroup.setLayout(&_meshLayout);
+
+    _meshLayout.addWidget(&_meshList, 0, 0, 1, 1);
+
+    connect(&_meshList, SIGNAL(activated(int)), this, SLOT(meshHasChanged(int)));
+
+    _toolLayout.addWidget(&_meshGroup, 1, 0, 1, 1);
+
+    _textureGroup.setLayout(&_textureLayout);
+
+    _textureLayout.addWidget(&_textureList, 0, 0, 1, 1);
+
+    connect(&_textureList, SIGNAL(activated(int)), this, SLOT(textureHasChanged(int)));
+
+    _toolLayout.addWidget(&_textureGroup, 2, 0, 1, 1);
+
     _intensityGroup.setLayout(&_intensityLayout);
 
     _colorPicker.setCurrentColor(QColor::fromRgb(255, 255, 255));
@@ -41,7 +70,11 @@ MaterialTools::MaterialTools(QWidget *parent) :
     _intensityLayout.addWidget(&_KsSlider, 3, 0, 1, 1);
     _intensityLayout.addWidget(&_NsSlider, 4, 0, 1, 1);
 
-    _toolLayout.addWidget(&_intensityGroup, 2, 0, 1, 1);
+    _intensityLayout.setVerticalSpacing(0);
+    _intensityLayout.setHorizontalSpacing(0);
+    _intensityLayout.setContentsMargins(0, 5, 0, 0);
+
+    _toolLayout.addWidget(&_intensityGroup, 3, 0, 1, 1);
 
     _refractionGroup.setLayout(&_refractionLayout);
 
@@ -60,10 +93,57 @@ MaterialTools::MaterialTools(QWidget *parent) :
     _refractionLayout.addWidget(&_refractionRatioSlider, 0, 0, 1, 1);
     _refractionLayout.addWidget(&_reflexionPercentageSlider, 1, 0, 1, 1);
 
-    _toolLayout.addWidget(&_refractionGroup, 3, 0, 1, 1);
+    _refractionLayout.setVerticalSpacing(0);
+    _refractionLayout.setHorizontalSpacing(0);
+    _refractionLayout.setContentsMargins(0, 5, 0, 0);
+
+    _toolLayout.addWidget(&_refractionGroup, 4, 0, 1, 1);
+    _toolLayout.setSizeConstraint(QLayout::SetFixedSize);
+    _toolLayout.setVerticalSpacing(0);
 }
 
-void MaterialTools::setCurrentMaterial(std::shared_ptr<Materialable> material)
+void ObjectTools::setAssetsStorage(std::shared_ptr<AssetsStorage> assetsStorage){
+    _assetsStorage = assetsStorage;
+}
+
+void ObjectTools::updateShaderList(){
+    _shaderList.clear();
+    for(int i = 0;i < _assetsStorage->getNumberOfShaderStrategies();i++){
+        _shaderList.addItem(QString::fromStdString(_assetsStorage->getShaderStrategies()[i]->getName()));
+    }
+}
+
+void ObjectTools::updateMeshList(){
+    _meshList.clear();
+    for(int i = 0;i < _assetsStorage->getNumberOfMeshs();i++){
+        _meshList.addItem(QString::fromStdString(_assetsStorage->getMeshs()[i]->getName()));
+    }
+}
+
+void ObjectTools::updateTextureList(){
+    _textureList.clear();
+    for(int i = 0;i < _assetsStorage->getNumberOfTextures();i++){
+        _textureList.addItem(QString::fromStdString(_assetsStorage->getTextures()[i]->getName()));
+    }
+}
+
+void ObjectTools::shaderHasChanged(int index){
+    _renderable->setShaderStrategy(_assetsStorage->getShaderStrategy(index));
+    _renderable->fillInVBO();
+    _renderable->createVertexArrayObject();
+}
+
+void ObjectTools::meshHasChanged(int index){
+    _renderable->setMesh(_assetsStorage->getMesh(index));
+    _renderable->fillInVBO();
+    _renderable->createVertexArrayObject();
+}
+
+void ObjectTools::textureHasChanged(int index){
+    _renderable->setColorMapId(_assetsStorage->getTexture(index)->getId());
+}
+
+void ObjectTools::setCurrentMaterial(std::shared_ptr<Materialable> material)
 {
     if(_material != 0)
     {
@@ -99,7 +179,12 @@ void MaterialTools::setCurrentMaterial(std::shared_ptr<Materialable> material)
     connect(&_reflexionPercentageSlider, SIGNAL(valueChanged(float)), this, SLOT(setReflexionPercentage(float)));
 }
 
-void MaterialTools::changeColor(QColor color){
+void ObjectTools::setCurrentRenderable(std::shared_ptr<Renderer> renderable){
+    _renderable = renderable;
+    setCurrentMaterial(_renderable);
+}
+
+void ObjectTools::changeColor(QColor color){
     QPalette p;
     p.setColor(QPalette::Button, color);
     _colorButton.setPalette(p);
@@ -107,95 +192,107 @@ void MaterialTools::changeColor(QColor color){
     _colorButton.setFlat(true);
 }
 
-const ShaderStrategy *MaterialTools::getShaderStrategy() const{
+const ShaderStrategy *ObjectTools::getShaderStrategy() const{
     return _material->getShaderStrategy();
 }
 
-std::shared_ptr<const Texture> MaterialTools::getColorMap() const{
-    return _material->getColorMap();
+GLuint ObjectTools::getColorMapId() const{
+    return _material->getColorMapId();
 }
 
-GLuint MaterialTools::getCubeMapId() const{
+GLuint ObjectTools::getCubeMapId() const{
     return _material->getCubeMapId();
 }
 
-QColor MaterialTools::getColor() const{
+GLuint ObjectTools::getRenderMapId() const{
+    return _material->getRenderMapId();
+}
+
+QColor ObjectTools::getColor() const{
     return _material->getColor();
 }
 
-glm::vec3 MaterialTools::getKd() const{
+glm::vec3 ObjectTools::getKd() const{
     return _material->getKd();
 }
 
-glm::vec3 MaterialTools::getKa() const{
+glm::vec3 ObjectTools::getKa() const{
     return _material->getKa();
 }
 
-glm::vec3 MaterialTools::getKs() const{
+glm::vec3 ObjectTools::getKs() const{
     return _material->getKs();
 }
 
-GLfloat MaterialTools::getTr() const{
+GLfloat ObjectTools::getTr() const{
     return _material->getTr();
 }
 
-GLfloat MaterialTools::getNs() const{
+GLfloat ObjectTools::getNs() const{
     return _material->getNs();
 }
 
-GLfloat MaterialTools::getRefractionRatio() const{
+GLfloat ObjectTools::getRefractionRatio() const{
     return _material->getRefractionRatio();
 }
 
-GLfloat MaterialTools::getReflexionPercentage() const{
+GLfloat ObjectTools::getReflexionPercentage() const{
     return _material->getReflexionPercentage();
 }
 
-void MaterialTools::setShaderStrategy(const ShaderStrategy *shaderStrategy){
+GLfloat ObjectTools::getEdgeFilterThreshold() const{
+    return _material->getEdgeFilterThreshold();
+}
+
+void ObjectTools::setShaderStrategy(const ShaderStrategy *shaderStrategy){
     _material->setShaderStrategy(shaderStrategy);
 }
 
-void MaterialTools::setMtl(glm::vec3 Kd, glm::vec3 Ks, glm::vec3 Ka, float Ns, float Tr) {
+void ObjectTools::setMtl(glm::vec3 Kd, glm::vec3 Ks, glm::vec3 Ka, float Ns, float Tr) {
     _material->setMtl(Kd, Ks, Ka, Ns, Tr);
 }
 
-void MaterialTools::setColorMap(std::shared_ptr<const Texture> texture){
-    _material->setColorMap(texture);
+void ObjectTools::setColorMapId(GLuint id){
+    _material->setColorMapId(id);
 }
 
-void MaterialTools::CreateCubeMap(){
-    _material->CreateCubeMap();
-}
-
-void MaterialTools::setCubeMapId(GLuint id){
+void ObjectTools::setCubeMapId(GLuint id){
     _material->setCubeMapId(id);
 }
 
-void MaterialTools::setColor(QColor color){
+void ObjectTools::setRenderMapId(GLuint id){
+    _material->setRenderMapId(id);
+}
+
+void ObjectTools::setColor(QColor color){
     _material->setColor(color);
 }
 
-void MaterialTools::setKd(float Kd){
+void ObjectTools::setKd(float Kd){
     _material->setKd(Kd);
 }
 
-void MaterialTools::setKa(float Ka){
+void ObjectTools::setKa(float Ka){
     _material->setKa(Ka);
 }
 
-void MaterialTools::setKs(float Ks){
+void ObjectTools::setKs(float Ks){
     _material->setKs(Ks);
 }
 
-void MaterialTools::setNs(float Ns){
+void ObjectTools::setNs(float Ns){
     _material->setNs(Ns);
 }
 
-void MaterialTools::setRefractionRatio(float ratio){
+void ObjectTools::setRefractionRatio(float ratio){
     _material->setRefractionRatio(ratio);
 }
 
-void MaterialTools::setReflexionPercentage(float percentage){
+void ObjectTools::setReflexionPercentage(float percentage){
     _material->setReflexionPercentage(percentage);
+}
+
+void ObjectTools::setEdgeFilterThreshold(float threshold){
+    _material->setEdgeFilterThreshold(threshold);
 }
 

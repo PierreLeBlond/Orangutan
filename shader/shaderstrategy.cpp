@@ -15,5 +15,13 @@ void ShaderStrategy::setShaderProgram(const ShaderProgram *shaderProgram)
     _programId = _shaderProgram->getProgramId();
 }
 
+std::string ShaderStrategy::getName() const{
+    return _name;
+}
+
+void ShaderStrategy::setName(std::string name){
+    _name = name;
+}
+
 
 

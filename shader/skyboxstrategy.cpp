@@ -38,7 +38,7 @@ void SkyboxStrategy::initUniformLocation()
 
 
 
-void SkyboxStrategy::draw(GLuint vao, GLuint idOfIndexArray, const Mesh &mesh, const Material& material, const glm::core::type::mat4 modelMatrix, const glm::core::type::mat4 viewMatrix, const glm::core::type::mat4 projectionMatrix, const std::vector<std::shared_ptr<LightNode>>& lights) const
+void SkyboxStrategy::draw(GLuint vao, GLuint idOfIndexArray, const Mesh &mesh, const Material& material, const glm::core::type::mat4 &modelMatrix, const glm::core::type::mat4 &viewMatrix, const glm::core::type::mat4 &projectionMatrix, const std::vector<std::shared_ptr<LightNode>>& lights) const
 {
     _shaderProgram->startUseProgram();
 

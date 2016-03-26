@@ -15,6 +15,9 @@ vector<std::shared_ptr<Material>> Parseur::parseMtl(const char* filename) {
 
     std::ifstream mtlStream(filename);
 
+    //On linux, . is ,, so, well, sscanf doesn't work without this.
+    setlocale(LC_NUMERIC,"C");
+
     if(!mtlStream.bad())
     {
         char line[256];
@@ -76,15 +79,15 @@ vector<std::shared_ptr<Material>> Parseur::parseMtl(const char* filename) {
             {
 
                 if(line[0] == 'K' && line[1] == 'd')
-                    sscanf_s(line, "Kd %f %f %f", &(Kd.x), &(Kd.y), &(Kd.z));
+                    sscanf(line, "Kd %f %f %f", &(Kd.x), &(Kd.y), &(Kd.z));
                 if(line[0] == 'K' && line[1] == 'a')
-                    sscanf_s(line, "Ka %f %f %f", &(Ka.x), &(Ka.y), &(Ka.z));
+                    sscanf(line, "Ka %f %f %f", &(Ka.x), &(Ka.y), &(Ka.z));
                 if(line[0] == 'K' && line[1] == 's')
-                    sscanf_s(line, "Ks %f %f %f", &(Ks.x), &(Ks.y), &(Ks.z));
+                    sscanf(line, "Ks %f %f %f", &(Ks.x), &(Ks.y), &(Ks.z));
                 if(line[0] == 'N' && line[1] == 's')
-                    sscanf_s(line, "Ns %f", &(Ns));
+                    sscanf(line, "Ns %f", &(Ns));
                 if(line[0] == 'T' && line[1] == 'r')
-                    sscanf_s(line, "Tr %f", &(Tr));
+                    sscanf(line, "Tr %f", &(Tr));
                 if(line[0] == 'm' && line[1] == 'a' && line[2] == 'p' && line[3] == '_' && line[4] == 'K' && line[5] == 'd')
                     sscanf(line, "map_Kd %s", textureName);
             }
@@ -119,6 +122,9 @@ vector<std::shared_ptr<Mesh>> Parseur::parseObj(const char* filename) {
 
     std::ifstream objStream(filename);
 
+    //On linux, . is ,, so, well, sscanf doesn't work without this.
+    setlocale(LC_NUMERIC,"C");
+
     if (!objStream.bad())
     {
         std::vector<glm::vec3> vertexList;
@@ -131,7 +137,7 @@ vector<std::shared_ptr<Mesh>> Parseur::parseObj(const char* filename) {
 
         std::vector<GLuint> faceIndexes;
 
-        std::string name;
+        char name[256];
 
         int nbMesh = 0;
 
@@ -161,7 +167,7 @@ vector<std::shared_ptr<Mesh>> Parseur::parseObj(const char* filename) {
                 }
 
 
-                std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(name);
+                std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(std::string(name));
                 mesh->setObj(duplicatedVertices, duplicatedNormals, duplicatedTexCoords, faceIndexes);
                 meshs.push_back(mesh);
                 nbMesh++;
@@ -175,12 +181,12 @@ vector<std::shared_ptr<Mesh>> Parseur::parseObj(const char* filename) {
                 duplicatedNormals.clear();
                 duplicatedTexCoords.clear();
 
-                sscanf_s(line, "o %s", name);
+                sscanf(line, "o %s", name);
 
             }
             else if((line[0] == 'o' || line[0] == 'g') && nbMesh == 0)
             {
-                sscanf_s(line, "o %s", name);
+                sscanf(line, "o %s", name);
                 nbMesh++;
             }
             else
@@ -191,7 +197,7 @@ vector<std::shared_ptr<Mesh>> Parseur::parseObj(const char* filename) {
                     {
                         glm::vec3 normal;
 
-                        sscanf_s(line, "vn %f %f %f", &(normal.x), &(normal.y), &(normal.z));
+                        sscanf(line, "vn %f %f %f", &(normal.x), &(normal.y), &(normal.z));
 
                         normalList.push_back(normal);
                     }
@@ -199,7 +205,7 @@ vector<std::shared_ptr<Mesh>> Parseur::parseObj(const char* filename) {
                     {
                         glm::vec2 texCoord;
 
-                        sscanf_s(line, "vt %f %f", &(texCoord.s), &(texCoord.t));
+                        sscanf(line, "vt %f %f", &(texCoord.s), &(texCoord.t));
 
                         texCoordList.push_back(texCoord);
                     }
@@ -207,7 +213,7 @@ vector<std::shared_ptr<Mesh>> Parseur::parseObj(const char* filename) {
                     {
                         glm::vec3 vertex;
 
-                        sscanf_s(line, "v %f %f %f", &(vertex.x), &(vertex.y), &(vertex.z));
+                        sscanf(line, "v %f %f %f", &(vertex.x), &(vertex.y), &(vertex.z));
 
                         vertexList.push_back(vertex);
                     }
@@ -220,19 +226,19 @@ vector<std::shared_ptr<Mesh>> Parseur::parseObj(const char* filename) {
 
                     if (normalList.empty() && texCoordList.empty())
                     {
-                        sscanf_s(line, "f %i %i %i", &(faceVertices[0]), &(faceVertices[1]), &(faceVertices[2]));
+                        sscanf(line, "f %i %i %i", &(faceVertices[0]), &(faceVertices[1]), &(faceVertices[2]));
                     }
                     else if (!normalList.empty() && texCoordList.empty())
                     {
-                        sscanf_s(line, "f %i//%i %i//%i %i//%i", &(faceVertices[0]), &(faceNormals[0]), &(faceVertices[1]), &(faceNormals[1]), &(faceVertices[2]), &(faceNormals[2]));
+                        sscanf(line, "f %i//%i %i//%i %i//%i", &(faceVertices[0]), &(faceNormals[0]), &(faceVertices[1]), &(faceNormals[1]), &(faceVertices[2]), &(faceNormals[2]));
                     }
                     else if (normalList.empty() && !texCoordList.empty())
                     {
-                        sscanf_s(line, "f %i/%i/ %i/%i/ %i/%i/", &(faceVertices[0]), &(faceMaps[0]), &(faceVertices[1]), &(faceMaps[1]), &(faceVertices[2]), &(faceMaps[2]));
+                        sscanf(line, "f %i/%i/ %i/%i/ %i/%i/", &(faceVertices[0]), &(faceMaps[0]), &(faceVertices[1]), &(faceMaps[1]), &(faceVertices[2]), &(faceMaps[2]));
                     }
                     else if (!normalList.empty() && !texCoordList.empty())
                     {
-                        sscanf_s(line, "f %i/%i/%i %i/%i/%i %i/%i/%i", &(faceVertices[0]), &(faceMaps[0]), &(faceNormals[0]), &(faceVertices[1]), &(faceMaps[1]), &(faceNormals[1]), &(faceVertices[2]), &(faceMaps[2]), &(faceNormals[2]));
+                        sscanf(line, "f %i/%i/%i %i/%i/%i %i/%i/%i", &(faceVertices[0]), &(faceMaps[0]), &(faceNormals[0]), &(faceVertices[1]), &(faceMaps[1]), &(faceNormals[1]), &(faceVertices[2]), &(faceMaps[2]), &(faceNormals[2]));
                     }
 
                     for (unsigned int i = 0; i < 3; ++i)
@@ -274,7 +280,7 @@ vector<std::shared_ptr<Mesh>> Parseur::parseObj(const char* filename) {
             std::cout << "/!\\ Error while loading tex coords" << std::endl;
         }
 
-        std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(name);
+        std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(std::string(name));
         mesh->setObj(duplicatedVertices, duplicatedNormals, duplicatedTexCoords, faceIndexes);
         meshs.push_back(mesh);
         nbMesh++;

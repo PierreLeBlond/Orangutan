@@ -1,10 +1,10 @@
 #include "scene.h"
 
-Scene::Scene(std::shared_ptr<AssetsStorage> assetsStorage) : _assetsStorage(assetsStorage)
+Scene::Scene(std::shared_ptr<AssetsStorage> assetsStorage, int width, int height) : _assetsStorage(assetsStorage), _width(width), _height(height)
 {
-    auto cubeMap = std::make_shared<Renderable>();
-    cubeMap->setMesh(_assetsStorage->getMesh(0));
-    cubeMap->CreateCubeMap();
+    std::shared_ptr<Renderer> cubeMap = std::make_shared<Renderer>();
+    cubeMap->setMesh(_assetsStorage->getMesh(1));
+    cubeMap->setCubeMapId(_assetsStorage->getCubeMapTexture(0)->getId());
     cubeMap->setShaderStrategy(_assetsStorage->getShaderStrategy(1));
     cubeMap->fillInVBO();
     cubeMap->createVertexArrayObject();
@@ -12,18 +12,20 @@ Scene::Scene(std::shared_ptr<AssetsStorage> assetsStorage) : _assetsStorage(asse
     cubeMap->setYScale(100);
     cubeMap->setZScale(100);
 
+    _skyBox = cubeMap;
+
     auto cubeMapNode = std::make_shared<RenderableNode>();
     cubeMapNode->addRenderable(cubeMap);
 
     _sceneTree = cubeMapNode;
 
-    _currentRenderable = std::make_shared<Renderable>();
-    _currentRenderable->setMesh(_assetsStorage->getMesh(0));
+    _currentRenderable = std::make_shared<Renderer>();
+    _currentRenderable->setMesh(_assetsStorage->getMesh(3));
 
     _currentRenderable->setShaderStrategy(_assetsStorage->getShaderStrategy(0));
     _currentRenderable->setKa(0.5f);
-    _currentRenderable->setColor(QColor(255, 0, 0));
-    _currentRenderable->setColorMap(_assetsStorage->getTexture(0));
+    _currentRenderable->setColorMapId(_assetsStorage->getTexture(1)->getId());
+    _currentRenderable->setCubeMapId(_assetsStorage->getCubeMapTexture(0)->getId());
     _currentRenderable->fillInVBO();
     _currentRenderable->createVertexArrayObject();
     _currentRenderable->setZPos(-10);
@@ -44,21 +46,44 @@ Scene::Scene(std::shared_ptr<AssetsStorage> assetsStorage) : _assetsStorage(asse
     _currentLight = light;
     _lightNodes.push_back(lightNode);
 
-    _currentCamera = std::make_shared<Camera>(600, 400);
+    _currentCamera = std::make_shared<Camera>(_width, _height);
 
     auto cameraNode = std::make_shared<CameraNode>();
     cameraNode->setCamera(_currentCamera);
 
     _sceneTree->addChild(cameraNode);
 
+    _screenSpaceRenderable = std::make_shared<Renderer>();
+    _screenSpaceRenderable->setMesh(_assetsStorage->getMesh(0));
 
+    _screenSpaceRenderable->setShaderStrategy(_assetsStorage->getScreenSpaceShaderStrategy(0));
+    _screenSpaceRenderable->fillInVBO();
+    _screenSpaceRenderable->createVertexArrayObject();
 
+}
 
+void Scene::setSkybox(int index){
+    _skyBox->setCubeMapId(index);
+    //TO DO : apply to each object of the scene
+    _currentRenderable->setCubeMapId(index);
+}
+
+void Scene::setWidth(int width){
+    _width = width;
+}
+
+void Scene::setHeight(int height){
+    _height = height;
 }
 
 void Scene::draw() const{
     glm::vec3 vec(1.0f);
     _sceneTree->display(_currentCamera->getView(vec), _currentCamera->getPerspectiveProjection(), _lightNodes);
+
+}
+
+void Scene::drawScreenSpace() const{
+    _screenSpaceRenderable->draw(glm::mat4(1.0f), glm::mat4(1.0f), glm::mat4(1.0f), _lightNodes);
 }
 
 void Scene::setIsReady(bool isReady){
@@ -75,5 +100,17 @@ std::shared_ptr<Camera> Scene::getCurrentCamera(){
 
 std::shared_ptr<Transformable> Scene::getCurrentTransformable(){
     return _currentRenderable;
+}
+
+std::shared_ptr<Materialable> Scene::getCurrentMaterialable(){
+    return _currentRenderable;
+}
+
+std::shared_ptr<Renderer> Scene::getCurrentRenderable(){
+    return _currentRenderable;
+}
+
+std::shared_ptr<Renderer> Scene::getScreenSpaceRenderable(){
+    return _screenSpaceRenderable;
 }
 

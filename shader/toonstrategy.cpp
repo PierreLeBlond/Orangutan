@@ -184,10 +184,10 @@ void ToonStrategy::draw(GLuint vao, GLuint idOfIndexArray, const Mesh &mesh, con
     OpenGLFunction::functions().glUniform1i(_indexOfNbSpotLight, nbSpotLights);
 
 
-    if(material.getColorMap()->getId() != -1){
+    if(material.getColorMapId() != -1){
         OpenGLFunction::functions().glUniform1i(_indexOfColorMap, GL_TEXTURE0);
         OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0);
-        OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, material.getColorMap()->getId());
+        OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, material.getColorMapId());
         //nbDiffuseMap++;
     }
 

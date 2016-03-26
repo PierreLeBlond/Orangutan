@@ -8,16 +8,21 @@
 class Texture
 {
 public:
-                                Texture(std::string path);
+                                Texture(std::string path, std::string name = "unknow");
                                 Texture();
 
     GLuint                      getId() const;
+    std::string                 getName() const;
 
-    void                        setId(GLuint id);
+    void                        setName(std::string name);
 
     void                        load(std::string path);
 
+    void                        loadCubeMap(std::string path_prefix);
+
 private:
+    std::string                 _name;
+
     GLuint                      _id;
     std::string                 _path;
     QImage                      _image;

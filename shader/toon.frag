@@ -39,7 +39,7 @@ uniform sampler2D colorMap;
 
 uniform int nbDiffuseMap;
 
-out vec4 color_out;
+layout(location = 0) out vec4 color_out;
 
 const int levels = 3;
 const float scaleFactor = 1.0 / levels;

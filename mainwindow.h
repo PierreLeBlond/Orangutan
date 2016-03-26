@@ -21,6 +21,7 @@
 
 #include "windowtitlebar.h"
 #include "materialtool.h"
+#include "worldtool.h"
 
 class MainWindow : public QMainWindow
 {
@@ -51,9 +52,11 @@ private:
     QGridLayout                             _layout;
     QWidget                                 _centralWidget;
 
-    QDockWidget                             _dockWidget;
+    QDockWidget                             _objectDockWidget;
+    QDockWidget                             _worldDockWidget;
 
-    MaterialTools                           _materialTool;
+    ObjectTools                             _materialTool;
+    WorldTool                               _worldTool;
 
     void                                    centerOnScreen();
 

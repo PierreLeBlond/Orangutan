@@ -1,22 +1,26 @@
 #include "material.h"
 
 
-Material::Material(std::string name) : _name(name), _colorMap(0),
+Material::Material(std::string name) : _name(name), _colorMapId(-1), _renderMapId(-1),
     _Kd(glm::vec3(1.0f)), _Ks(glm::vec3(1.0f)), _Ka(glm::vec3(1.0f)),
     _illum(1), _Ns(10.0f), _Tr(1.0f), _color(QColor::fromRgb(255, 255, 255)),
-    _refractionRatio(0), _reflexionPercentage(100) {
+    _refractionRatio(0), _reflexionPercentage(100), _edgeFilterThreshold(0.7) {
 }
 
 const ShaderStrategy *Material::getShaderStrategy() const{
     return _shaderStrategy;
 }
 
-std::shared_ptr<const Texture> Material::getColorMap() const{
-    return _colorMap;
+GLuint Material::getColorMapId() const{
+    return _colorMapId;
 }
 
 GLuint Material::getCubeMapId() const{
     return _cubeMapId;
+}
+
+GLuint Material::getRenderMapId() const{
+    return _renderMapId;
 }
 
 QColor Material::getColor() const{
@@ -51,6 +55,10 @@ GLfloat Material::getReflexionPercentage() const{
     return _reflexionPercentage;
 }
 
+GLfloat Material::getEdgeFilterThreshold() const{
+    return _edgeFilterThreshold;
+}
+
 void Material::setShaderStrategy(const ShaderStrategy *shaderStrategy){
     _shaderStrategy = shaderStrategy;
 }
@@ -63,12 +71,16 @@ void Material::setMtl(glm::vec3 Kd, glm::vec3 Ks, glm::vec3 Ka, float Ns, float 
     _Tr = Tr;
 }
 
-void Material::setColorMap(std::shared_ptr<const Texture> texture){
-    _colorMap = texture;
+void Material::setColorMapId(GLuint id){
+    _colorMapId = id;
 }
 
 void Material::setCubeMapId(GLuint id){
     _cubeMapId = id;
+}
+
+void Material::setRenderMapId(GLuint id){
+    _renderMapId = id;
 }
 
 void Material::setColor(QColor color){
@@ -99,39 +111,6 @@ void Material::setReflexionPercentage(float percentage){
     _reflexionPercentage = percentage;
 }
 
-void Material::CreateCubeMap()
-{
-    OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0 + 0);
-    OpenGLFunction::functions().glEnable(GL_TEXTURE_CUBE_MAP);
-
-    OpenGLFunction::functions().glGenTextures(1, &_cubeMapId);
-    OpenGLFunction::functions().glBindTexture(GL_TEXTURE_CUBE_MAP, _cubeMapId);
-
-    const char* suffixes[] = { "posx", "negx", "posy", "negy", "posz", "negz"};
-    std::string baseFileName = "images/sky_";
-
-    GLuint targets[] = {
-        GL_TEXTURE_CUBE_MAP_POSITIVE_X,
-        GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
-        GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
-        GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
-        GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
-        GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
-    };
-
-    for(int i = 0;i < 6;i++)
-    {
-        std::string texName = baseFileName + suffixes[i] + ".png";
-        QImage img(texName.c_str());
-        img = img.rgbSwapped();
-        OpenGLFunction::functions().glTexImage2D(targets[i], 0, GL_RGBA, img.width(), img.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, img.bits());
-    }
-
-    OpenGLFunction::functions().glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    OpenGLFunction::functions().glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    OpenGLFunction::functions().glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    OpenGLFunction::functions().glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    OpenGLFunction::functions().glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-    OpenGLFunction::functions().glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+void Material::setEdgeFilterThreshold(float threshold){
+    _edgeFilterThreshold = threshold;
 }

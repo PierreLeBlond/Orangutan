@@ -68,7 +68,8 @@ std::string Shader::readFileSrc(std::string filename)
 
     if (filename != std::string(""))
     {
-        fopen_s(&fp, filename.c_str(), "rt");
+        //fopen_s doesn't work on linux, let's keep good old fopen
+        fp = fopen(filename.c_str(), "rt");
 
         if (fp != NULL)
         {

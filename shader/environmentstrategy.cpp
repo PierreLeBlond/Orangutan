@@ -135,8 +135,8 @@ void EnvironmentStrategy::draw(GLuint vao, GLuint idOfIndexArray, const Mesh &me
     OpenGLFunction::functions().glUniform3fv(_indexOfKd, 1, glm::value_ptr(material.getKd()*glm::vec3(((float)material.getColor().red())/255.0, ((float)material.getColor().green())/255.0, ((float)material.getColor().blue())/255.0)));
     OpenGLFunction::functions().glUniform1f(_indexOfNs, material.getNs());
 
-    OpenGLFunction::functions().glUniform1f(_indexOfRefractionRatio, material.getRefractionRatio());
-    OpenGLFunction::functions().glUniform1f(_indexOfReflexionPercentage, material.getReflexionPercentage());
+    OpenGLFunction::functions().glUniform1f(_indexOfRefractionRatio, material.getRefractionRatio()/100.0f);
+    OpenGLFunction::functions().glUniform1f(_indexOfReflexionPercentage, material.getReflexionPercentage()/100.0f);
 
     int nbAmbiantLights = 0;
     int nbPonctualLights = 0;

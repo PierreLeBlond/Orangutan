@@ -6,6 +6,8 @@
 
 #include <vector>
 #include <memory>
+#include <sstream>
+#include <locale.h>
 
 class Parseur
 {

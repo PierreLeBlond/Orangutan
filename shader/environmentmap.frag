@@ -1,4 +1,4 @@
-#version 330
+#version 330 core
 
 #define MAX_LIGHT 8
 
@@ -126,7 +126,7 @@ void main(void)
 
     color_out = mix(vec4((diffuseAndAmbient_all + spec_all)*refractColor.rgb, refractColor.a),
                     vec4((diffuseAndAmbient_all + spec_all)*reflectColor.rgb, reflectColor.a),
-                    reflexionPercentage/100.0);
+                    reflexionPercentage);
 }
 
 

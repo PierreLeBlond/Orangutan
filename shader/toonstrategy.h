@@ -13,7 +13,6 @@ public:
     virtual void                                initUniformLocation();
 
 private:
-
     GLuint                                      _indexOfProjectionMatrix;
     GLuint                                      _indexOfViewMatrix;
     GLuint                                      _indexOfModelMatrix;

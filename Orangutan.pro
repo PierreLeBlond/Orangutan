@@ -13,19 +13,23 @@ TARGET = Orangutan
 TEMPLATE = app
 CONFIG += console
 
+linux {
+CONFIG += c++11
+}
+
 
 SOURCES += main.cpp\
         mainwindow.cpp \
     assetsstorage.cpp \
     material.cpp \
     mesh.cpp \
-    Shader/environmentstrategy.cpp \
-    Shader/gouraudstrategy.cpp \
-    Shader/shader.cpp \
-    Shader/shaderprogram.cpp \
-    Shader/shaderstrategy.cpp \
-    Shader/skyboxstrategy.cpp \
-    Shader/toonstrategy.cpp \
+    shader/environmentstrategy.cpp \
+    shader/gouraudstrategy.cpp \
+    shader/shader.cpp \
+    shader/shaderprogram.cpp \
+    shader/shaderstrategy.cpp \
+    shader/skyboxstrategy.cpp \
+    shader/toonstrategy.cpp \
     texture.cpp \
     opengl.cpp \
     lightnode.cpp \
@@ -42,19 +46,23 @@ SOURCES += main.cpp\
     scenenode.cpp \
     windowtitlebar.cpp \
     materialtool.cpp \
-    customsliderwidget.cpp
+    customsliderwidget.cpp \
+    shader/edgefilterstrategy.cpp \
+    worldtool.cpp \
+    shader/gaussianblurfilterstrategy.cpp \
+    object.cpp
 
 HEADERS  += mainwindow.h \
     assetsstorage.h \
     material.h \
     mesh.h \
-    Shader/environmentstrategy.h \
-    Shader/gouraudstrategy.h \
-    Shader/shader.h \
-    Shader/shaderprogram.h \
-    Shader/shaderstrategy.h \
-    Shader/skyboxstrategy.h \
-    Shader/toonstrategy.h \
+    shader/environmentstrategy.h \
+    shader/gouraudstrategy.h \
+    shader/shader.h \
+    shader/shaderprogram.h \
+    shader/shaderstrategy.h \
+    shader/skyboxstrategy.h \
+    shader/toonstrategy.h \
     texture.h \
     util.h \
     opengl.h \
@@ -72,13 +80,23 @@ HEADERS  += mainwindow.h \
     scenenode.h \
     windowtitlebar.h \
     materialtool.h \
-    customsliderwidget.h
+    customsliderwidget.h \
+    shader/edgefilterstrategy.h \
+    worldtool.h \
+    shader/gaussianblurfilterstrategy.h \
+    object.h
 
 FORMS    += mainwindow.ui
 
 INCLUDEPATH += $$PWD/GLM\
 
+win32{
 LIBS += opengl32.lib\
+}
 
 DISTFILES += \
-    style.qss
+    style.qss \
+    edgefilter.vert \
+    edgefilter.frag \
+    verticalgaussianblurfilter.frag \
+    horizontalgaussianblurfilter.frag

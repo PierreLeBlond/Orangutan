@@ -3,20 +3,22 @@
 #include "opengl.h"
 #include "mesh.h"
 #include "material.h"
-#include "Shader/shaderstrategy.h"
+#include "shader/shaderstrategy.h"
 #include "transformable.h"
 #include "lightnode.h"
 #include "util.h"
 
+#include "object.h"
+
 #include <vector>
 
-class Renderable : public Materialable, public Transformable
+class Renderer : public Materialable, public Transformable, public Object
 {
 public:
 
-                                    Renderable();
+                                    Renderer();
 
-    virtual                         ~Renderable();
+    virtual                         ~Renderer();
 
     void                            createVertexArrayObject();
 
@@ -26,24 +28,23 @@ public:
 
     void                            setMesh(std::shared_ptr<const Mesh> mesh);
 
-    inline void                     setMaterial(const Material& material) { _material = material;}
+    void                            setMaterial(const Material& material);
 
-    inline const Transform&         getTransform() const {return _transform;}
+    const Transform&                getTransform() const;
+    const Material&                 getMaterial() const;
 
-    inline const Material&          getMaterial() const {return _material;}
+    GLuint                          getIdOfPositionArray()  const;
+    GLuint                          getIdOfIndexArray()     const;
+    GLuint                          getIdOfNormalArray()    const;
+    GLuint                          getIdOfTexCoordArray()  const;
 
-    inline GLuint                   getIdOfPositionArray()  const { return _idOfPositionArray; }
-    inline GLuint                   getIdOfIndexArray()     const { return _idOfIndexArray; }
-    inline GLuint                   getIdOfNormalArray()    const { return _idOfNormalArray; }
-    inline GLuint                   getIdOfTexCoordArray()  const { return _idOfTexCoordArray; }
-
-    inline GLuint                   getVao()                const { return _vao; }
+    GLuint                          getVao()                const;
 
     //inherit from Materialable
     virtual const ShaderStrategy*   getShaderStrategy() const;
-    virtual std::shared_ptr<const Texture>getColorMap() const;
-
+    virtual GLuint                  getColorMapId() const;
     virtual GLuint                  getCubeMapId() const;
+    virtual GLuint                  getRenderMapId() const;
 
     virtual QColor                  getColor() const;
     virtual glm::vec3               getKd() const;
@@ -53,16 +54,15 @@ public:
     virtual GLfloat                 getNs() const;
     virtual GLfloat                 getRefractionRatio() const;
     virtual GLfloat                 getReflexionPercentage() const;
+    virtual GLfloat                 getEdgeFilterThreshold() const;
 
     virtual void                    setShaderStrategy(const ShaderStrategy* shaderStrategy);
 
     virtual void                    setMtl(glm::vec3 Kd, glm::vec3 Ks, glm::vec3 Ka, float Ns, float Tr);
 
-    virtual void                    setColorMap(std::shared_ptr<const Texture> texture);
-
-    virtual void                    CreateCubeMap();
-
+    virtual void                    setColorMapId(GLuint id);
     virtual void                    setCubeMapId(GLuint id);
+    virtual void                    setRenderMapId(GLuint id);
 
     virtual void                    setColor(QColor color);
     virtual void                    setKd(float Kd);
@@ -71,49 +71,50 @@ public:
     virtual void                    setNs(float Ns);
     virtual void                    setRefractionRatio(float ratio);
     virtual void                    setReflexionPercentage(float percentage);
+    virtual void                    setEdgeFilterThreshold(float threshold);
 
     //inherit from Transformable
-    virtual void setModelMatrix(const glm::mat4& modelMatrix);
+    virtual void                    setModelMatrix(const glm::mat4& modelMatrix);
 
-    virtual void setXRotation(float angle);
-    virtual void setYRotation(float angle);
-    virtual void setZRotation(float angle);
+    virtual void                    setXRotation(float angle);
+    virtual void                    setYRotation(float angle);
+    virtual void                    setZRotation(float angle);
 
-    virtual void setXScale(float scale);
-    virtual void setYScale(float scale);
-    virtual void setZScale(float scale);
+    virtual void                    setXScale(float scale);
+    virtual void                    setYScale(float scale);
+    virtual void                    setZScale(float scale);
 
-    virtual void setXPos(int x);
-    virtual void setXPos(float x);
+    virtual void                    setXPos(int x);
+    virtual void                    setXPos(float x);
 
-    virtual void setYPos(int y);
-    virtual void setYPos(float y);
+    virtual void                    setYPos(int y);
+    virtual void                    setYPos(float y);
 
-    virtual void setZPos(int z);
-    virtual void setZPos(float z);
+    virtual void                    setZPos(int z);
+    virtual void                    setZPos(float z);
 
-    virtual void setTranslationMatrix(const glm::vec3& vector);
+    virtual void                    setTranslationMatrix(const glm::vec3& vector);
 
-    virtual void move(int direction);
-    virtual void animate();
-    virtual void update();
+    virtual void                    move(int direction);
+    virtual void                    animate();
+    virtual void                    update();
 
 
-    virtual void setXRotationSpeed(float speed);
-    virtual void setYRotationSpeed(float speed);
-    virtual void setZRotationSpeed(float speed);
+    virtual void                    setXRotationSpeed(float speed);
+    virtual void                    setYRotationSpeed(float speed);
+    virtual void                    setZRotationSpeed(float speed);
 
-    virtual void setXTranslationSpeed(float speed);
-    virtual void setYTranslationSpeed(float speed);
-    virtual void setZTranslationSpeed(float speed);
+    virtual void                    setXTranslationSpeed(float speed);
+    virtual void                    setYTranslationSpeed(float speed);
+    virtual void                    setZTranslationSpeed(float speed);
 
-    virtual void setXTranslationSmallAxe(int l);
-    virtual void setYTranslationSmallAxe(int l);
-    virtual void setZTranslationSmallAxe(int l);
+    virtual void                    setXTranslationSmallAxe(int l);
+    virtual void                    setYTranslationSmallAxe(int l);
+    virtual void                    setZTranslationSmallAxe(int l);
 
-    virtual void setXTranslationBigAxe(int l);
-    virtual void setYTranslationBigAxe(int l);
-    virtual void setZTranslationBigAxe(int l);
+    virtual void                    setXTranslationBigAxe(int l);
+    virtual void                    setYTranslationBigAxe(int l);
+    virtual void                    setZTranslationBigAxe(int l);
 
 private:
     Transform                       _transform;
@@ -122,15 +123,11 @@ private:
 
     Material                        _material;
 
-    int                             _shaderProgramMode;
-
     GLuint                          _idOfPositionArray;
     GLuint                          _idOfIndexArray;
     GLuint                          _idOfNormalArray;
     GLuint                          _idOfTexCoordArray;
 
     GLuint                          _vao;
-
-
 };
 

@@ -13,7 +13,7 @@
 #include "renderable.h"
 
 
-Renderable::Renderable() :_mesh(0)
+Renderer::Renderer() :_mesh(0)
 {
     OpenGLFunction::functions().glGenVertexArrays(1, &_vao);
 
@@ -23,7 +23,7 @@ Renderable::Renderable() :_mesh(0)
     OpenGLFunction::functions().glGenBuffers(1, &_idOfIndexArray);
 }
 
-Renderable::~Renderable()
+Renderer::~Renderer()
 { 
     OpenGLFunction::functions().glDeleteBuffers(1, &_idOfPositionArray);
     OpenGLFunction::functions().glDeleteBuffers(1, &_idOfNormalArray);
@@ -37,7 +37,7 @@ Renderable::~Renderable()
  * @brief Renderable::createVertexArrayObject
  * To call whenever the material or the shader strategy have changed
  */
-void Renderable::createVertexArrayObject()
+void Renderer::createVertexArrayObject()
 {
     if(_mesh)
     {
@@ -59,7 +59,7 @@ void Renderable::createVertexArrayObject()
     }
 }
 
-void Renderable::fillInVBO()
+void Renderer::fillInVBO()
 {
     if(_mesh)
     {
@@ -80,7 +80,7 @@ void Renderable::fillInVBO()
     }
 }
 
-void Renderable::draw(const glm::core::type::mat4 &modelMatrix, const glm::core::type::mat4 &viewMatrix, const glm::core::type::mat4 &projectionMatrix, const std::vector<std::shared_ptr<LightNode> > &lights)
+void Renderer::draw(const glm::core::type::mat4 &modelMatrix, const glm::core::type::mat4 &viewMatrix, const glm::core::type::mat4 &projectionMatrix, const std::vector<std::shared_ptr<LightNode> > &lights)
 {
     if(_mesh) {
     _transform.update();
@@ -88,219 +88,263 @@ void Renderable::draw(const glm::core::type::mat4 &modelMatrix, const glm::core:
     }
 }
 
-void Renderable::setMesh(std::shared_ptr<const Mesh> mesh){
+void Renderer::setMesh(std::shared_ptr<const Mesh> mesh){
     _mesh = mesh;
+}
+
+void Renderer::setMaterial(const Material &material){
+    _material = material;
+}
+
+const Transform& Renderer::getTransform() const{
+    return _transform;
+}
+
+const Material& Renderer::getMaterial() const{
+    return _material;
+}
+
+GLuint Renderer::getIdOfPositionArray() const{
+    return _idOfPositionArray;
+}
+
+GLuint Renderer::getIdOfIndexArray() const{
+    return _idOfIndexArray;
+}
+
+GLuint Renderer::getIdOfNormalArray() const{
+    return _idOfNormalArray;
+}
+
+GLuint Renderer::getIdOfTexCoordArray() const{
+    return _idOfTexCoordArray;
+}
+
+GLuint Renderer::getVao() const{
+    return _vao;
 }
 
 //inherit from Materiable
 
 
 
-const ShaderStrategy *Renderable::getShaderStrategy() const{
+const ShaderStrategy *Renderer::getShaderStrategy() const{
     return _material.getShaderStrategy();
 }
 
-std::shared_ptr<const Texture> Renderable::getColorMap() const{
-    return _material.getColorMap();
+GLuint Renderer::getColorMapId() const{
+    return _material.getColorMapId();
 }
 
-GLuint Renderable::getCubeMapId() const{
+GLuint Renderer::getCubeMapId() const{
     return _material.getCubeMapId();
 }
 
-QColor Renderable::getColor() const{
+GLuint Renderer::getRenderMapId() const{
+    return _material.getRenderMapId();
+}
+
+QColor Renderer::getColor() const{
     return _material.getColor();
 }
 
-glm::vec3 Renderable::getKd() const{
+glm::vec3 Renderer::getKd() const{
     return _material.getKd();
 }
 
-glm::vec3 Renderable::getKa() const{
+glm::vec3 Renderer::getKa() const{
     return _material.getKa();
 }
 
-glm::vec3 Renderable::getKs() const{
+glm::vec3 Renderer::getKs() const{
     return _material.getKs();
 }
 
-GLfloat Renderable::getTr() const{
+GLfloat Renderer::getTr() const{
     return _material.getTr();
 }
 
-GLfloat Renderable::getNs() const{
+GLfloat Renderer::getNs() const{
     return _material.getNs();
 }
 
-GLfloat Renderable::getRefractionRatio() const{
+GLfloat Renderer::getRefractionRatio() const{
     return _material.getRefractionRatio();
 }
 
-GLfloat Renderable::getReflexionPercentage() const{
+GLfloat Renderer::getReflexionPercentage() const{
     return _material.getReflexionPercentage();
 }
 
-void Renderable::setShaderStrategy(const ShaderStrategy *shaderStrategy){
+GLfloat Renderer::getEdgeFilterThreshold() const{
+    return _material.getEdgeFilterThreshold();
+}
+
+void Renderer::setShaderStrategy(const ShaderStrategy *shaderStrategy){
     _material.setShaderStrategy(shaderStrategy);
 }
 
-void Renderable::setMtl(glm::vec3 Kd, glm::vec3 Ks, glm::vec3 Ka, float Ns, float Tr) {
+void Renderer::setMtl(glm::vec3 Kd, glm::vec3 Ks, glm::vec3 Ka, float Ns, float Tr) {
     _material.setMtl(Kd, Ks, Ka, Ns, Tr);
 }
 
-void Renderable::setColorMap(std::shared_ptr<const Texture> texture){
-    _material.setColorMap(texture);
+void Renderer::setColorMapId(GLuint id){
+    _material.setColorMapId(id);
 }
 
-void Renderable::CreateCubeMap(){
-    _material.CreateCubeMap();
-}
-
-void Renderable::setCubeMapId(GLuint id){
+void Renderer::setCubeMapId(GLuint id){
     _material.setCubeMapId(id);
 }
 
-void Renderable::setColor(QColor color){
+void Renderer::setRenderMapId(GLuint id){
+    _material.setRenderMapId(id);
+}
+
+void Renderer::setColor(QColor color){
     _material.setColor(color);
 }
 
-void Renderable::setKd(float Kd){
+void Renderer::setKd(float Kd){
     _material.setKd(Kd);
 }
 
-void Renderable::setKa(float Ka){
+void Renderer::setKa(float Ka){
     _material.setKa(Ka);
 }
 
-void Renderable::setKs(float Ks){
+void Renderer::setKs(float Ks){
     _material.setKs(Ks);
 }
 
-void Renderable::setNs(float Ns){
+void Renderer::setNs(float Ns){
     _material.setNs(Ns);
 }
 
-void Renderable::setRefractionRatio(float ratio){
+void Renderer::setRefractionRatio(float ratio){
     _material.setRefractionRatio(ratio);
 }
 
-void Renderable::setReflexionPercentage(float percentage){
+void Renderer::setReflexionPercentage(float percentage){
     _material.setReflexionPercentage(percentage);
 }
 
+void Renderer::setEdgeFilterThreshold(float threshold){
+    _material.setEdgeFilterThreshold(threshold);
+}
+
 //inherit from Transformable
-void Renderable::setModelMatrix(const glm::mat4& modelMatrix){
+void Renderer::setModelMatrix(const glm::mat4& modelMatrix){
     _transform.setModelMatrix(modelMatrix);
 }
 
-void Renderable::setXRotation(float angle){
+void Renderer::setXRotation(float angle){
     _transform.setXRotation(angle);
 }
 
-void Renderable::setYRotation(float angle){
+void Renderer::setYRotation(float angle){
     _transform.setYRotation(angle);
 }
 
-void Renderable::setZRotation(float angle){
+void Renderer::setZRotation(float angle){
     _transform.setZRotation(angle);
 }
 
-void Renderable::setXScale(float scale){
+void Renderer::setXScale(float scale){
     _transform.setXScale(scale);
 }
 
-void Renderable::setYScale(float scale){
+void Renderer::setYScale(float scale){
     _transform.setYScale(scale);
 }
 
-void Renderable::setZScale(float scale){
+void Renderer::setZScale(float scale){
     _transform.setZScale(scale);
 }
 
-void Renderable::setXPos(int x){
+void Renderer::setXPos(int x){
     _transform.setXPos(x);
 }
 
-void Renderable::setXPos(float x){
+void Renderer::setXPos(float x){
     _transform.setXPos(x);
 }
 
-void Renderable::setYPos(int y){
+void Renderer::setYPos(int y){
     _transform.setYPos(y);
 }
 
-void Renderable::setYPos(float y){
+void Renderer::setYPos(float y){
     _transform.setYPos(y);
 }
 
-void Renderable::setZPos(int z){
+void Renderer::setZPos(int z){
     _transform.setZPos(z);
 }
 
-void Renderable::setZPos(float z){
+void Renderer::setZPos(float z){
     _transform.setZPos(z);
 }
 
-void Renderable::setTranslationMatrix(const glm::vec3& vector){
+void Renderer::setTranslationMatrix(const glm::vec3& vector){
     _transform.setTranslationMatrix(vector);
 }
 
-void Renderable::move(int direction){
+void Renderer::move(int direction){
     _transform.move(direction);
 }
 
-void Renderable::animate(){
+void Renderer::animate(){
     _transform.animate();
 }
 
-void Renderable::update(){
+void Renderer::update(){
     _transform.update();
 }
 
-void Renderable::setXRotationSpeed(float speed){
+void Renderer::setXRotationSpeed(float speed){
     _transform.setXRotationSpeed(speed);
 }
 
-void Renderable::setYRotationSpeed(float speed){
+void Renderer::setYRotationSpeed(float speed){
     _transform.setYRotationSpeed(speed);
 }
 
-void Renderable::setZRotationSpeed(float speed){
+void Renderer::setZRotationSpeed(float speed){
     _transform.setZRotationSpeed(speed);
 }
 
-void Renderable::setXTranslationSpeed(float speed){
+void Renderer::setXTranslationSpeed(float speed){
     _transform.setXTranslationSpeed(speed);
 }
 
-void Renderable::setYTranslationSpeed(float speed){
+void Renderer::setYTranslationSpeed(float speed){
     _transform.setYTranslationSpeed(speed);
 }
 
-void Renderable::setZTranslationSpeed(float speed){
+void Renderer::setZTranslationSpeed(float speed){
     _transform.setZTranslationSpeed(speed);
 }
 
-void Renderable::setXTranslationSmallAxe(int l){
+void Renderer::setXTranslationSmallAxe(int l){
     _transform.setXTranslationSmallAxe(l);
 }
 
-void Renderable::setYTranslationSmallAxe(int l){
+void Renderer::setYTranslationSmallAxe(int l){
     _transform.setYTranslationSmallAxe(l);
 }
 
-void Renderable::setZTranslationSmallAxe(int l){
+void Renderer::setZTranslationSmallAxe(int l){
     _transform.setZTranslationSmallAxe(l);
 }
 
-void Renderable::setXTranslationBigAxe(int l){
+void Renderer::setXTranslationBigAxe(int l){
     _transform.setXTranslationBigAxe(l);
 }
 
-void Renderable::setYTranslationBigAxe(int l){
+void Renderer::setYTranslationBigAxe(int l){
     _transform.setYTranslationBigAxe(l);
 }
 
-void Renderable::setZTranslationBigAxe(int l){
+void Renderer::setZTranslationBigAxe(int l){
     _transform.setZTranslationBigAxe(l);
 }
