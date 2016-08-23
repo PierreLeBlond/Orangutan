@@ -13,90 +13,105 @@ TARGET = Orangutan
 TEMPLATE = app
 CONFIG += console
 
-linux {
 CONFIG += c++11
-}
+
+# App sources
+SOURCES += src/app/main.cpp \
+        src/app/mainwindow.cpp \
+        src/app/windowtitlebar.cpp \
+        src/app/materialtool.cpp \
+        src/app/customsliderwidget.cpp \
+        src/app/renderingwindow.cpp \
+        src/app/worldtool.cpp
+
+# Core sources
+SOURCES += src/core/shader.cpp \
+        src/core/texture.cpp \
+        src/core/opengl.cpp \
+        src/core/qtrenderer.cpp \
+        src/core/shaderprogram.cpp \
+        src/core/vao.cpp
+
+# Physics sources
+SOURCES += src/physics/transformable.cpp
+
+# Scene sources
+SOURCES += src/scene/scene.cpp \
+        src/scene/objectnode.cpp \
+        src/scene/assetsstorage.cpp \
+        src/scene/assetsfactory.cpp
+
+# Object sources
+SOURCES += src/object/object.cpp \
+        src/object/asset.cpp \
+        src/object/renderableobject.cpp \
+        src/object/camera.cpp \
+        src/object/light.cpp \
+        src/object/material.cpp \
+        src/object/mesh.cpp
+
+# Shader sources
+SOURCES += src/shader/edgefilterstrategy.cpp \
+        src/shader/gaussianblurfilterstrategy.cpp \
+        src/shader/shaderstrategy.cpp \
+        src/shader/skyboxstrategy.cpp \
+        src/shader/toonstrategy.cpp \
+        src/shader/environmentstrategy.cpp \
+        src/shader/gouraudstrategy.cpp
+
+# Util sources
+SOURCES += src/util/parseur.cpp
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    assetsstorage.cpp \
-    material.cpp \
-    mesh.cpp \
-    shader/environmentstrategy.cpp \
-    shader/gouraudstrategy.cpp \
-    shader/shader.cpp \
-    shader/shaderprogram.cpp \
-    shader/shaderstrategy.cpp \
-    shader/skyboxstrategy.cpp \
-    shader/toonstrategy.cpp \
-    texture.cpp \
-    opengl.cpp \
-    lightnode.cpp \
-    light.cpp \
-    transformable.cpp \
-    assetsfactory.cpp \
-    parseur.cpp \
-    renderingwindow.cpp \
-    scene.cpp \
-    renderable.cpp \
-    camera.cpp \
-    cameranode.cpp \
-    renderablenode.cpp \
-    scenenode.cpp \
-    windowtitlebar.cpp \
-    materialtool.cpp \
-    customsliderwidget.cpp \
-    shader/edgefilterstrategy.cpp \
-    worldtool.cpp \
-    shader/gaussianblurfilterstrategy.cpp \
-    object.cpp
+# App headers
+HEADERS += src/app/mainwindow.h \
+        src/app/windowtitlebar.h \
+        src/app/materialtool.h \
+        src/app/customsliderwidget.h \
+        src/app/renderingwindow.h \
+        src/app/worldtool.h
 
-HEADERS  += mainwindow.h \
-    assetsstorage.h \
-    material.h \
-    mesh.h \
-    shader/environmentstrategy.h \
-    shader/gouraudstrategy.h \
-    shader/shader.h \
-    shader/shaderprogram.h \
-    shader/shaderstrategy.h \
-    shader/skyboxstrategy.h \
-    shader/toonstrategy.h \
-    texture.h \
-    util.h \
-    opengl.h \
-    lightnode.h \
-    light.h \
-    transformable.h \
-    assetsfactory.h \
-    parseur.h \
-    renderingwindow.h \
-    scene.h \
-    renderable.h \
-    camera.h \
-    cameranode.h \
-    renderablenode.h \
-    scenenode.h \
-    windowtitlebar.h \
-    materialtool.h \
-    customsliderwidget.h \
-    shader/edgefilterstrategy.h \
-    worldtool.h \
-    shader/gaussianblurfilterstrategy.h \
-    object.h
+# Core headers
+HEADERS += src/core/shader.h \
+        src/core/texture.h \
+        src/core/opengl.h \
+        src/core/qtrenderer.h \
+        src/core/shaderprogram.h \
+        src/core/vao.h
 
-FORMS    += mainwindow.ui
+# Physics headers
+HEADERS += src/physics/transformable.h
 
-INCLUDEPATH += $$PWD/GLM\
+# Scene headers
+HEADERS += src/scene/scene.h \
+        src/scene/objectnode.h \
+        src/scene/assetsstorage.h \
+        src/scene/assetsfactory.h
 
-win32{
-LIBS += opengl32.lib\
-}
+# Object headers
+HEADERS += src/object/object.h \
+        src/object/asset.h \
+        src/object/renderableobject.h \
+        src/object/camera.h \
+        src/object/light.h \
+        src/object/material.h \
+        src/object/mesh.h
+
+# Shader headers
+HEADERS += src/shader/edgefilterstrategy.h \
+        src/shader/gaussianblurfilterstrategy.h \
+        src/shader/shaderstrategy.h \
+        src/shader/skyboxstrategy.h \
+        src/shader/toonstrategy.h \
+        src/shader/environmentstrategy.h \
+        src/shader/gouraudstrategy.h
+
+# Util headers
+HEADERS  += src/util/util.h
+
+INCLUDEPATH += $$PWD/ext/GLM \
+            src
+
 
 DISTFILES += \
-    style.qss \
-    edgefilter.vert \
-    edgefilter.frag \
-    verticalgaussianblurfilter.frag \
-    horizontalgaussianblurfilter.frag
+    src/style/style.qss \
