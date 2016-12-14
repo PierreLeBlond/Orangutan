@@ -1,6 +1,8 @@
-#version 330
+#version 450 core
 
 in vec3 vertex_in;
+in vec3 normal_in;
+in vec2 uv_in;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
@@ -10,7 +12,9 @@ out vec3 uv_out;
 
 void main()
 {
-    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertex_in, 1.0);
-    uv_out = vertex_in;
+    vec3 pos = mat3(modelMatrix)*vertex_in;
+    vec4 pmp = projectionMatrix * viewMatrix * modelMatrix * vec4(vertex_in, 1.0);
+    uv_out = pos;
+    gl_Position = pmp.xyzw;
 }
 

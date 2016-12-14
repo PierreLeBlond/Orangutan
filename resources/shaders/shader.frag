@@ -1,4 +1,4 @@
-#version 330
+#version 450 core
 
 in vec2 uv_out;
 in vec3 spec_out;
@@ -13,6 +13,5 @@ out vec4 color_out;
 void main()
 {
     vec4 c = texture(colorMap, uv_out);
-
     color_out = vec4((diffuseAndAmbient_out + spec_out)*c.rgb, c.a);
 }

@@ -1,5 +1,4 @@
-#version 330 core
-
+#version 450 core
 
 in vec3 vertex_in;
 in vec3 normal_in;

@@ -22,7 +22,7 @@ public:
 
     void                                fillInVBO();
 
-    void                                draw(const glm::mat4&	viewMatrix,
+    virtual void                        draw(const glm::mat4&	viewMatrix,
                                               const glm::mat4& projectionMatrix,
                                                const std::vector<std::shared_ptr<Light>> &lights);
 

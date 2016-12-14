@@ -2,7 +2,7 @@
 
 Camera::Camera(unsigned int width, unsigned int height) : _mode(PERSPECTIVE),
  _fovy(75.0f), _width(width), _height(height),
-  _eyePosition(glm::vec3(0.0f, 0.0f, 0.0f)),
+  _eyePosition(glm::vec3(0.0f, 0.0f, 10.0f)),
    _latitude(0.0f), _longitude(0.0f)
 {
     _roll = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -21,6 +21,25 @@ Camera::Camera(unsigned int width, unsigned int height) : _mode(PERSPECTIVE),
 
 Camera::~Camera()
 {
+}
+
+void Camera::update()
+{
+    _viewMatrix = glm::lookAt(_eyePosition, _roll + _eyePosition, -_yaw);
+    setModelMatrix(glm::inverse(_viewMatrix));
+    if(_skyBox)
+        _skyBox->setModelMatrix(getTransform().getModelMatrix());
+
+}
+
+void Camera::setSkybox(std::shared_ptr<Object> skybox)
+{
+    _skyBox = skybox;
+}
+
+std::shared_ptr<const Object> Camera::getSkybox() const
+{
+    return _skyBox;
 }
 
 void Camera::rotate(float longitude, float latitude)
@@ -95,9 +114,8 @@ void Camera::move(int direction)
     }
 }
 
-glm::mat4 Camera::computeView(const glm::vec3& scenePosVect)
+const glm::mat4& Camera::getView() const
 {
-    _viewMatrix = glm::lookAt(_eyePosition + scenePosVect, _roll + _eyePosition + scenePosVect, -_yaw);
     return _viewMatrix;
 }
 

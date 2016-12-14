@@ -48,9 +48,7 @@ private:
 
     std::vector<std::shared_ptr<Light>>         _lights;
 
-
     bool                                        _isReady;
-
 };
 
 #endif // SCENE_H

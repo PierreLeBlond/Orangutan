@@ -447,8 +447,6 @@ std::shared_ptr<Mesh> Mesh::createCube(int resolution, const std::string& name){
     }
     mesh->setObj(vertexList, normalList, texCoordList, faceIndexes);
 
-
-
     return mesh;
 }
 

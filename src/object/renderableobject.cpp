@@ -1,4 +1,5 @@
 #include "object/renderableobject.h"
+#include "core/debug.h"
 
 RenderableObject::RenderableObject() : _mesh(0)
 {
@@ -14,7 +15,6 @@ RenderableObject::~RenderableObject()
 void RenderableObject::createVertexArrayObject()
 {
         _vao.bind();
-
         _vao.attribBuffer(_idOfPositionArray, _material.getShaderStrategy()->getVertexAttribute(), 3, O_FLOAT);
         _vao.attribBuffer(_idOfNormalArray, _material.getShaderStrategy()->getNormalAttribute(), 3, O_FLOAT);
         _vao.attribBuffer(_idOfTexCoordArray, _material.getShaderStrategy()->getTextureCoordinateAttribute(), 2, O_FLOAT);

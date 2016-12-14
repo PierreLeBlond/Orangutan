@@ -1,11 +1,11 @@
 #include "app/mainwindow.h"
+#include "core/debug.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), _titleBar(this), _statusBar(this), _layout(0), _centralWidget(0)
-    //_objectDockWidget("object", 0), _materialTool(0),
-    //_worldDockWidget("world", 0), _worldTool(0)
 {
-    std::cout << "App started in " << QDir::current().absolutePath().toStdString() << std::endl;
+    std::cout << "App started in " <<
+        QDir::current().absolutePath().toStdString() << std::endl;
 
     //setCentralWidget(&_centralWidget);
     setGeometry(0, 0, 800, 400);
@@ -49,29 +49,56 @@ MainWindow::MainWindow(QWidget *parent) :
     _assetsStorage = std::make_shared<AssetsStorage>();
     _assetsFactory = std::make_shared<AssetsFactory>(_assetsStorage);
 
-    _assetsFactory->importShader("ressources/shaders/phong.vert", "ressources/shaders/phong.frag");
+    std::cout << "Shader phong" << std::endl;
+    _assetsFactory->importShader("../resources/shaders/phong.vert",
+                                 "../resources/shaders/phong.frag");
     _assetsFactory->createNewShaderStrategy(GOURAUD, 0, "phong");
-    _assetsFactory->importShader("ressources/shaders/skybox.vert", "ressources/shaders/skybox.frag");
+
+    std::cout << "Shader skybox" << std::endl;
+    _assetsFactory->importShader("../resources/shaders/skybox.vert",
+                                 "../resources/shaders/skybox.frag");
     _assetsFactory->createNewShaderStrategy(SKYBOX, 1, "skybox");
-    _assetsFactory->importShader("ressources/shaders/environmentmap.vert", "ressources/shaders/environmentmap.frag");
+
+    std::cout << "Shader environment" << std::endl;
+    _assetsFactory->importShader("../resources/shaders/environmentmap.vert",
+                                 "../resources/shaders/environmentmap.frag");
     _assetsFactory->createNewShaderStrategy(ENVIRONMENTMAP, 2, "environmentmap");
-    _assetsFactory->importShader("ressources/shaders/shader.vert", "ressources/shaders/shader.frag");
+
+    std::cout << "Shader shader" << std::endl;
+    _assetsFactory->importShader("../resources/shaders/shader.vert",
+                                 "../resources/shaders/shader.frag");
     _assetsFactory->createNewShaderStrategy(GOURAUD, 3, "gouraud");
-    _assetsFactory->importShader("ressources/shaders/toon.vert", "ressources/shaders/toon.frag");
+
+    std::cout << "Shader toon" << std::endl;
+    _assetsFactory->importShader("../resources/shaders/toon.vert",
+                                 "../resources/shaders/toon.frag");
     _assetsFactory->createNewShaderStrategy(TOON, 4, "toon");
-    _assetsFactory->importShader("ressources/shaders/edgefilter.vert", "ressources/shaders/edgefilter.frag");
+
+    std::cout << "Shader edge" << std::endl;
+    _assetsFactory->importShader("../resources/shaders/edgefilter.vert",
+                                 "../resources/shaders/edgefilter.frag");
     _assetsFactory->createNewScreenSpaceShaderStrategy(EDGEFILTER, 5, "edgeFilter");
-    _assetsFactory->importShader("ressources/shaders/edgefilter.vert", "ressources/shaders/verticalgaussianblurfilter.frag");
-    _assetsFactory->createNewScreenSpaceShaderStrategy(GAUSSIANBLURFILTER, 6, "verticalGaussianBlur");
-    _assetsFactory->importShader("ressources/shaders/edgefilter.vert", "ressources/shaders/horizontalgaussianblurfilter.frag");
-    _assetsFactory->createNewScreenSpaceShaderStrategy(GAUSSIANBLURFILTER, 7, "horizontalGaussianBlur");
 
-    _assetsFactory->importTexture("ressources/images/dice.jpg", "dice");
-    _assetsFactory->importTexture("ressources/images/Minion.png", "minion");
-    _assetsFactory->importCubeMapTexture("ressources/images/space_", "space");
-    _assetsFactory->importCubeMapTexture("ressources/images/sky_", "sky");
+    std::cout << "Shader gaussian" << std::endl;
+    _assetsFactory->importShader("../resources/shaders/edgefilter.vert",
+                                 "../resources/shaders/verticalgaussianblurfilter.frag");
+    _assetsFactory->createNewScreenSpaceShaderStrategy(GAUSSIANBLURFILTER, 6,
+                                                       "verticalGaussianBlur");
 
-    _assetsFactory->importMeshs("ressources/meshs/minion.obj");
+    std::cout << "Shader gaussian" << std::endl;
+    _assetsFactory->importShader("../resources/shaders/edgefilter.vert",
+                                 "../resources/shaders/horizontalgaussianblurfilter.frag");
+    _assetsFactory->createNewScreenSpaceShaderStrategy(GAUSSIANBLURFILTER, 7,
+                                                       "horizontalGaussianBlur");
+
+    _assetsFactory->importTexture("../resources/images/dice.jpg", "dice");
+    _assetsFactory->importTexture("../resources/images/Minion.png", "minion");
+    _assetsFactory->importTexture("../resources/images/Mozart.png", "mozart");
+    _assetsFactory->importCubeMapTexture("../resources/images/space_", "space");
+    _assetsFactory->importCubeMapTexture("../resources/images/sky_", "sky");
+
+    _assetsFactory->importMeshs("../resources/meshes/minion.obj");
+    _assetsFactory->importMeshs("../resources/meshes/mozart.obj");
 
     /*_materialTool.setAssetsStorage(_assetsStorage);
     _materialTool.updateShaderList();
@@ -92,8 +119,6 @@ MainWindow::MainWindow(QWidget *parent) :
     /*_materialTool.setCurrentRenderable(_scene->getCurrentRenderable());
     _worldTool.setScene(_scene);
     _worldTool.setRenderingWindow(_renderingWindow);*/
-
-
 }
 
 MainWindow::~MainWindow()

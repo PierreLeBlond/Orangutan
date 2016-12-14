@@ -1,4 +1,5 @@
 #include "shader/skyboxstrategy.h"
+#include "core/debug.h"
 
 SkyboxStrategy::SkyboxStrategy(const std::string& name) : ShaderStrategy(name)
 {
@@ -39,7 +40,7 @@ void SkyboxStrategy::setUniform(const Material& material,
     }
     _shaderProgram->setUniform("La", La);
 
-    _shaderProgram->bindTexture(O_TEXTURE_CUBE_MAP, "cubeMap", material.getColorMapId());
+    _shaderProgram->bindTexture(O_TEXTURE_CUBE_MAP, "cubeMap", material.getCubeMapId());
 
     _shaderProgram->stopUseProgram();
 }

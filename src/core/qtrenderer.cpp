@@ -1,4 +1,5 @@
 #include "core/qtrenderer.h"
+#include "core/debug.h"
 
 using namespace std;
 
@@ -8,7 +9,7 @@ QTRenderer::QTRenderer(QWidget* parent, GLuint width, GLuint height) : QOpenGLWi
 
 void QTRenderer::initializeGL()
 {
-    QOpenGLFunctions_4_3_Core* funcs = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_3_Core>();
+    QOpenGLFunctions_4_5_Core* funcs = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_5_Core>();
     if (!funcs) {
         cerr << "Could not obtain required OpenGL context version" << endl;
         exit(1);
@@ -31,7 +32,7 @@ void QTRenderer::initializeGL()
     std::cout << "GL Version (integer)           : " << major << "." << minor << std::endl;
     std::cout << "GLSL Version                   : " << glslVersion  << std::endl;
 
-    OpenGLFunction::functions().glClearColor(0.3f, 0.37f, 0.56f, 1.0f);
+    OpenGLFunction::functions().glClearColor(0.3f, 0.0f, 0.56f, 1.0f);
 
     OpenGLFunction::functions().glEnable(GL_DEPTH_TEST);
 
@@ -39,7 +40,7 @@ void QTRenderer::initializeGL()
 
     OpenGLFunction::functions().glDisable(GL_CULL_FACE);
 
-    OpenGLFunction::functions().glEnable(GL_TEXTURE_2D);
+    //OpenGLFunction::functions().glEnable(GL_TEXTURE_2D);
 }
 
 void QTRenderer::init()
@@ -57,10 +58,8 @@ void QTRenderer::start()
 void QTRenderer::paintGL()
 {
     makeCurrent();
-
+    //OpenGLFunction::functions().glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     _drawCall();
-
-    OpenGLFunction::functions().glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void QTRenderer::resizeGL(int width, int height)
@@ -76,7 +75,7 @@ void QTRenderer::createFrameBuffer(GLuint *fboHandle, GLuint *depthBuf, GLuint *
     OpenGLFunction::functions().glBindFramebuffer(GL_FRAMEBUFFER, *fboHandle);
 
     OpenGLFunction::functions().glGenTextures(1, renderTex1);
-    OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0);
+    //OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0);
     OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, *renderTex1);
     OpenGLFunction::functions().glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
     OpenGLFunction::functions().glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -85,7 +84,7 @@ void QTRenderer::createFrameBuffer(GLuint *fboHandle, GLuint *depthBuf, GLuint *
     OpenGLFunction::functions().glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *renderTex1, 0);
 
     OpenGLFunction::functions().glGenTextures(1, renderTex2);
-    OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0);
+    //OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0);
     OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, *renderTex2);
     OpenGLFunction::functions().glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
     OpenGLFunction::functions().glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

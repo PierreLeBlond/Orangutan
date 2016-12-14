@@ -1,4 +1,4 @@
-#version 330
+#version 450 core
 
 #define MAX_LIGHT 8
 
@@ -120,7 +120,7 @@ void main()
         spec_out += sPhongWithSpotLight(spotLights[i], s, v, r, normal);
     }
 
-        uv_out = uv_in;
+    uv_out = uv_in;
 
-        gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertex_in, 1.0);
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertex_in, 1.0);
 }

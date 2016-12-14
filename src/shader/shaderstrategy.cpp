@@ -1,4 +1,5 @@
 #include "shader/shaderstrategy.h"
+#include "core/debug.h"
 
 ShaderStrategy::ShaderStrategy(const std::string& name) : Asset(name)
 {
@@ -23,6 +24,7 @@ std::shared_ptr<ShaderProgram> ShaderStrategy::getShaderProgram() const
 void ShaderStrategy::draw(const Vao &vao) const
 {
     _shaderProgram->startUseProgram();
+
 
     vao.bind();
     vao.bindIndexBuffer();

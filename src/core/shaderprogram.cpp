@@ -10,6 +10,7 @@
  */
 
 #include "core/shaderprogram.h"
+#include "core/debug.h"
 
 
 ShaderProgram::ShaderProgram() : _programId(OpenGLFunction::functions().glCreateProgram()),
@@ -129,7 +130,7 @@ void ShaderProgram::storeUniformLocation()
         GLint nameBufSize = results[0] + 1;
         char* name = new char[nameBufSize];
         OpenGLFunction::functions().glGetProgramResourceName(_programId, GL_UNIFORM, i, nameBufSize, NULL, name);
-        std::cout << results[2] << " " << name << " " << results[1] << std::endl;
+        //std::cout << results[2] << " " << name << " " << results[1] << std::endl;
         _uniformLocations[std::string(name)] = results[2];
         delete [] name;
     }
@@ -138,17 +139,26 @@ void ShaderProgram::storeUniformLocation()
 void ShaderProgram::storeAttributeLocation()
 {
     GLint nbOfAttributes = 0;
-    OpenGLFunction::functions().glGetProgramInterfaceiv(_programId, GL_PROGRAM_INPUT, GL_ACTIVE_RESOURCES, &nbOfAttributes);
+    OpenGLFunction::functions().glGetProgramInterfaceiv(_programId,
+                                                        GL_PROGRAM_INPUT,
+                                                        GL_ACTIVE_RESOURCES,
+                                                        &nbOfAttributes);
 
     GLenum properties[] = { GL_NAME_LENGTH, GL_TYPE, GL_LOCATION };
 
     for(int i = 0; i < nbOfAttributes;i++)
     {
         GLint results[3];
-        OpenGLFunction::functions().glGetProgramResourceiv(_programId, GL_PROGRAM_INPUT, i, 4, properties, 3, NULL, results);
+        OpenGLFunction::functions().glGetProgramResourceiv(_programId,
+                                                           GL_PROGRAM_INPUT,
+                                                           i, 4, properties, 3,
+                                                           NULL, results);
         GLint nameBufSize = results[0] + 1;
         char* name = new char[nameBufSize];
-        OpenGLFunction::functions().glGetProgramResourceName(_programId, GL_PROGRAM_INPUT, i, nameBufSize, NULL, name);
+        OpenGLFunction::functions().glGetProgramResourceName(_programId,
+                                                             GL_PROGRAM_INPUT,
+                                                             i, nameBufSize,
+                                                             NULL, name);
         std::cout << results[2] << " " << name << " " << results[1] << std::endl;
         _attributeLocations[std::string(name)] = results[2];
         delete [] name;
@@ -157,32 +167,49 @@ void ShaderProgram::storeAttributeLocation()
 
 int ShaderProgram::getUniformLocation(const std::string &name) const
 {
-    return _uniformLocations.at(name);
+    auto it = _uniformLocations.find(name);
+    if(it != _uniformLocations.end())
+        return it->second;
+    else
+    {
+        return -1;
+    }
 }
 
 int ShaderProgram::getAttributeLocation(const std::string &name) const
 {
-    return _attributeLocations.at(name);
+    auto it = _attributeLocations.find(name);
+    if(it != _attributeLocations.end())
+        return it->second;
+    else
+    {
+        std::cout << "Error : could not find attribute location of : " << name << std::endl;
+        return -1;
+    }
 }
 
 void ShaderProgram::setUniform(const std::string &name, const glm::vec3 &v)
 {
-    OpenGLFunction::functions().glUniform3fv(_uniformLocations[name], 1, glm::value_ptr(v));
+    OpenGLFunction::functions().glUniform3fv(_uniformLocations[name], 1,
+                                             glm::value_ptr(v));
 }
 
 void ShaderProgram::setUniform(const std::string &name, const glm::vec4 &v)
 {
-    OpenGLFunction::functions().glUniform4fv(_uniformLocations[name], 1, glm::value_ptr(v));
+    OpenGLFunction::functions().glUniform4fv(_uniformLocations[name], 1,
+                                             glm::value_ptr(v));
 }
 
 void ShaderProgram::setUniform(const std::string &name, const glm::mat3 &m)
 {
-    OpenGLFunction::functions().glUniformMatrix3fv(_uniformLocations[name], 1, GL_FALSE, glm::value_ptr(m));
+    OpenGLFunction::functions().glUniformMatrix3fv(_uniformLocations[name], 1,
+                                                   GL_FALSE, glm::value_ptr(m));
 }
 
 void ShaderProgram::setUniform(const std::string &name, const glm::mat4 &m)
 {
-    OpenGLFunction::functions().glUniformMatrix4fv(_uniformLocations[name], 1, GL_FALSE, glm::value_ptr(m));
+    OpenGLFunction::functions().glUniformMatrix4fv(_uniformLocations[name], 1,
+                                                   GL_FALSE, glm::value_ptr(m));
 }
 
 void ShaderProgram::setUniform(const std::string &name, float val)
@@ -207,8 +234,15 @@ void ShaderProgram::setUniform(const std::string &name, bool val)
 
 void ShaderProgram::bindTexture(int type, const std::string &name, GLuint id)
 {
-    OpenGLFunction::functions().glUniform1i(_uniformLocations[name], GL_TEXTURE0);
-    OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0);
+    if(type == GL_TEXTURE_2D)
+    {
+        OpenGLFunction::functions().glUniform1i(_uniformLocations[name], 0);
+        OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0 + 0);
+    }else if(type == GL_TEXTURE_CUBE_MAP)
+    {
+        OpenGLFunction::functions().glUniform1i(_uniformLocations[name], 2);
+        OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0 + 2);
+    }
     OpenGLFunction::functions().glBindTexture(type, id);
 }
 

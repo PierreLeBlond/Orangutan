@@ -1,6 +1,7 @@
 
 #include "scene/objectnode.h"
 
+#include <iostream>
 
 ObjectNode::ObjectNode()
 {

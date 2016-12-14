@@ -4,7 +4,7 @@ Transform::Transform() : _translationMatrix(1.0f),
 _xScaleMatrix(1.0f), _yScaleMatrix(1.0f), _zScaleMatrix(1.0f),
 _xRotationMatrix(1.0f), _yRotationMatrix(1.0f), _zRotationMatrix(1.0f),
     _xAngle(0.0f), _yAngle(0.0f), _zAngle(0.0f),
-    _xScale(0.0f), _yScale(0.0f), _zScale(0.0f),
+    _xScale(1.0f), _yScale(1.0f), _zScale(1.0f),
     _xPos(0.0f), _yPos(0.0f), _zPos(0.0f),
     _xRotationSpeed(0.0f), _yRotationSpeed(0.0f), _zRotationSpeed(0.0f),
     _xTranslationSpeed(0.0f), _yTranslationSpeed(0.0f), _zTranslationSpeed(0.0f),
@@ -40,18 +40,21 @@ void Transform::setModelMatrix(const glm::core::type::mat4 &modelMatrix)
 void Transform::setXRotation(float angle)
 {
     _xRotationMatrix = glm::rotate(float(angle), glm::vec3(1.0f, 0.0f, 0.0f));
+    update();
     _xAngle = angle;
 }
 
 void Transform::setYRotation(float angle)
 {
     _yRotationMatrix = glm::rotate(float(angle), glm::vec3(0.0f, 1.0f, 0.0f));
+    update();
     _yAngle = angle;
 }
 
 void Transform::setZRotation(float angle)
 {
     _zRotationMatrix = glm::rotate(float(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+    update();
     _zAngle = angle;
 }
 
@@ -59,53 +62,62 @@ void Transform::setXScale(float scale)
 {
     _xScaleMatrix = glm::scale(glm::vec3(float(scale), 1.0f, 1.0f));
     _xScale = scale;
+    update();
 }
 
 void Transform::setYScale(float scale)
 {
     _yScaleMatrix = glm::scale(glm::vec3(1.0f, float(scale), 1.0f));
     _yScale = scale;
+    update();
 }
 
 void Transform::setZScale(float scale)
 {
     _zScaleMatrix = glm::scale(glm::vec3(1.0f, 1.0f, float(scale)));
     _zScale = scale;
+    update();
 }
 
 void Transform::setXPos(int x)
 {
     _xPos = x;
+    update();
     _translationMatrix = glm::translate(_xPos, _yPos, _zPos);
 }
 
 void Transform::setXPos(float x)
 {
     _xPos = x;
+    update();
     _translationMatrix = glm::translate(_xPos, _yPos, _zPos);
 }
 
 void Transform::setYPos(int y)
 {
     _yPos = y;
+    update();
     _translationMatrix = glm::translate(_xPos, _yPos, _zPos);
 }
 
 void Transform::setYPos(float y)
 {
     _yPos = y;
+    update();
     _translationMatrix = glm::translate(_xPos, _yPos, _zPos);
 }
 
 void Transform::setZPos(int z)
 {
     _zPos = z;
+    update();
     _translationMatrix = glm::translate(_xPos, _yPos, _zPos);
 }
 
 void Transform::setZPos(float z)
 {
     _zPos = z;
+    update();
     _translationMatrix = glm::translate(_xPos, _yPos, _zPos);
 }
 
@@ -115,6 +127,7 @@ void Transform::setTranslationMatrix(const glm::core::type::vec3 &vector)
     _yPos = vector.y;
     _zPos = vector.z;
     _translationMatrix = glm::translate(_xPos, _yPos, _zPos);
+    update();
 }
 
 void Transform::move(int direction)
@@ -148,6 +161,7 @@ void Transform::move(int direction)
     default:
         break;
     }
+    update();
 }
 
 void Transform::animate()

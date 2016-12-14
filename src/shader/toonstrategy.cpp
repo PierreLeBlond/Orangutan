@@ -1,4 +1,5 @@
 #include "shader/toonstrategy.h"
+#include "core/debug.h"
 
 ToonStrategy::ToonStrategy(const std::string& name) : ShaderStrategy(name)
 {
@@ -31,10 +32,10 @@ void ToonStrategy::setUniform(const Material &material,
     _shaderProgram->setUniform("viewMatrix", viewMatrix);
     _shaderProgram->setUniform("modelMatrix", modelMatrix);
 
-    _shaderProgram->setUniform("Ks", material.getKs());
+    //_shaderProgram->setUniform("Ks", material.getKs());
     _shaderProgram->setUniform("Ka", material.getKa()*glm::vec3(((float)material.getColor().red())/255.0, ((float)material.getColor().green())/255.0, ((float)material.getColor().blue())/255.0));
     _shaderProgram->setUniform("Kd", material.getKd()*glm::vec3(((float)material.getColor().red())/255.0, ((float)material.getColor().green())/255.0, ((float)material.getColor().blue())/255.0));
-    _shaderProgram->setUniform("Ns", material.getNs());
+    //_shaderProgram->setUniform("Ns", material.getNs());
 
     int nbAmbiantLights = 0;
     int nbPonctualLights = 0;

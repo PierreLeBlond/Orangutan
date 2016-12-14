@@ -1,14 +1,19 @@
 #include "core/texture.h"
+#include "core/debug.h"
+
+#include <iostream>
 
 Texture::Texture() : _id(-1) {
 }
 
 Texture::Texture(std::string path, std::string name) : Asset(name), _id(-1), _path(path), _type(GL_TEXTURE_2D), _image(QString::fromStdString(_path)) {
     OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0 + 0);
-    OpenGLFunction::functions().glEnable(GL_TEXTURE_2D);
+    //OpenGLFunction::functions().glEnable(GL_TEXTURE_2D);
+
 
     OpenGLFunction::functions().glGenTextures(1, &_id);
     OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, _id);
+    std::cout << "Bind texture to id " << _id << std::endl;
 
     _image = _image.convertToFormat(QImage::Format_ARGB32);
     _image = _image.rgbSwapped();
@@ -33,7 +38,7 @@ void Texture::load(std::string path) {
     _type = GL_TEXTURE_2D;
 
     OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0 + 0);
-    OpenGLFunction::functions().glEnable(GL_TEXTURE_2D);
+    //OpenGLFunction::functions().glEnable(GL_TEXTURE_2D);
 
     OpenGLFunction::functions().glGenTextures(1, &_id);
     OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, _id);
@@ -51,7 +56,7 @@ void Texture::loadCubeMap(std::string path_prefix)
     _type = GL_TEXTURE_CUBE_MAP;
 
     OpenGLFunction::functions().glActiveTexture(GL_TEXTURE0 + 0);
-    OpenGLFunction::functions().glEnable(GL_TEXTURE_CUBE_MAP);
+    //OpenGLFunction::functions().glEnable(GL_TEXTURE_CUBE_MAP);
 
     OpenGLFunction::functions().glGenTextures(1, &_id);
     OpenGLFunction::functions().glBindTexture(GL_TEXTURE_CUBE_MAP, _id);

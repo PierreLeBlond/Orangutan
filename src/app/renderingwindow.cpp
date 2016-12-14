@@ -8,11 +8,6 @@ RenderingWindow::RenderingWindow(QWidget* parent, GLuint width, GLuint height) :
     _screenSpaceShader.push_back(false);
     _screenSpaceShader.push_back(false);
 
-    std::function<void()> drawCall = [&](){
-        _scene->draw();
-    };
-
-    setDrawCall(drawCall);
 }
 
 RenderingWindow::~RenderingWindow()
@@ -115,6 +110,13 @@ void RenderingWindow::resizeGL(int width, int height)
 void RenderingWindow::setScene(std::shared_ptr<Scene> scene){
     _scene = scene;
     _asAScene = true;
+
+    std::function<void()> drawCall = [&](){
+        if(_scene->isReady())
+            _scene->draw();
+    };
+
+    setDrawCall(drawCall);
 }
 
 void RenderingWindow::setAssetsStorage(std::shared_ptr<AssetsStorage> assetsStorage){
@@ -148,13 +150,13 @@ void RenderingWindow::keyPressEvent(QKeyEvent *keyEvent)
     case Qt::Key_Left:
         _scene->getCurrentCamera()->yaw(-10.0f);
         break;
-    case Qt::Key_Z:
+    case Qt::Key_W:
         _scene->getCurrentCamera()->move(FORWARD);
         break;
     case Qt::Key_S:
        _scene->getCurrentCamera()->move(BACKWARD);
         break;
-    case Qt::Key_Q:
+    case Qt::Key_A:
         _scene->getCurrentCamera()->move(LEFT);
         break;
     case Qt::Key_D:

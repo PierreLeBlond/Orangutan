@@ -17,7 +17,7 @@ Shader::Shader(GLenum type)
     _shaderId = OpenGLFunction::functions().glCreateShader(type);
     if(0==_shaderId)
     {
-        std::cerr << "Error creating shader type " << type << std::endl;
+        std::cout << "Error creating shader type " << type << std::endl;
         exit(EXIT_FAILURE);
     }
     else

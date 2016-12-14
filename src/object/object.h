@@ -20,7 +20,7 @@ public:
     const Transform&            getTransform() const;
     void                        setTransform(const Transform& transform);
 
-    void                        draw(const glm::mat4& viewMatrix,
+    virtual void                draw(const glm::mat4& viewMatrix,
                                         const glm::mat4& projectionMatrix,
                                         const std::vector<std::shared_ptr<Light>> &lights);
 

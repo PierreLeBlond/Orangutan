@@ -31,7 +31,7 @@ void GaussianBlurFilterStrategy::initAttribute(){
     _shaderProgram->startUseProgram();
 
     _vertexAttribute = _shaderProgram->getAttributeLocation("vertex_in");
-    _textureCoordinateAttribute = _shaderProgram->getAttributeLocation("uv_in");
+    //_textureCoordinateAttribute = _shaderProgram->getAttributeLocation("uv_in");
 
     _shaderProgram->stopUseProgram();
 }

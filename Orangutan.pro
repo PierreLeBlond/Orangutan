@@ -14,6 +14,7 @@ TEMPLATE = app
 CONFIG += console
 
 CONFIG += c++11
+CONFIG += debug
 
 # App sources
 SOURCES += src/app/main.cpp \
@@ -30,7 +31,8 @@ SOURCES += src/core/shader.cpp \
         src/core/opengl.cpp \
         src/core/qtrenderer.cpp \
         src/core/shaderprogram.cpp \
-        src/core/vao.cpp
+        src/core/vao.cpp \
+        src/core/debug.cpp
 
 # Physics sources
 SOURCES += src/physics/transformable.cpp
@@ -77,7 +79,8 @@ HEADERS += src/core/shader.h \
         src/core/opengl.h \
         src/core/qtrenderer.h \
         src/core/shaderprogram.h \
-        src/core/vao.h
+        src/core/vao.h \
+        src/core/debug.h
 
 # Physics headers
 HEADERS += src/physics/transformable.h
@@ -110,8 +113,10 @@ HEADERS += src/shader/edgefilterstrategy.h \
 HEADERS  += src/util/util.h
 
 INCLUDEPATH += $$PWD/ext/GLM \
-            src
-
+               src
 
 DISTFILES += \
     src/style/style.qss \
+
+MOC_DIR = tmp
+OBJECTS_DIR = tmp

@@ -56,6 +56,4 @@ private:
     float*                                  _normals;
     float*                                  _texCoords;
     unsigned int*                           _indexes;
-
-
 };

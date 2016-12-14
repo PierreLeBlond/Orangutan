@@ -18,7 +18,16 @@ public:
                                 Camera(unsigned int width, unsigned int height);
                                 ~Camera();
 
-    glm::mat4                   computeView(const glm::vec3& scenePosVect);
+    /**
+     * brief Update the view matrix, model Matrix and skybox matrix
+     */
+    void                        update();
+
+    void                        setSkybox(std::shared_ptr<Object> skyBox);
+    std::shared_ptr<
+        const Object>           getSkybox() const;
+
+    const glm::mat4&            getView() const;
     glm::mat4                   computeRotateViewMatrix() const;
     glm::mat4                   computePerspectiveProjection() const;
     glm::mat4                   computeOrthoProjection() const;
@@ -68,6 +77,8 @@ private:
     glm::vec3                   _pitch;
 
     glm::mat4                   _rotateMatrix;
+
+    std::shared_ptr<Object>     _skyBox;
 };
 
 #endif // CAMERA_H
