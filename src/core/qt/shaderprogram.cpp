@@ -4,7 +4,7 @@
 #include "core/qt/context.h"
 
 ShaderProgram::ShaderProgram() : _programId(Context::functions().glCreateProgram()),
-_vertShader(GL_VERTEX_SHADER), _geomShader(GL_GEOMETRY_SHADER), _fragShader(GL_FRAGMENT_SHADER)
+_vertShader(O_VERTEX), _geomShader(O_GEOMETRY), _fragShader(O_FRAGMENT)
 {
 }
 
@@ -232,18 +232,19 @@ void ShaderProgram::setUniform(const std::string &name, bool val)
     Context::functions().glUniform1i(_uniformLocations[name], val);
 }
 
-void ShaderProgram::bindTexture(int type, const std::string &name, GLuint id)
+void ShaderProgram::bindTexture(int type, const std::string &name, unsigned int id)
 {
-    if(type == GL_TEXTURE_2D)
+    if(type == O_TEXTURE_2D)
     {
         Context::functions().glUniform1i(_uniformLocations[name], 0);
         Context::functions().glActiveTexture(GL_TEXTURE0 + 0);
-    }else if(type == GL_TEXTURE_CUBE_MAP)
+        Context::functions().glBindTexture(GL_TEXTURE_2D, id);
+    }else if(type == O_TEXTURE_CUBE_MAP)
     {
         Context::functions().glUniform1i(_uniformLocations[name], 2);
         Context::functions().glActiveTexture(GL_TEXTURE0 + 2);
+        Context::functions().glBindTexture(GL_TEXTURE_CUBE_MAP, id);
     }
-    Context::functions().glBindTexture(type, id);
 }
 
 void ShaderProgram::unbindTexture()

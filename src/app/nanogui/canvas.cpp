@@ -5,6 +5,16 @@ Canvasable(width, height),
 nanogui::GLCanvas(parent)
 {
     resize(width, height);
+
+    nanogui::Color color(0.3f, 0.0f, 0.56f, 1.0f);
+
+    setBackgroundColor(color);
+
+    glEnable(GL_DEPTH_TEST);
+
+    glDisable(GL_BLEND);
+
+    glEnable(GL_CULL_FACE);
 }
 
 Canvas::~Canvas()
@@ -25,7 +35,7 @@ void Canvas::drawGL()
 
 bool Canvas::keyboardEvent(int key, int scancode, int action, int modifiers)
 {
-    if(action == GLFW_PRESS)
+    if(action == GLFW_PRESS || action == GLFW_REPEAT)
     {
         switch(key)
         {

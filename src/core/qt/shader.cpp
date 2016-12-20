@@ -38,9 +38,26 @@ std::string Shader::readFileSrc(std::string filename)
     return std::string(content);
 }
 
-Shader::Shader(GLenum type)
+Shader::Shader(unsigned int type)
 {
-    _shaderId = Context::functions().glCreateShader(type);
+    GLenum t;
+    switch(type)
+    {
+      case O_VERTEX:
+        t = GL_VERTEX_SHADER;
+        break;
+      case O_FRAGMENT:
+        t = GL_FRAGMENT_SHADER;
+        break;
+      case O_GEOMETRY:
+        t = GL_GEOMETRY_SHADER;
+        break;
+      default:
+        t = GL_VERTEX_SHADER;
+        break;
+    }
+
+    _shaderId = Context::functions().glCreateShader(t);
     if(0==_shaderId)
     {
         std::cout << "Error creating shader type " << type << std::endl;

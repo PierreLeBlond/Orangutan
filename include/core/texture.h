@@ -18,7 +18,7 @@ public:
 
     unsigned int                getId() const;
 
-    void                        load(std::string path);
+    bool                        load(std::string path);
 
     void                        loadCubeMap(std::string path_prefix);
 

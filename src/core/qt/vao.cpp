@@ -74,9 +74,23 @@ void Vao::fillBuffer(unsigned int bufferId, size_t size, const void* data)
 
 void Vao::attribBuffer(unsigned int bufferId, int attributeLocation, int size, int type)
 {
+    unsigned int t;
+    switch(type)
+    {
+      case O_FLOAT:
+        t = GL_FLOAT;
+        break;
+      case O_INT:
+        t = GL_INT;
+        break;
+      default:
+        t = GL_FLOAT;
+        break;
+    }
+
     Context::functions().glEnableVertexAttribArray(attributeLocation);
     Context::functions().glBindBuffer(GL_ARRAY_BUFFER, bufferId);
-    Context::functions().glVertexAttribPointer(attributeLocation, size, type, GL_FALSE, 0, BUFFER_OFFSET(0));
+    Context::functions().glVertexAttribPointer(attributeLocation, size, t, GL_FALSE, 0, BUFFER_OFFSET(0));
     Context::functions().glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

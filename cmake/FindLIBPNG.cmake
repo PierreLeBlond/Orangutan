@@ -1,0 +1,48 @@
+#
+# Try to find LIBPNG library and include path.
+# Once done this will define
+#
+# LIBPNG_FOUND
+# LIBPNG_INCLUDE_DIR
+# LIBPNG_INCLUDE_DIRS
+# LIBPNG_LIBRARY
+# LIBPNG_LIB_DIRS
+
+if(NOT LIBPNG_FOUND)
+
+    FIND_PATH(LIBPNG_INCLUDE_DIR png.h
+  PATHS
+  ${PROJECT_SOURCE_DIR}/ext/libpng/include/
+  /usr/local/include/
+    NO_DEFAULT_PATH
+    )
+
+FIND_PATH( LIBPNG_LIB_DIRS libpng16.so
+  PATHS
+  ${PROJECT_SOURCE_DIR}/ext/libpng/lib/
+  /usr/local/lib/
+    NO_DEFAULT_PATH
+    )
+
+FIND_LIBRARY( LIBPNG_LIBRARY NAMES png16
+  PATHS
+  ${PROJECT_SOURCE_DIR}/ext/libpng/lib/
+  /usr/local/lib/
+    NO_DEFAULT_PATH
+    )
+
+SET(LIBPNG_FOUND "NO")
+
+IF (LIBPNG_INCLUDE_DIR AND LIBPNG_LIBRARY)
+    SET(LIBPNG_FOUND "YES")
+ENDIF (LIBPNG_INCLUDE_DIR AND LIBPNG_LIBRARY)
+
+if(LIBPNG_FOUND)
+  message(STATUS "Found LIBPNG: ${LIBPNG_INCLUDE_DIR}")
+else(LIBPNG_FOUND)
+  if (NOT LIBPNG_FIND_QUIETLY)
+    message(FATAL_ERROR "could NOT find LIBPNG")
+  endif (NOT LIBPNG_FIND_QUIETLY)
+endif(LIBPNG_FOUND)
+
+endif(NOT LIBPNG_FOUND)

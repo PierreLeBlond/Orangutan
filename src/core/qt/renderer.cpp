@@ -76,8 +76,8 @@ void Renderer::resizeGL(int width, int height)
     Context::functions().glViewport(0, 0, width, height);
 }
 
-void Renderer::createFrameBuffer(GLuint *fboHandle, GLuint *depthBuf,
-                                 GLuint *renderTex1, GLuint *renderTex2,
+void Renderer::createFrameBuffer(unsigned int *fboHandle, unsigned int *depthBuf,
+                                 unsigned int *renderTex1, unsigned int *renderTex2,
                                  int width, int height)
 {
     Context::functions().glGenFramebuffers(1, fboHandle);

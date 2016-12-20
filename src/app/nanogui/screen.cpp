@@ -59,6 +59,7 @@ bool Screen::keyboardEvent(int key, int scancode, int action, int modifiers)
             break;
         }
     }
+    _canvas->keyboardEvent(key, scancode, action, modifiers);
     return false;
 }
 

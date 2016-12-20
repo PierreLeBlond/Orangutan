@@ -5,7 +5,7 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -Wall")
 
-option(USE_QT "Enable qt context" ON)
+option(USE_QT "Enable qt context" OFF)
 
 # Make include root directory
 include_directories(${PROJECT_SOURCE_DIR}/include)
@@ -27,6 +27,10 @@ else()
     include_directories( ${GLFW_INCLUDE_DIR} )
     find_package(NANOGUI REQUIRED)
     include_directories( ${NANOGUI_INCLUDE_DIRS} )
+    find_package(SOIL REQUIRED)
+    include_directories( ${SOIL_INCLUDE_DIR} )
+    find_package(LIBPNG REQUIRED)
+    include_directories( ${LIBPNG_INCLUDE_DIR} )
 endif()
 
 set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -lGL -lm -lGLU")
@@ -35,12 +39,16 @@ link_directories(
     /usr/local/lib
     /opt/local/lib
     ${NANOGUI_LIB_DIRS}
+    ${SOIL_LIB_DIRS}
+    ${LIBPNG_LIB_DIRS}
     )
 
 set(LIBS
     ${LIBS}
     ${OPENGL_LIBRARIES}
     ${NANOGUI_LIBRARY}
+    ${SOIL_LIBRARY}
+    ${LIBPNG_LIBRARY}
     )
 
 file (GLOB APPSRCFILES src/app/*.cpp)

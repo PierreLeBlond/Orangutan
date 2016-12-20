@@ -8,7 +8,7 @@
 Texture::Texture() : _id(-1) {
 }
 
-Texture::Texture(std::string path, std::string name) : Asset(name), _id(-1), _path(path), _type(GL_TEXTURE_2D) {
+Texture::Texture(std::string path, std::string name) : Asset(name), _id(-1), _path(path), _type(O_TEXTURE_2D) {
     Context::functions().glActiveTexture(GL_TEXTURE0 + 0);
     //Context::functions().glEnable(GL_TEXTURE_2D);
 
@@ -32,7 +32,7 @@ GLuint Texture::getId() const {
     return _id;
 }
 
-void Texture::load(std::string path) {
+bool Texture::load(std::string path) {
 
     _path = path;
 
@@ -56,6 +56,8 @@ void Texture::load(std::string path) {
     Context::functions().glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
     Context::functions().glBindTexture(GL_TEXTURE_2D, 0);
+
+    return true;
 }
 
 void Texture::loadCubeMap(std::string path_prefix)
