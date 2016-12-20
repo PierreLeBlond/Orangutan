@@ -5,6 +5,9 @@
 #include <QTimer>
 #include <QDebug>
 #include <QObject>
+#include <QKeyEvent>
+#include <QMouseEvent>
+#include <QWheelEvent>
 
 #include "scene/scene.h"
 #include "app/canvasable.h"
@@ -12,11 +15,11 @@
 
 class Canvas : public Canvasable, public Renderer
 {
-    Q_OBJECT
 public:
-                                                Canvas(QWidget *parent = 0, GLuint width = 600, GLuint height = 400);
+                                                Canvas(QWidget *parent = 0, unsigned int width = 600, unsigned int height = 400);
     virtual                                     ~Canvas();
 
+    virtual void                                resizeGL(int width, int height);
     virtual void                                resize(int width, int height);
 
     void                                        keyPressEvent(QKeyEvent *keyEvent);

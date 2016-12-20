@@ -16,7 +16,6 @@
 #include "core/texture.h"
 
 #include <vector>
-#include <QImage>
 
 
 class AssetsFactory

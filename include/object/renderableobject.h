@@ -31,29 +31,29 @@ public:
     const Material&                     getMaterial() const;
     void                                setMaterial(const Material& material);
 
-    GLuint                              getIdOfPositionArray()  const;
-    GLuint                              getIdOfIndexArray()     const;
-    GLuint                              getIdOfNormalArray()    const;
-    GLuint                              getIdOfTexCoordArray()  const;
+    unsigned int                        getIdOfPositionArray()  const;
+    unsigned int                        getIdOfIndexArray()     const;
+    unsigned int                        getIdOfNormalArray()    const;
+    unsigned int                        getIdOfTexCoordArray()  const;
 
     const Vao&                          getVao()                const;
 
     //inherit from Materialable
     virtual std::shared_ptr<
                 const ShaderStrategy>   getShaderStrategy() const;
-    virtual GLuint                      getColorMapId() const;
-    virtual GLuint                      getCubeMapId() const;
-    virtual GLuint                      getRenderMapId() const;
+    virtual unsigned int                getColorMapId() const;
+    virtual unsigned int                getCubeMapId() const;
+    virtual unsigned int                getRenderMapId() const;
 
-    virtual QColor                      getColor() const;
+    virtual glm::vec4                   getColor() const;
     virtual glm::vec3                   getKd() const;
     virtual glm::vec3                   getKa() const;
     virtual glm::vec3                   getKs() const;
-    virtual GLfloat                     getTr() const;
-    virtual GLfloat                     getNs() const;
-    virtual GLfloat                     getRefractionRatio() const;
-    virtual GLfloat                     getReflexionPercentage() const;
-    virtual GLfloat                     getEdgeFilterThreshold() const;
+    virtual float                       getTr() const;
+    virtual float                       getNs() const;
+    virtual float                       getRefractionRatio() const;
+    virtual float                       getReflexionPercentage() const;
+    virtual float                       getEdgeFilterThreshold() const;
 
     virtual void                        setShaderStrategy(
                                             std::shared_ptr<const ShaderStrategy> shaderStrategy);
@@ -61,11 +61,11 @@ public:
     virtual void                        setMtl(glm::vec3 Kd, glm::vec3 Ks,
                                             glm::vec3 Ka, float Ns, float Tr);
 
-    virtual void                        setColorMapId(GLuint id);
-    virtual void                        setCubeMapId(GLuint id);
-    virtual void                        setRenderMapId(GLuint id);
+    virtual void                        setColorMapId(unsigned int id);
+    virtual void                        setCubeMapId(unsigned int id);
+    virtual void                        setRenderMapId(unsigned int id);
 
-    virtual void                        setColor(QColor color);
+    virtual void                        setColor(glm::vec4 color);
     virtual void                        setKd(float Kd);
     virtual void                        setKa(float Ka);
     virtual void                        setKs(float Ks);
@@ -79,10 +79,10 @@ private:
 
     Material                            _material;
 
-    GLuint                              _idOfPositionArray;
-    GLuint                              _idOfIndexArray;
-    GLuint                              _idOfNormalArray;
-    GLuint                              _idOfTexCoordArray;
+    unsigned int                        _idOfPositionArray;
+    unsigned int                        _idOfIndexArray;
+    unsigned int                        _idOfNormalArray;
+    unsigned int                        _idOfTexCoordArray;
 
     Vao                                 _vao;
 };

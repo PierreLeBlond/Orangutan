@@ -18,39 +18,30 @@ find_package(GLM REQUIRED)
 include_directories( ${GLM_INCLUDE_DIR} )
 
 if(USE_QT)
-    #find_package(QT REQUIRED)
-    #include_directories( ${QT_INCLUDE_DIR} )
-    #include_directories( ${QT_CORE_INCLUDE_DIR} )
-    #include_directories( ${QT_GUI_INCLUDE_DIR} )
-    #include_directories( ${QT_OPENGL_INCLUDE_DIR} )
-    set(CMAKE_AUTOMOC ON)
     set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-    find_package(Qt5Widgets REQUIRED)
-    find_package(Qt5OpenGL REQUIRED)
-    #set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -lGL -lm ${Qt5Core_EXECUTABLE_COMPILE_FLAGS}, ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}, ${Qt5Gui_EXECUTABLE_COMPILE_FLAGS}, ${Qt5OpenGL_EXECUTABLE_COMPILE_FLAGS}")
-# Call moc automatically when needed
+    set(CMAKE_AUTOMOC ON)
 else()
+    find_package(EIGEN REQUIRED)
+    include_directories( "${EIGEN_INCLUDE_DIR}" )
+    find_package(GLFW REQUIRED)
+    include_directories( ${GLFW_INCLUDE_DIR} )
     find_package(NANOGUI REQUIRED)
-    include_directories( ${NANOGUI_INCLUDE_DIR} )
+    include_directories( ${NANOGUI_INCLUDE_DIRS} )
 endif()
 
 set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -lGL -lm -lGLU")
 
 link_directories(
-  /usr/local/lib
-  /opt/local/lib
-  ${NANOGUI_LIB_DIRS}
-  ${QT_LIB_DIRS}
-)
+    /usr/local/lib
+    /opt/local/lib
+    ${NANOGUI_LIB_DIRS}
+    )
 
 set(LIBS
     ${LIBS}
     ${OPENGL_LIBRARIES}
-    ${NANOGUI_LIBRARIES}
-    ${QT_LIBRARIES}
+    ${NANOGUI_LIBRARY}
     )
-
 
 file (GLOB APPSRCFILES src/app/*.cpp)
 file (GLOB CORESRCFILES src/core/*.cpp)
@@ -74,8 +65,27 @@ if(USE_QT)
         ${QTAPPSRCFILES}
         ${QTCORESRCFILES}
         )
+else()
+    file (GLOB NANOGUIAPPSRCFILES src/app/nanogui/*.cpp)
+    file (GLOB NANOGUICORESRCFILES src/core/nanogui/*.cpp)
+    set(SRCFILES
+        ${APPSRCFILES}
+        ${CORESRCFILES}
+        ${OBJECTSRCFILES}
+        ${PHYSICSSRCFILES}
+        ${SCENESRCFILES}
+        ${SHADERSRCFILES}
+        ${UTILSRCFILES}
+        ${NANOGUIAPPSRCFILES}
+        ${NANOGUICORESRCFILES}
+        )
 endif()
 
-add_executable(orangutan ${SRCFILES})
-QT5_USE_MODULES(orangutan Widgets OpenGL)
-target_link_libraries(orangutan ${LIBS})
+add_executable(Orangutan ${SRCFILES})
+
+if(USE_QT)
+    find_package(Qt5Widgets REQUIRED)
+    find_package(Qt5OpenGL REQUIRED)
+    QT5_USE_MODULES(Orangutan Core Gui Widgets OpenGL)
+endif()
+target_link_libraries(Orangutan ${LIBS})

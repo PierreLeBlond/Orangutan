@@ -15,8 +15,6 @@
 
 class Screen : public Screenable, public QMainWindow
 {
-    Q_OBJECT
-
 public:
                                                 Screen(QWidget *parent = 0);
     virtual                                     ~Screen();

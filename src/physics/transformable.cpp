@@ -1,5 +1,7 @@
 #include "physics/transformable.h"
 
+#include <chrono>
+
 Transform::Transform() : _translationMatrix(1.0f),
 _xScaleMatrix(1.0f), _yScaleMatrix(1.0f), _zScaleMatrix(1.0f),
 _xRotationMatrix(1.0f), _yRotationMatrix(1.0f), _zRotationMatrix(1.0f),
@@ -168,35 +170,35 @@ void Transform::animate()
 {
     if(_xRotationSpeed != 0)
     {
-        int angle = (int)(((QTime::currentTime().msecsSinceStartOfDay()))*(_xRotationSpeed/1000.0f)) % 360;
+        int angle = (int)(((std::chrono::system_clock::now().time_since_epoch().count()))*(_xRotationSpeed/1000.0f)) % 360;
         setXRotation(angle);
     }
     if(_yRotationSpeed != 0)
     {
-        int angle = (int)(((QTime::currentTime().msecsSinceStartOfDay()))*(_yRotationSpeed/1000.0f)) % 360;
+        int angle = (int)(((std::chrono::system_clock::now().time_since_epoch().count()))*(_yRotationSpeed/1000.0f)) % 360;
         setYRotation(angle);
     }
     if(_zRotationSpeed != 0)
     {
-        int angle = (int)(((QTime::currentTime().msecsSinceStartOfDay()))*(_zRotationSpeed/1000.0f)) % 360;
+        int angle = (int)(((std::chrono::system_clock::now().time_since_epoch().count()))*(_zRotationSpeed/1000.0f)) % 360;
         setZRotation(angle);
     }
 
     if(_xTranslationSpeed != 0)
     {
-        int angle = (int)(((QTime::currentTime().msecsSinceStartOfDay()))*(_xTranslationSpeed/1000)) % 360;
+        int angle = (int)(((std::chrono::system_clock::now().time_since_epoch().count()))*(_xTranslationSpeed/1000)) % 360;
         setYPos((float)(_xTranslationSmallAxe*cos(((float)angle)*2.0f*3.14f/360.0f)));
         setZPos((float)(_xTranslationBigAxe*sin(((float)angle)*2.0f*3.14f/360.0f)));
     }
     if(_yTranslationSpeed != 0)
     {
-        int angle = (int)(((QTime::currentTime().msecsSinceStartOfDay()))*(_yTranslationSpeed/1000)) % 360;
+        int angle = (int)(((std::chrono::system_clock::now().time_since_epoch().count()))*(_yTranslationSpeed/1000)) % 360;
         setZPos((float)(_yTranslationSmallAxe*cos(((float)angle)*2.0f*3.14f/360.0f)));
         setXPos((float)(_yTranslationBigAxe*sin(((float)angle)*2.0f*3.14f/360.0f)));
     }
     if(_zTranslationSpeed != 0)
     {
-        int angle = (int)(((QTime::currentTime().msecsSinceStartOfDay()))*(_zTranslationSpeed/1000)) % 360;
+        int angle = (int)(((std::chrono::system_clock::now().time_since_epoch().count()))*(_zTranslationSpeed/1000)) % 360;
         setXPos((float)(_zTranslationSmallAxe*cos(((float)angle)*2.0f*3.14f/360.0f)));
         setYPos((float)(_zTranslationBigAxe*sin(((float)angle)*2.0f*3.14f/360.0f)));
     }

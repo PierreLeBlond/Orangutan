@@ -39,9 +39,7 @@ void GaussianBlurFilterStrategy::initAttribute(){
 void GaussianBlurFilterStrategy::setUniform(const Material &material, const glm::core::type::mat4 &modelMatrix, const glm::core::type::mat4 &viewMatrix, const glm::core::type::mat4 &projectionMatrix, const std::vector<std::shared_ptr<Light> > &lights) const{
     _shaderProgram->startUseProgram();
 
-    _shaderProgram->setUniform("projectionMatrix", projectionMatrix);
-    _shaderProgram->setUniform("viewMatrix", viewMatrix);
-    _shaderProgram->setUniform("modelMatrix", modelMatrix);
+    setMatrixUniform(modelMatrix, viewMatrix, projectionMatrix);
 
     _shaderProgram->bindTexture(O_TEXTURE_2D, "renderTex", material.getRenderMapId());
 

@@ -11,7 +11,7 @@ class Screenable
 {
   public:
                                                     Screenable();
-    virtual                                         ~Screenable() = 0;
+    virtual                                         ~Screenable();
 
     virtual void                                    init();
 

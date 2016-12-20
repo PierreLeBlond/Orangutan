@@ -12,8 +12,7 @@
 #include <QTimer>
 
 class Renderer : public QOpenGLWidget,
-public Rendererable
-{
+public Rendererable {
     Q_OBJECT
 public:
                                                 Renderer(QWidget *parent = 0);
@@ -23,12 +22,15 @@ public:
     virtual void                                start();
     virtual void                                stop();
 
-    //Mandatory
     virtual void                                initializeGL();
-    virtual void                                resizeGL(int width, int height);
-    virtual void                                paintGL();
 
-    virtual void                                createFrameBuffer(unsigned int *fboHandle, unsigned int *depthBuf, unsigned int *renderTex1, unsigned int *renderTex2, int width, int height);
+    virtual void                                resize(int width, int height);
+
+    //Mandatory
+    void                                        paintGL();
+
+
+    virtual void                                createFrameBuffer(unsigned int *fboHandle, unsigned int *depthBuf, unsigned int *renderTex1, unsigned int *renderTex2);
 
 private slots:
     void                                        timeOutSlot();

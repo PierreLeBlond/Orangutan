@@ -1,6 +1,5 @@
 #ifndef RENDERERABLE_H
 #define RENDERERABLE_H
-#include <GL/gl.h>
 
 #include <iostream>
 #include <functional>
@@ -8,25 +7,21 @@
 class Rendererable
 {
 public:
-                                                Rendererable(GLuint width = 600, GLuint height = 400);
-    virtual                                     ~Rendererable() = 0;
+                                                Rendererable();
+    virtual                                     ~Rendererable();
 
     virtual void                                init() = 0;
     virtual void                                start() = 0;
     virtual void                                stop() = 0;
 
-    virtual void                                resize(int width, int height);
+    virtual void                                resize(int width, int height) = 0;
 
     void                                        setDrawCall(std::function<void()> drawCall);
 
-    virtual void                                createFrameBuffer(GLuint *fboHandle, GLuint *depthBuf, GLuint *renderTex1, GLuint *renderTex2) = 0;
+    virtual void                                createFrameBuffer(unsigned int *fboHandle, unsigned int *depthBuf, unsigned int *renderTex1, unsigned int *renderTex2, int width, int height) = 0;
 
 protected:
-    int                                         _width;
-    int                                         _height;
-
     std::function<void()>                       _drawCall;
 };
-
 
 #endif // RENDERERABLE_H

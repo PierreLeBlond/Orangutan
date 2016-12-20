@@ -3,8 +3,6 @@
 
 #include "object/object.h"
 
-#include <QColor>
-
 enum light_type {
     AMBIANT = 0, DIRECTION, PONCTUAL, SPOT
 };
@@ -15,7 +13,7 @@ public:
                                     Light();
     virtual                         ~Light();
 
-    const QColor&                   getColor() const;
+    const glm::vec4&                getColor() const;
     const glm::vec3&                getLd() const;
     const glm::vec3&                getLa() const;
     const glm::vec3&                getLs() const;
@@ -25,7 +23,7 @@ public:
 
     bool                            getState() const;
 
-    void                            setColor(const QColor &color);
+    void                            setColor(const glm::vec4 &color);
     void                            setLd(float Ld);
     void                            setLa(float La);
     void                            setLs(float Ls);
@@ -35,7 +33,7 @@ public:
     void                            setState(bool state);
 
 private:
-    QColor                          _color;
+    glm::vec4                       _color;
     glm::vec3                       _Ld;
     glm::vec3                       _La;
     glm::vec3                       _Ls;

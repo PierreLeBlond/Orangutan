@@ -9,9 +9,6 @@
 #include "scene/assetsstorage.h"
 
 #include <memory>
-#include <QKeyEvent>
-#include <QMouseEvent>
-#include <QWheelEvent>
 
 
 class Scene
@@ -37,8 +34,8 @@ private:
 
     std::shared_ptr<AssetsStorage>              _assetsStorage;
 
-    GLuint                                      _width;
-    GLuint                                      _height;
+    unsigned int                                _width;
+    unsigned int                                _height;
 
     std::shared_ptr<Object>                     _currentObject;
     std::shared_ptr<Camera>                     _currentCamera;

@@ -14,18 +14,24 @@ RenderableObject::~RenderableObject()
 
 void RenderableObject::createVertexArrayObject()
 {
-        _vao.bind();
+    _vao.bind();
+    if(_material.getShaderStrategy()->getVertexAttribute() > -1)
         _vao.attribBuffer(_idOfPositionArray, _material.getShaderStrategy()->getVertexAttribute(), 3, O_FLOAT);
+    if(_material.getShaderStrategy()->getNormalAttribute() > -1)
         _vao.attribBuffer(_idOfNormalArray, _material.getShaderStrategy()->getNormalAttribute(), 3, O_FLOAT);
+    if(_material.getShaderStrategy()->getTextureCoordinateAttribute() > -1)
         _vao.attribBuffer(_idOfTexCoordArray, _material.getShaderStrategy()->getTextureCoordinateAttribute(), 2, O_FLOAT);
 
-        _vao.unbind();
+    _vao.unbind();
 }
 
 void RenderableObject::fillInVBO()
 {
+    if(_material.getShaderStrategy()->getVertexAttribute() > -1)
         _vao.fillBuffer(_idOfPositionArray, 3 * _mesh->getNumberOfVertices() * sizeof(float), _mesh->getPositions());
+    if(_material.getShaderStrategy()->getNormalAttribute() > -1)
         _vao.fillBuffer(_idOfNormalArray, 3 * _mesh->getNumberOfNormals() * sizeof(float), _mesh->getNormals());
+    if(_material.getShaderStrategy()->getTextureCoordinateAttribute() > -1)
         _vao.fillBuffer(_idOfTexCoordArray, 2 * _mesh->getNumberOfTexCoords() * sizeof(float), _mesh->getTexCoords());
         _vao.fillIndexBuffer(3 * _mesh->getNumberOfTriangles() * sizeof(int), _mesh->getIndexes());
         _vao.setNumberOfElements(3 * _mesh->getNumberOfTriangles());
@@ -49,19 +55,19 @@ const Material& RenderableObject::getMaterial() const{
     return _material;
 }
 
-GLuint RenderableObject::getIdOfPositionArray() const{
+unsigned int RenderableObject::getIdOfPositionArray() const{
     return _idOfPositionArray;
 }
 
-GLuint RenderableObject::getIdOfIndexArray() const{
+unsigned int RenderableObject::getIdOfIndexArray() const{
     return _idOfIndexArray;
 }
 
-GLuint RenderableObject::getIdOfNormalArray() const{
+unsigned int RenderableObject::getIdOfNormalArray() const{
     return _idOfNormalArray;
 }
 
-GLuint RenderableObject::getIdOfTexCoordArray() const{
+unsigned int RenderableObject::getIdOfTexCoordArray() const{
     return _idOfTexCoordArray;
 }
 
@@ -74,19 +80,19 @@ std::shared_ptr<const ShaderStrategy> RenderableObject::getShaderStrategy() cons
     return _material.getShaderStrategy();
 }
 
-GLuint RenderableObject::getColorMapId() const{
+unsigned int RenderableObject::getColorMapId() const{
     return _material.getColorMapId();
 }
 
-GLuint RenderableObject::getCubeMapId() const{
+unsigned int RenderableObject::getCubeMapId() const{
     return _material.getCubeMapId();
 }
 
-GLuint RenderableObject::getRenderMapId() const{
+unsigned int RenderableObject::getRenderMapId() const{
     return _material.getRenderMapId();
 }
 
-QColor RenderableObject::getColor() const{
+glm::vec4 RenderableObject::getColor() const{
     return _material.getColor();
 }
 
@@ -102,23 +108,23 @@ glm::vec3 RenderableObject::getKs() const{
     return _material.getKs();
 }
 
-GLfloat RenderableObject::getTr() const{
+float RenderableObject::getTr() const{
     return _material.getTr();
 }
 
-GLfloat RenderableObject::getNs() const{
+float RenderableObject::getNs() const{
     return _material.getNs();
 }
 
-GLfloat RenderableObject::getRefractionRatio() const{
+float RenderableObject::getRefractionRatio() const{
     return _material.getRefractionRatio();
 }
 
-GLfloat RenderableObject::getReflexionPercentage() const{
+float RenderableObject::getReflexionPercentage() const{
     return _material.getReflexionPercentage();
 }
 
-GLfloat RenderableObject::getEdgeFilterThreshold() const{
+float RenderableObject::getEdgeFilterThreshold() const{
     return _material.getEdgeFilterThreshold();
 }
 
@@ -130,19 +136,19 @@ void RenderableObject::setMtl(glm::vec3 Kd, glm::vec3 Ks, glm::vec3 Ka, float Ns
     _material.setMtl(Kd, Ks, Ka, Ns, Tr);
 }
 
-void RenderableObject::setColorMapId(GLuint id){
+void RenderableObject::setColorMapId(unsigned int id){
     _material.setColorMapId(id);
 }
 
-void RenderableObject::setCubeMapId(GLuint id){
+void RenderableObject::setCubeMapId(unsigned int id){
     _material.setCubeMapId(id);
 }
 
-void RenderableObject::setRenderMapId(GLuint id){
+void RenderableObject::setRenderMapId(unsigned int id){
     _material.setRenderMapId(id);
 }
 
-void RenderableObject::setColor(QColor color){
+void RenderableObject::setColor(glm::vec4 color){
     _material.setColor(color);
 }
 

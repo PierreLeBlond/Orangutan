@@ -1,5 +1,4 @@
 #pragma once
-#include <GL/gl.h>
 
 #include <iostream>
 #include <map>
@@ -13,6 +12,7 @@
 
 #include "util/util.h"
 #include "core/shader.h"
+#include "core/texture.h"
 
 #define MAX_LIGHT 8
 
@@ -22,7 +22,7 @@ public:
                                                 ShaderProgram();
                                                 ~ShaderProgram();
 
-    inline GLuint                               getProgramId()      const { return _programId; }
+    inline unsigned int                         getProgramId()      const { return _programId; }
     inline const Shader&                        getVertexShader()   const { return _vertShader; }
     inline const Shader&                        getGeometryShader() const { return _geomShader; }
     inline const Shader&                        getFragmentShader() const { return _fragShader; }
@@ -78,11 +78,11 @@ public:
     void                                        setUniform(const std::string &name, unsigned int val);
     void                                        setUniform(const std::string &name, bool val);
 
-    void                                        bindTexture(int type, const std::string &name, GLuint id);
+    void                                        bindTexture(int type, const std::string &name, unsigned int id);
     void                                        unbindTexture();
 
 private:
-    GLuint                                      _programId;
+    unsigned int                                _programId;
 
     Shader                                      _vertShader;
     Shader                                      _geomShader;

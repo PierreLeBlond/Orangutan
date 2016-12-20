@@ -19,7 +19,7 @@ Scene::Scene(std::shared_ptr<AssetsStorage> assetsStorage, int width, int height
     //_sceneTree->addChild(cameraNode);
 
     //CubeMap
-    std::shared_ptr<RenderableObject> cubeMap = std::make_shared<RenderableObject>();
+    /*std::shared_ptr<RenderableObject> cubeMap = std::make_shared<RenderableObject>();
     cubeMap->setMesh(_assetsStorage->getMesh(1));
     cubeMap->setCubeMapId(_assetsStorage->getCubeMapTexture(1)->getId());
     cubeMap->setShaderStrategy(_assetsStorage->getShaderStrategy(1));
@@ -35,7 +35,7 @@ Scene::Scene(std::shared_ptr<AssetsStorage> assetsStorage, int width, int height
     cubeMapNode->setZScale(100);
     cubeMapNode->setObject(cubeMap);
 
-    _sceneTree->addChild(cubeMapNode);
+    _sceneTree->addChild(cubeMapNode);*/
 
     std::shared_ptr<RenderableObject> object = std::make_shared<RenderableObject>();
     _currentObject = object;

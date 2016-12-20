@@ -32,8 +32,8 @@ vector<std::shared_ptr<Material>> Parseur::parseMtl(const char* filename) {
         glm::vec3 Ks = glm::vec3(1.0f);
         glm::vec3 Ka = glm::vec3(1.0f);
         int illum = 1;
-        GLfloat Ns = 1.0f;
-        GLfloat Tr = 1.0f;
+        float Ns = 1.0f;
+        float Tr = 1.0f;
 
 
         char textureName[256];
@@ -135,7 +135,7 @@ vector<std::shared_ptr<Mesh>> Parseur::parseObj(const char* filename) {
         std::vector<glm::vec3> duplicatedNormals;
         std::vector<glm::vec2> duplicatedTexCoords;
 
-        std::vector<GLuint> faceIndexes;
+        std::vector<unsigned int> faceIndexes;
 
         char name[256];
 

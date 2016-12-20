@@ -1,8 +1,13 @@
 #pragma once
-#include <GL/gl.h>
 
 #include <string>
 #include <iostream>
+
+enum Shader_type {
+    O_VERTEX,
+    O_FRAGMENT,
+    O_GEOMETRY
+};
 
 /**
  * @class Shader
@@ -17,7 +22,7 @@ public:
      *
      * Constructeur de la classe Shader
      */
-    Shader(GLenum type);
+    Shader(unsigned int type);
 
     /**
      * @brief ~Shader
@@ -42,10 +47,10 @@ public:
      *
      * Assesseur de l'attribut _shaderId.
      */
-    GLuint shaderId() const			{ return _shaderId; }
+    unsigned int shaderId() const                { return _shaderId; }
 
 private:
-    GLuint _shaderId;/**< L'id du shader*/
+    unsigned int _shaderId;/**< L'id du shader*/
 
     /**
      * @brief readFileSrc

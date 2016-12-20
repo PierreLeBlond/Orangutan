@@ -1,8 +1,6 @@
 #ifndef TRANSFORMABLE_H
 #define TRANSFORMABLE_H
 
-#include <QTime>
-
 #include "util/util.h"
 
 #include "glm/glm.hpp"

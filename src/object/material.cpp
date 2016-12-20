@@ -4,7 +4,7 @@
 Material::Material(std::string name) : Asset(name),
 _colorMapId(-1), _cubeMapId(-1), _renderMapId(-1),
     _Kd(glm::vec3(1.0f)), _Ks(glm::vec3(1.0f)), _Ka(glm::vec3(1.0f)),
-    _illum(1), _Ns(10.0f), _Tr(1.0f), _color(QColor::fromRgb(255, 255, 255)),
+    _illum(1), _Ns(10.0f), _Tr(1.0f), _color(glm::vec4(255.0f, 255.0f, 255.0f, 255.0f)),
     _refractionRatio(0), _reflexionPercentage(100), _edgeFilterThreshold(0.7)
 {
 }
@@ -25,7 +25,7 @@ unsigned int  Material::getRenderMapId() const{
     return _renderMapId;
 }
 
-QColor Material::getColor() const{
+glm::vec4 Material::getColor() const{
     return _color;
 }
 
@@ -85,7 +85,7 @@ void Material::setRenderMapId(unsigned int  id){
     _renderMapId = id;
 }
 
-void Material::setColor(QColor color){
+void Material::setColor(glm::vec4 color){
     _color = color;
 }
 

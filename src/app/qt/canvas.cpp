@@ -1,10 +1,10 @@
 #include "app/qt/canvas.h"
 
-Canvas::Canvas(QWidget* parent, GLuint width, GLuint height) :
+Canvas::Canvas(QWidget* parent, unsigned int width, unsigned int height) :
 Canvasable(width, height),
-Renderer(parent, width, height)
+Renderer(parent)
 {
-    resize(width, height);
+    //resize(width, height);
 }
 
 Canvas::~Canvas()
@@ -88,6 +88,12 @@ Canvas::~Canvas()
         OpenGLFunction::functions().glBindTexture(GL_TEXTURE_2D, 0);
     }
 }*/
+
+void Canvas::resizeGL(int width, int height)
+{
+    Canvasable::resize(width, height);
+    Renderer::resizeGL(width, height);
+}
 
 void Canvas::resize(int width, int height)
 {

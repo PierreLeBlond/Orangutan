@@ -3,23 +3,25 @@
 #include "core/debug.h"
 #include "core/qt/context.h"
 #include <iostream>
+#include <QImage>
 
 Texture::Texture() : _id(-1) {
 }
 
-Texture::Texture(std::string path, std::string name) : Asset(name), _id(-1), _path(path), _type(GL_TEXTURE_2D), _image(QString::fromStdString(_path)) {
+Texture::Texture(std::string path, std::string name) : Asset(name), _id(-1), _path(path), _type(GL_TEXTURE_2D) {
     Context::functions().glActiveTexture(GL_TEXTURE0 + 0);
     //Context::functions().glEnable(GL_TEXTURE_2D);
-
 
     Context::functions().glGenTextures(1, &_id);
     Context::functions().glBindTexture(GL_TEXTURE_2D, _id);
     std::cout << "Bind texture to id " << _id << std::endl;
 
-    _image = _image.convertToFormat(QImage::Format_ARGB32);
-    _image = _image.rgbSwapped();
-    _image = _image.mirrored();
-    Context::functions().glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _image.width(), _image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, _image.bits());
+    QImage image(QString::fromStdString(_path));
+    image = image.convertToFormat(QImage::Format_ARGB32);
+    image = image.rgbSwapped();
+    image = image.mirrored();
+
+    Context::functions().glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
     Context::functions().glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     Context::functions().glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
@@ -34,7 +36,11 @@ void Texture::load(std::string path) {
 
     _path = path;
 
-    _image.load(QString::fromStdString(_path));
+    QImage image(QString::fromStdString(_path));
+
+    image = image.convertToFormat(QImage::Format_ARGB32);
+    image = image.rgbSwapped();
+    image = image.mirrored();
 
     _type = GL_TEXTURE_2D;
 
@@ -45,7 +51,7 @@ void Texture::load(std::string path) {
     Context::functions().glBindTexture(GL_TEXTURE_2D, _id);
 
     //_image = _image.convertToFormat(QImage::Format_ARGB32);
-    Context::functions().glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _image.width(), _image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, _image.bits());
+    Context::functions().glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
     Context::functions().glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     Context::functions().glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 

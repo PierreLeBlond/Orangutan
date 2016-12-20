@@ -1,6 +1,6 @@
 #include "app/canvasable.h"
 
-Canvasable::Canvasable(GLuint width, GLuint height) : _width(width), _height(height),
+Canvasable::Canvasable(unsigned int width, unsigned int height) : _width(width), _height(height),
  _asAScene(false), _mouseIsPressed(false)
 {
     _screenSpaceShader.push_back(false);

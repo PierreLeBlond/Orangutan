@@ -3,14 +3,12 @@
 
 using namespace std;
 
-Rendererable::Rendererable(GLuint width, GLuint height) : _width(width), _height(height), _drawCall([](){})
+Rendererable::Rendererable() : _drawCall([](){})
 {
 }
 
-void Rendererable::resize(int width, int height)
+Rendererable::~Rendererable()
 {
-    _width = width;
-    _height = height;
 }
 
 void Rendererable::setDrawCall(std::function<void()> drawCall)

@@ -20,7 +20,7 @@ Screen::Screen(QWidget *parent) :
     QSurfaceFormat format;
     format.setDepthBufferSize(24);
     format.setMajorVersion(4);
-    format.setMinorVersion(3);
+    format.setMinorVersion(5);
     format.setSamples(4);
     format.setProfile(QSurfaceFormat::CoreProfile);
     QSurfaceFormat::setDefaultFormat(format);
@@ -37,6 +37,8 @@ Screen::Screen(QWidget *parent) :
     //Le context OpenGL necessite l'affichage du widget pour être créé,
     //un appel à InitializeGl est fait automatiquement, ainsi qu'à ResizeGL et PaintGL
     show();
+
+    init();
 
     /*_materialTool.setCurrentRenderable(_scene->getCurrentRenderable());
     _worldTool.setScene(_scene);
@@ -64,7 +66,6 @@ void Screen::init()
     _canvas->setAssetsStorage(_assetsStorage);
     _canvas->init();
     _canvas->start();
-
 }
 
 void Screen::keyPressEvent(QKeyEvent *keyEvent)

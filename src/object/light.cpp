@@ -1,7 +1,7 @@
 #include "object/light.h"
 
 Light::Light() : _Ld(glm::vec3(0.75f, 0.75f, 0.75f)), _La(glm::vec3(0.75f, 0.75f, 0.75f)), _Ls(glm::vec3(1.0f, 1.0f, 1.0f)),
-  _type(PONCTUAL), _state(true), _color(QColor::fromRgb(255, 255, 255)),
+  _type(PONCTUAL), _state(true), _color(glm::vec4(255, 255, 255, 255)),
   _cutoffAngle(30), _exponent(10)
 {
 }
@@ -10,7 +10,7 @@ Light::~Light()
 {
 }
 
-const QColor& Light::getColor() const{
+const glm::vec4& Light::getColor() const{
     return _color;
 }
 
@@ -42,7 +42,7 @@ bool Light::getState() const{
     return _state;
 }
 
-void Light::setColor(const QColor& color){
+void Light::setColor(const glm::vec4& color){
     _color = color;
 }
 

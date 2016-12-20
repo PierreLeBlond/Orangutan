@@ -6,8 +6,8 @@
 class Canvasable
 {
   public:
-                                                Canvasable(GLuint width = 600, GLuint height = 400);
-    virtual                                     ~Canvasable() = 0;
+                                                Canvasable(unsigned int width = 600, unsigned int height = 400);
+    virtual                                     ~Canvasable();
 
     virtual void                                resize(int width, int height);
 
@@ -21,8 +21,8 @@ class Canvasable
     std::shared_ptr<AssetsStorage>              _assetsStorage;
 
     std::shared_ptr<Scene>                      _scene;
-    GLuint                                      _width;
-    GLuint                                      _height;
+    unsigned int                                      _width;
+    unsigned int                                      _height;
 
     bool                                        _asAScene;
 

@@ -16,8 +16,8 @@ void SkyboxStrategy::initAttribute()
     _shaderProgram->startUseProgram();
 
     _vertexAttribute = _shaderProgram->getAttributeLocation("vertex_in");
-    _normalAttribute = _shaderProgram->getAttributeLocation("normal_in");
-    _textureCoordinateAttribute = _shaderProgram->getAttributeLocation("uv_in");
+    //_normalAttribute = _shaderProgram->getAttributeLocation("normal_in");
+    //_textureCoordinateAttribute = _shaderProgram->getAttributeLocation("uv_in");
 
     _shaderProgram->stopUseProgram();
 }
@@ -28,9 +28,7 @@ void SkyboxStrategy::setUniform(const Material& material,
 {
     _shaderProgram->startUseProgram();
 
-    _shaderProgram->setUniform("projectionMatrix", projectionMatrix);
-    _shaderProgram->setUniform("viewMatrix", viewMatrix);
-    _shaderProgram->setUniform("modelMatrix", modelMatrix);
+    setMatrixUniform(modelMatrix, viewMatrix, projectionMatrix);
 
     glm::vec3 La;
     for(unsigned int i = 0; i < lights.size();i++){

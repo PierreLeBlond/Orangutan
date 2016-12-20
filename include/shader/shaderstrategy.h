@@ -23,7 +23,19 @@ public:
                                         ShaderStrategy(const std::string& name = "unknown");
     virtual                             ~ShaderStrategy() = 0;
 
-    virtual void                        setUniform(const Material &material, const glm::mat4& modelMatrix, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, const std::vector<std::shared_ptr<Light>> &lights) const = 0;
+    virtual void                        setUniform(const Material &material,
+                                                   const glm::mat4& modelMatrix,
+                                                   const glm::mat4& viewMatrix,
+                                                   const glm::mat4& projectionMatrix,
+                                                   const std::vector<std::shared_ptr<Light>> &lights) const = 0;
+
+    void                                setLightUniform(const std::vector<std::shared_ptr<Light>> &lights,
+                                                        const glm::mat4& viewMatrix) const;
+    void                                setMatrixUniform(const glm::mat4& modelMatrix,
+                                                         const glm::mat4& viewMatrix,
+                                                         const glm::mat4& projectionMatrix) const;
+    void                                setMaterialUniform(const Material &material) const;
+
     virtual void                        initAttribute() = 0;
 
     void                                draw(const Vao &vao) const;
@@ -31,17 +43,17 @@ public:
     void                                setShaderProgram(std::shared_ptr<ShaderProgram> shaderProgram);
     std::shared_ptr<ShaderProgram>      getShaderProgram() const;
 
-    inline GLuint                       getVertexAttribute()            const { return _vertexAttribute; }
-    inline GLuint                       getNormalAttribute()            const { return _normalAttribute; }
-    inline GLuint                       getTextureCoordinateAttribute() const { return _textureCoordinateAttribute; }
+    inline int                          getVertexAttribute()            const { return _vertexAttribute; }
+    inline int                          getNormalAttribute()            const { return _normalAttribute; }
+    inline int                          getTextureCoordinateAttribute() const { return _textureCoordinateAttribute; }
 
 protected:
     std::shared_ptr<ShaderProgram>      _shaderProgram;
-    GLuint                              _programId;
+    unsigned int                        _programId;
 
-    GLuint                              _vertexAttribute;
-    GLuint                              _normalAttribute;
-    GLuint                              _textureCoordinateAttribute;
+    int                                 _vertexAttribute;
+    int                                 _normalAttribute;
+    int                                 _textureCoordinateAttribute;
 };
 
 
