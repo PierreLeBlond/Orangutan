@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "object/object.h"
+#include "scene/objectnode.h"
 
 #include "util/util.h"
 
@@ -12,7 +12,7 @@
 #include "glm/gtx/transform2.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-class Camera : public Object
+class Camera : public ObjectNode
 {
 public:
                                 Camera(unsigned int width, unsigned int height);
@@ -22,10 +22,6 @@ public:
      * brief Update the view matrix, model Matrix and skybox matrix
      */
     void                        update();
-
-    void                        setSkybox(std::shared_ptr<Object> skyBox);
-    std::shared_ptr<
-        const Object>           getSkybox() const;
 
     const glm::mat4&            getView() const;
     glm::mat4                   computeRotateViewMatrix() const;

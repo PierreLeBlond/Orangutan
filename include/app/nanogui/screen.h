@@ -1,12 +1,13 @@
 #include "app/screenable.h"
 #include "app/nanogui/canvas.h"
+#include "app/nanogui/maintool.h"
 
 #include <nanogui/screen.h>
 
 class Screen : public Screenable, public nanogui::Screen
 {
 public:
-                                                Screen(int width = 1000, int height = 750, std::string name = "Orangutan", bool b = false);
+                                                Screen(int width = 1200, int height = 600, std::string name = "Orangutan", bool b = false);
     virtual                                     ~Screen();
 
     virtual void                                init();
@@ -20,6 +21,7 @@ public:
 private:
 
     Canvas*                                     _canvas;
+    MainTool                                    _mainTool;
 };
 
 

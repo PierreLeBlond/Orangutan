@@ -10,7 +10,6 @@
 
 #include <memory>
 
-
 class Scene
 {
 public:
@@ -24,12 +23,14 @@ public:
     void                            setSkybox(int index);
 
     void                            draw() const;
+    void                            animate();
 
     void                            setIsReady(bool isReady);
     bool                            isReady() const;
 
     std::shared_ptr<Camera>         getCurrentCamera();
-    std::shared_ptr<Object>         getCurrentObject();
+    std::shared_ptr<
+        RenderableObject>           getCurrentRenderableObject();
 private:
 
     std::shared_ptr<AssetsStorage>              _assetsStorage;
@@ -37,7 +38,7 @@ private:
     unsigned int                                _width;
     unsigned int                                _height;
 
-    std::shared_ptr<Object>                     _currentObject;
+    std::shared_ptr<RenderableObject>           _currentRenderableObject;
     std::shared_ptr<Camera>                     _currentCamera;
     std::shared_ptr<RenderableObject>           _skyBox;
 

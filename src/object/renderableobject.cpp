@@ -39,7 +39,7 @@ void RenderableObject::fillInVBO()
 
 void RenderableObject::draw(const glm::core::type::mat4 &viewMatrix, const glm::core::type::mat4 &projectionMatrix, const std::vector<std::shared_ptr<Light> > &lights)
 {
-    _material.getShaderStrategy()->setUniform(_material, getTransform().getGlobalMatrix(), viewMatrix, projectionMatrix, lights);
+    _material.getShaderStrategy()->setUniform(_material, getTransform().getGlobalMatrix()*getTransform().getModelMatrix(), viewMatrix, projectionMatrix, lights);
     _material.getShaderStrategy()->draw(_vao);
 }
 

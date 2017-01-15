@@ -1,6 +1,9 @@
 #include "shader/skyboxstrategy.h"
 #include "core/debug.h"
 
+#include <iostream>
+#include "glm/gtx/string_cast.hpp"
+
 SkyboxStrategy::SkyboxStrategy(const std::string& name) : ShaderStrategy(name)
 {
 

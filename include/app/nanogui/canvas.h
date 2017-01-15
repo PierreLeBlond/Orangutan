@@ -11,7 +11,7 @@
 class Canvas : public Canvasable, public nanogui::GLCanvas, public Rendererable
 {
 public:
-                                                Canvas(nanogui::Widget *parent = 0, unsigned int width = 600, unsigned int height = 400);
+                                                Canvas(GLFWwindow *GLFWWindow, nanogui::Widget *parent = 0, unsigned int width = 600, unsigned int height = 400);
     virtual                                     ~Canvas();
 
     virtual void                                init(){};
@@ -32,6 +32,9 @@ public:
 
     virtual void                                createFrameBuffer(unsigned int *fboHandle, unsigned int *depthBuf, unsigned int *renderTex1, unsigned int *renderTex2, int width, int height);
 
+private:
+    Eigen::Vector2i                             _lastMousePosition;
+    GLFWwindow*                                 _GLFWWindow;
 };
 
 #endif // CANVAS_H

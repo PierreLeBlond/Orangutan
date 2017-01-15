@@ -1,6 +1,7 @@
 #include "physics/transformable.h"
 
 #include <chrono>
+#include <iostream>
 
 Transform::Transform() : _translationMatrix(1.0f),
 _xScaleMatrix(1.0f), _yScaleMatrix(1.0f), _zScaleMatrix(1.0f),
@@ -56,8 +57,8 @@ void Transform::setYRotation(float angle)
 void Transform::setZRotation(float angle)
 {
     _zRotationMatrix = glm::rotate(float(angle), glm::vec3(0.0f, 0.0f, 1.0f));
-    update();
     _zAngle = angle;
+    update();
 }
 
 void Transform::setXScale(float scale)
@@ -84,43 +85,43 @@ void Transform::setZScale(float scale)
 void Transform::setXPos(int x)
 {
     _xPos = x;
-    update();
     _translationMatrix = glm::translate(_xPos, _yPos, _zPos);
+    update();
 }
 
 void Transform::setXPos(float x)
 {
     _xPos = x;
-    update();
     _translationMatrix = glm::translate(_xPos, _yPos, _zPos);
+    update();
 }
 
 void Transform::setYPos(int y)
 {
     _yPos = y;
-    update();
     _translationMatrix = glm::translate(_xPos, _yPos, _zPos);
+    update();
 }
 
 void Transform::setYPos(float y)
 {
     _yPos = y;
-    update();
     _translationMatrix = glm::translate(_xPos, _yPos, _zPos);
+    update();
 }
 
 void Transform::setZPos(int z)
 {
     _zPos = z;
-    update();
     _translationMatrix = glm::translate(_xPos, _yPos, _zPos);
+    update();
 }
 
 void Transform::setZPos(float z)
 {
     _zPos = z;
-    update();
     _translationMatrix = glm::translate(_xPos, _yPos, _zPos);
+    update();
 }
 
 void Transform::setTranslationMatrix(const glm::core::type::vec3 &vector)
@@ -168,6 +169,8 @@ void Transform::move(int direction)
 
 void Transform::animate()
 {
+    long int t = std::chrono::system_clock::now().time_since_epoch().count();
+    t = t%1000000000;
     if(_xRotationSpeed != 0)
     {
         int angle = (int)(((std::chrono::system_clock::now().time_since_epoch().count()))*(_xRotationSpeed/1000.0f)) % 360;
@@ -192,7 +195,7 @@ void Transform::animate()
     }
     if(_yTranslationSpeed != 0)
     {
-        int angle = (int)(((std::chrono::system_clock::now().time_since_epoch().count()))*(_yTranslationSpeed/1000)) % 360;
+        int angle = ((t/1000000)*(int)_yTranslationSpeed) % 360;
         setZPos((float)(_yTranslationSmallAxe*cos(((float)angle)*2.0f*3.14f/360.0f)));
         setXPos((float)(_yTranslationBigAxe*sin(((float)angle)*2.0f*3.14f/360.0f)));
     }
@@ -202,6 +205,7 @@ void Transform::animate()
         setXPos((float)(_zTranslationSmallAxe*cos(((float)angle)*2.0f*3.14f/360.0f)));
         setYPos((float)(_zTranslationBigAxe*sin(((float)angle)*2.0f*3.14f/360.0f)));
     }
+    update();
 }
 
 void Transform::update()

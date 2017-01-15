@@ -89,7 +89,7 @@ void Texture::loadCubeMap(std::string path_prefix)
 {
     _type = O_TEXTURE_CUBE_MAP;
 
-    const char* suffixes[] = { "posx", "negx", "posy", "negy", "posz", "negz"};
+    const char* suffixes[] = { "posx", "negx", "posy", "negy", "negz", "posz"};
     std::string baseFileName = path_prefix;
     std::string extension = ".png";
 

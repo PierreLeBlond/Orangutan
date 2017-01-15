@@ -54,7 +54,8 @@ void ObjectNode::displayScene(const glm::mat4&  viewMatrix,
                             const glm::mat4& projectionMatrix,
                             const std::vector<std::shared_ptr<Light>>& lights)
 {
-    _object->draw(viewMatrix, projectionMatrix, lights);
+    if(_object)
+        _object->draw(viewMatrix, projectionMatrix, lights);
     for (unsigned int i = 0; i < _childs.size(); i++)
     {
         _childs[i]->displayScene(viewMatrix, projectionMatrix, lights);
@@ -64,7 +65,8 @@ void ObjectNode::displayScene(const glm::mat4&  viewMatrix,
 void ObjectNode::animateScene()
 {
      _transform.animate();
-     _object->animate();
+    if(_object)
+        _object->animate();
      for (unsigned int i = 0; i < _childs.size(); i++)
      {
          _childs[i]->animateScene();
@@ -73,13 +75,15 @@ void ObjectNode::animateScene()
 
 void ObjectNode::updateScene(const glm::mat4& mat)
 {
-    _object->update();
-    _transform.update();
+    /*if(_object)
+        _object->update();
+    _transform.update();*/
     setGlobalMatrix(mat);
-    _object->setGlobalMatrix(_transform.getGlobalMatrix());
+    if(_object)
+        _object->setGlobalMatrix(mat*_transform.getModelMatrix());
     for (unsigned int i = 0; i < _childs.size(); i++)
     {
-        _childs[i]->updateScene(_transform.getGlobalMatrix());
+        _childs[i]->updateScene(mat*_transform.getModelMatrix());
     }
 }
 

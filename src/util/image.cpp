@@ -62,7 +62,7 @@ void* Image::loadPNG(const char* filename, int* width, int* height)
                 // note that png is ordered top to
                 // bottom, but OpenGL expect it bottom to top
                 // so the order or swapped
-                memcpy(data+(row_bytes * (*height-1-i)), row_pointers[i], row_bytes);
+                std::memcpy(data+(row_bytes * (*height-1-i)), row_pointers[i], row_bytes);
             }
 
             /* Clean up after the read,

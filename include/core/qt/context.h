@@ -24,7 +24,7 @@ private:
     QOpenGLFunctions_4_5_Core*              _functionPointer;
 
                                             Context();
-                                            ~Context();
+                                            ~Context(){};
 };
 
 #endif // CONTEXT_H

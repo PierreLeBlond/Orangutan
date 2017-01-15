@@ -6,10 +6,6 @@ Context::Context()
 {
 }
 
-Context::~Context()
-{
-}
-
 Context& Context::instance(){
     return _instance;
 }

@@ -126,7 +126,6 @@ public:
     virtual void animate();
     virtual void update();
 
-
     virtual void setXRotationSpeed(float speed);
     virtual void setYRotationSpeed(float speed);
     virtual void setZRotationSpeed(float speed);

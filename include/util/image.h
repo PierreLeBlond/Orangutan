@@ -1,10 +1,8 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-#include "object/material.h"
-#include "object/mesh.h"
-
 #include <vector>
+#include <cstring>
 #include <memory>
 #include <sstream>
 #include <locale.h>

@@ -29,9 +29,10 @@ else()
     include_directories( ${NANOGUI_INCLUDE_DIRS} )
     find_package(SOIL REQUIRED)
     include_directories( ${SOIL_INCLUDE_DIR} )
-    find_package(LIBPNG REQUIRED)
-    include_directories( ${LIBPNG_INCLUDE_DIR} )
 endif()
+
+find_package(LIBPNG REQUIRED)
+include_directories( ${LIBPNG_INCLUDE_DIR} )
 
 set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -lGL -lm -lGLU")
 
