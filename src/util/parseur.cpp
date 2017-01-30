@@ -6,7 +6,7 @@ Parseur::Parseur() {
 }
 
 vector<std::shared_ptr<Material>> Parseur::parseMtl(const char* filename) {
-
+/*
     vector<std::shared_ptr<Material>> materials;
 
     std::cout << "-------------------------------------------------------" << std::endl;
@@ -110,6 +110,7 @@ vector<std::shared_ptr<Material>> Parseur::parseMtl(const char* filename) {
         mtlStream.close();
     }
     return materials;
+    */
 }
 
 vector<std::shared_ptr<Mesh>> Parseur::parseObj(const char* filename) {

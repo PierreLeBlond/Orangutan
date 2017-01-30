@@ -43,6 +43,7 @@ public:
     void                                        stopUseProgram() const;
 
     int                                         getUniformLocation(const std::string &name) const;
+    std::vector<std::string>                    getUniformsName() const;
     int                                         getAttributeLocation(const std::string &name) const;
 
     template<typename T>

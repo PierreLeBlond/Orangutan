@@ -25,9 +25,9 @@ public:
 
     const glm::mat4&            getView() const;
     glm::mat4                   computeRotateViewMatrix() const;
-    glm::mat4                   computePerspectiveProjection() const;
-    glm::mat4                   computeOrthoProjection() const;
-    glm::mat4                   computeProjection() const;
+    glm::mat4                   getPerspectiveProjection() const;
+    glm::mat4                   getOrthoProjection() const;
+    glm::mat4                   getProjection() const;
 
     void                        setPerspectiveProjectionMode();
     void                        setOrthoProjectionMode();

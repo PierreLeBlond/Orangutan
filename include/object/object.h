@@ -1,6 +1,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include "object/asset.h"
 #include "physics/transformable.h"
 
 #include <string>
@@ -9,14 +10,11 @@
 
 class Light;
 
-class Object : public Transformable
+class Object : public Asset, public Transformable
 {
 public:
                                 Object();
                                 Object(const std::string &name);
-
-    const std::string&          getName() const;
-    void                        setName(const std::string &name);
 
     const Transform&            getTransform() const;
     void                        setTransform(const Transform& transform);
@@ -69,7 +67,6 @@ public:
     virtual void                setZTranslationBigAxe(int l);
 
 private:
-    std::string                 _name;
     Transform                   _transform;
 };
 

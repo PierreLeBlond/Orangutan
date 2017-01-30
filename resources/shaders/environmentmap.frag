@@ -7,7 +7,7 @@ in vec3 normal_out;
 in vec3 ReflectDir_out;
 in vec3 RefractDir_out;
 
-uniform float reflexionPercentage;
+uniform float reflexionRatio;
 
 struct Lighting {
     vec4 position;
@@ -126,7 +126,7 @@ void main(void)
 
     color_out = mix(vec4((diffuseAndAmbient_all + spec_all)*refractColor.rgb, refractColor.a),
                     vec4((diffuseAndAmbient_all + spec_all)*reflectColor.rgb, reflectColor.a),
-                    reflexionPercentage);
+                    reflexionRatio);
 }
 
 

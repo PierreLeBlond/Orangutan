@@ -28,7 +28,10 @@ public:
     void                                     removeChild(std::shared_ptr<ObjectNode> node);
     void                                     removeNode(std::shared_ptr<ObjectNode> node);
 
-    void                                     displayScene(const glm::mat4& viewMatrix,
+    void                                     draw(const glm::mat4& viewMatrix,
+                                                const glm::mat4& projectionMatrix,
+                                                const std::vector<std::shared_ptr<Light>>& lights);
+    void                                     drawScene(const glm::mat4& viewMatrix,
                                                 const glm::mat4& projectionMatrix,
                                                 const std::vector<std::shared_ptr<Light>>& lights);
     void                                     updateScene(const glm::mat4& mat);

@@ -9,7 +9,6 @@
 #include "object/mesh.h"
 
 #include "shader/shaderstrategy.h"
-#include "shader/edgefilterstrategy.h"
 
 
 class AssetsStorage

@@ -38,15 +38,13 @@ void Canvas::drawGL()
 
 bool Canvas::keyboardEvent(int key, int scancode, int action, int modifiers)
 {
-    if(action == GLFW_PRESS && Keyboard::instance().getState(key) != KEYDOWN)
+    if(action == GLFW_PRESS /*&& Keyboard::instance().getState(key) != KEYDOWN*/)
     {
         Keyboard::instance().setState(key, KEYDOWN);
-        std::cout << "DOWN" << std::endl;
     }
     else if(action == GLFW_RELEASE)
     {
         Keyboard::instance().setState(key, KEYUP);
-        std::cout << "UP" << std::endl;
     }
     return true;
 }

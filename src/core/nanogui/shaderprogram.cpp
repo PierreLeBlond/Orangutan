@@ -176,6 +176,16 @@ int ShaderProgram::getUniformLocation(const std::string &name) const
     }
 }
 
+std::vector<std::string> ShaderProgram::getUniformsName() const
+{
+    std::vector<std::string> names;
+    for(auto const& p : _uniformLocations)
+    {
+        names.push_back(p.first);
+    }
+    return names;
+}
+
 int ShaderProgram::getAttributeLocation(const std::string &name) const
 {
     auto it = _attributeLocations.find(name);
@@ -190,26 +200,22 @@ int ShaderProgram::getAttributeLocation(const std::string &name) const
 
 void ShaderProgram::setUniform(const std::string &name, const glm::vec3 &v)
 {
-    glUniform3fv(_uniformLocations[name], 1,
-                                             glm::value_ptr(v));
+    glUniform3fv(_uniformLocations[name], 1, glm::value_ptr(v));
 }
 
 void ShaderProgram::setUniform(const std::string &name, const glm::vec4 &v)
 {
-    glUniform4fv(_uniformLocations[name], 1,
-                                             glm::value_ptr(v));
+    glUniform4fv(_uniformLocations[name], 1, glm::value_ptr(v));
 }
 
 void ShaderProgram::setUniform(const std::string &name, const glm::mat3 &m)
 {
-    glUniformMatrix3fv(_uniformLocations[name], 1,
-                                                   GL_FALSE, glm::value_ptr(m));
+    glUniformMatrix3fv(_uniformLocations[name], 1, GL_FALSE, glm::value_ptr(m));
 }
 
 void ShaderProgram::setUniform(const std::string &name, const glm::mat4 &m)
 {
-    glUniformMatrix4fv(_uniformLocations[name], 1,
-                                                   GL_FALSE, glm::value_ptr(m));
+    glUniformMatrix4fv(_uniformLocations[name], 1, GL_FALSE, glm::value_ptr(m));
 }
 
 void ShaderProgram::setUniform(const std::string &name, float val)

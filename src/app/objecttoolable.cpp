@@ -18,13 +18,7 @@ void ObjectToolable::setAssetsStorage(std::shared_ptr<AssetsStorage> assetsStora
     _assetsStorage = assetsStorage;
 }
 
-void ObjectToolable::setMap(int id)
-{
-    if(_object)
-        _object->setColorMapId(_assetsStorage->getTexture(id)->getId());
-}
-
-void ObjectToolable::setMaterial(int id)
+void ObjectToolable::setShaderStrategy(int id)
 {
     if(_object)
         _object->setShaderStrategy(_assetsStorage->getShaderStrategy(id));

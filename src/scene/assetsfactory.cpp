@@ -14,7 +14,6 @@ AssetsFactory::AssetsFactory(std::shared_ptr<AssetsStorage> assetsStorage) : _as
 
 AssetsFactory::~AssetsFactory()
 {
-
 }
 
 int AssetsFactory::importMeshs(const char *filename, const char *name){
@@ -49,45 +48,18 @@ int AssetsFactory::importShader(const char *vertexFilename, const char *fragment
     return _assetsStorage->getNumberOfShaderPrograms() - 1;
 }
 
-int AssetsFactory::createNewShaderStrategy(int type, int shaderId, const char *name){
+int AssetsFactory::createNewShaderStrategy(int shaderId, const char *name){
     int id = _assetsStorage->getNumberOfShaderStrategies();
     std::shared_ptr<ShaderStrategy> strategy;
-    switch(type){
-    case GOURAUD :
-        strategy = std::make_shared<GouraudStrategy>(name);
-        strategy->setShaderProgram(_assetsStorage->getShaderProgram(shaderId));
-        strategy->initAttribute();
-        _assetsStorage->addShaderStrategy(strategy);
-        break;
-    case TOON :
-        strategy = std::make_shared<ToonStrategy>(name);
-        strategy->setShaderProgram(_assetsStorage->getShaderProgram(shaderId));
-        strategy->initAttribute();
-        _assetsStorage->addShaderStrategy(strategy);
-       break;
-   case ENVIRONMENTMAP :
-        strategy = std::make_shared<EnvironmentStrategy>(name);
-        strategy->setShaderProgram(_assetsStorage->getShaderProgram(shaderId));
-        strategy->initAttribute();
-        strategy->setName(std::string(name));
-        _assetsStorage->addShaderStrategy(strategy);
-      break;
-    case SKYBOX :
-        strategy = std::make_shared<SkyboxStrategy>(name);
-        strategy->setShaderProgram(_assetsStorage->getShaderProgram(shaderId));
-        strategy->initAttribute();
-        strategy->setName(std::string(name));
-        _assetsStorage->addShaderStrategy(strategy);
-        break;
-    default :
-        id = -1;
-        break;
-    }
+    strategy = std::make_shared<ShaderStrategy>(name);
+    strategy->setShaderProgram(_assetsStorage->getShaderProgram(shaderId));
+    strategy->initAttribute();
+    _assetsStorage->addShaderStrategy(strategy);
     return id;
 }
 
 int AssetsFactory::createNewScreenSpaceShaderStrategy(int type, int shaderId, const char *name){
-    int id = _assetsStorage->getNumberOfScreenSpaceShaderStrategies();
+    /*int id = _assetsStorage->getNumberOfScreenSpaceShaderStrategies();
     std::shared_ptr<ShaderStrategy> strategy;
     switch(type){
     case EDGEFILTER :
@@ -105,5 +77,6 @@ int AssetsFactory::createNewScreenSpaceShaderStrategy(int type, int shaderId, co
         id = -1;
         break;
     }
-    return id;
+    return id;*/
+    return -1;
 }

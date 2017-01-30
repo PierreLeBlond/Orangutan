@@ -17,6 +17,8 @@ public:
                                 Texture();
 
     unsigned int                getId() const;
+    Image_type                  getType() const;
+    const std::string&          getPath() const;
 
     bool                        load(std::string path);
 
@@ -25,7 +27,7 @@ public:
 private:
     unsigned int                _id;
     std::string                 _path;
-    int                         _type;
+    Image_type                  _type;
 };
 
 #endif // TEXTURE_H

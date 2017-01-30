@@ -15,8 +15,7 @@ class ObjectToolable
     void                                        setCurrentObject(std::shared_ptr<RenderableObject> object);
     void                                        setAssetsStorage(std::shared_ptr<AssetsStorage> assetsStorage);
 
-    void                                        setMap(int id);
-    void                                        setMaterial(int id);
+    void                                        setShaderStrategy(int id);
 
   protected:
 

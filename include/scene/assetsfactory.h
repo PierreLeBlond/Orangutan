@@ -6,12 +6,7 @@
 #include "util/parseur.h"
 #include "util/util.h"
 
-#include "shader/gouraudstrategy.h"
-#include "shader/environmentstrategy.h"
-#include "shader/skyboxstrategy.h"
-#include "shader/toonstrategy.h"
-#include "shader/edgefilterstrategy.h"
-#include "shader/gaussianblurfilterstrategy.h"
+#include "shader/shaderstrategy.h"
 
 #include "core/texture.h"
 
@@ -28,7 +23,7 @@ public:
     int                                     importTexture(const char* filename, const char* name = "unknown");
     int                                     importCubeMapTexture(const char*filename, const char *name = "unknown");
     int                                     importShader(const char* vertexFilename, const char* fragmentFilename, const char* geometryFilename = "");
-    int                                     createNewShaderStrategy(int type, int shaderId, const char* name);
+    int                                     createNewShaderStrategy(int shaderId, const char* name);
     int                                     createNewScreenSpaceShaderStrategy(int type, int shaderId, const char* name);
 
 private:

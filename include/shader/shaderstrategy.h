@@ -3,6 +3,7 @@
 
 #include "core/shaderprogram.h"
 #include "core/vao.h"
+#include "core/debug.h"
 
 #include "object/material.h"
 #include "object/light.h"
@@ -14,6 +15,8 @@
 #include "glm/gtx/transform2.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+#include <algorithm>
+
 class Material;
 class ShaderProgram;
 
@@ -21,33 +24,46 @@ class ShaderStrategy : public Asset
 {
 public:
                                         ShaderStrategy(const std::string& name = "unknown");
-    virtual                             ~ShaderStrategy() = 0;
+    virtual                             ~ShaderStrategy();
 
-    virtual void                        setUniform(const Material &material,
+    template<class T>
+    void                                setUniform(const Uniform<T>& uniform) const
+    {
+        std::vector<std::string> names = _shaderProgram->getUniformsName();
+        auto it = std::find(names.begin(), names.end(), uniform.getName());
+        if(it != names.end())
+        {
+            _shaderProgram->setUniform(uniform.getName(), uniform.getValue());
+        }
+    }
+
+    void                                setUniforms(const Material &material,
                                                    const glm::mat4& modelMatrix,
                                                    const glm::mat4& viewMatrix,
                                                    const glm::mat4& projectionMatrix,
-                                                   const std::vector<std::shared_ptr<Light>> &lights) const = 0;
+                                                   const std::vector<std::shared_ptr<Light>> &lights) const;
 
-    void                                setLightUniform(const std::vector<std::shared_ptr<Light>> &lights,
+    void                                setLightUniforms(const std::vector<std::shared_ptr<Light>> &lights,
                                                         const glm::mat4& viewMatrix) const;
-    void                                setMatrixUniform(const glm::mat4& modelMatrix,
+    void                                setMatrixUniforms(const glm::mat4& modelMatrix,
                                                          const glm::mat4& viewMatrix,
                                                          const glm::mat4& projectionMatrix) const;
-    void                                setMaterialUniform(const Material &material) const;
+    void                                setMaterialUniforms(const Material &material) const;
 
-    virtual void                        initAttribute() = 0;
+    void                                initAttribute();
 
     void                                draw(const Vao &vao) const;
 
     void                                setShaderProgram(std::shared_ptr<ShaderProgram> shaderProgram);
-    std::shared_ptr<ShaderProgram>      getShaderProgram() const;
+    const std::shared_ptr<
+        ShaderProgram>&                 getShaderProgram() const;
 
-    inline int                          getVertexAttribute()            const { return _vertexAttribute; }
-    inline int                          getNormalAttribute()            const { return _normalAttribute; }
-    inline int                          getTextureCoordinateAttribute() const { return _textureCoordinateAttribute; }
+    int                                 getVertexAttribute()            const { return _vertexAttribute; }
+    int                                 getNormalAttribute()            const { return _normalAttribute; }
+    int                                 getTextureCoordinateAttribute() const { return _textureCoordinateAttribute; }
 
 protected:
+
     std::shared_ptr<ShaderProgram>      _shaderProgram;
     unsigned int                        _programId;
 

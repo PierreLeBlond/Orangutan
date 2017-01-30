@@ -8,18 +8,8 @@ Object::Object()
 {
 }
 
-Object::Object(const string &name) : _name(name)
+Object::Object(const string &name) : Asset(name)
 {
-}
-
-const std::string& Object::getName() const
-{
-    return _name;
-}
-
-void Object::setName(const std::string &name)
-{
-    _name = name;
 }
 
 const Transform& Object::getTransform() const

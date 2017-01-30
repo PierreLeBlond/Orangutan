@@ -6,14 +6,37 @@ ShaderStrategy::ShaderStrategy(const std::string& name) : Asset(name),
     _normalAttribute(-1),
     _textureCoordinateAttribute(-1)
 {
-
 }
 
 ShaderStrategy::~ShaderStrategy()
 {
 }
 
-void ShaderStrategy::setLightUniform(const std::vector<std::shared_ptr<Light>> &lights,
+void ShaderStrategy::initAttribute()
+{
+    _shaderProgram->startUseProgram();
+
+    _vertexAttribute = _shaderProgram->getAttributeLocation("vertex_in");
+    _normalAttribute = _shaderProgram->getAttributeLocation("normal_in");
+    _textureCoordinateAttribute = _shaderProgram->getAttributeLocation("uv_in");
+
+    _shaderProgram->stopUseProgram();
+}
+
+void ShaderStrategy::setUniforms(const Material &material,
+                                 const glm::mat4& modelMatrix,
+                                 const glm::mat4& viewMatrix,
+                                 const glm::mat4& projectionMatrix,
+                                 const std::vector<std::shared_ptr<Light>> &lights) const
+{
+    _shaderProgram->startUseProgram();
+    setMatrixUniforms(modelMatrix, viewMatrix, projectionMatrix);
+    setMaterialUniforms(material);
+    setLightUniforms(lights, viewMatrix);
+    _shaderProgram->stopUseProgram();
+}
+
+void ShaderStrategy::setLightUniforms(const std::vector<std::shared_ptr<Light>> &lights,
                                      const glm::mat4 &viewMatrix) const
 {
     int nbAmbiantLights = 0;
@@ -73,7 +96,7 @@ void ShaderStrategy::setLightUniform(const std::vector<std::shared_ptr<Light>> &
     _shaderProgram->setUniform("nbSpotLight", nbSpotLights);
 }
 
-void ShaderStrategy::setMatrixUniform(const glm::mat4& modelMatrix,
+void ShaderStrategy::setMatrixUniforms(const glm::mat4& modelMatrix,
                                       const glm::mat4& viewMatrix,
                                       const glm::mat4& projectionMatrix) const
 {
@@ -82,12 +105,58 @@ void ShaderStrategy::setMatrixUniform(const glm::mat4& modelMatrix,
     _shaderProgram->setUniform("modelMatrix", modelMatrix);
 }
 
-void ShaderStrategy::setMaterialUniform(const Material &material) const
+void ShaderStrategy::setMaterialUniforms(const Material &material) const
 {
-    _shaderProgram->setUniform("Ks", material.getKs());
-    _shaderProgram->setUniform("Ka", material.getKa()*glm::vec3(material.getColor())/255.0f);
-    _shaderProgram->setUniform("Kd", material.getKd()*glm::vec3(material.getColor())/255.0f);
-    _shaderProgram->setUniform("Ns", material.getNs());
+    for(const auto &uniform : material.get1fUniforms())
+    {
+        setUniform(uniform);
+    }
+
+    for(const auto &uniform : material.get1iUniforms())
+    {
+        setUniform(uniform);
+    }
+
+    for(const auto &uniform : material.get1uiUniforms())
+    {
+        setUniform(uniform);
+    }
+
+    for(const auto &uniform : material.get1bUniforms())
+    {
+        setUniform(uniform);
+    }
+
+    for(const auto &uniform : material.get3fUniforms())
+    {
+        setUniform(uniform);
+    }
+
+    for(const auto &uniform : material.get4fUniforms())
+    {
+        setUniform(uniform);
+    }
+
+    for(const auto &uniform : material.get3x3fUniforms())
+    {
+        setUniform(uniform);
+    }
+
+    for(const auto &uniform : material.get4x4fUniforms())
+    {
+        setUniform(uniform);
+    }
+
+    for(const auto &pair : material.getTextures())
+    {
+        if(pair.second->getId() != -1)
+            _shaderProgram->bindTexture(pair.second->getType(), pair.first, pair.second->getId());
+    }
+
+    for(const auto &subMaterial : material.getMaterials())
+    {
+        setMaterialUniforms(subMaterial);
+    }
 }
 
 void ShaderStrategy::setShaderProgram(std::shared_ptr<ShaderProgram> shaderProgram)
@@ -96,7 +165,7 @@ void ShaderStrategy::setShaderProgram(std::shared_ptr<ShaderProgram> shaderProgr
     _programId = _shaderProgram->getProgramId();
 }
 
-std::shared_ptr<ShaderProgram> ShaderStrategy::getShaderProgram() const
+const std::shared_ptr<ShaderProgram>& ShaderStrategy::getShaderProgram() const
 {
      return _shaderProgram;
 }
@@ -104,7 +173,6 @@ std::shared_ptr<ShaderProgram> ShaderStrategy::getShaderProgram() const
 void ShaderStrategy::draw(const Vao &vao) const
 {
     _shaderProgram->startUseProgram();
-
 
     vao.bind();
     vao.bindIndexBuffer();

@@ -28,6 +28,7 @@ class Vao
                                         Vao();
                                         ~Vao();
     unsigned int                        addBuffer();
+    void                                deleteBuffer(unsigned int id);
     void                                bind() const;
     void                                unbind() const;
 

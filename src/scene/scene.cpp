@@ -20,10 +20,11 @@ Scene::Scene(std::shared_ptr<AssetsStorage> assetsStorage, int width, int height
     //CubeMap
     std::shared_ptr<RenderableObject> cubeMap = std::make_shared<RenderableObject>();
     cubeMap->setMesh(_assetsStorage->getMesh(1));
-    cubeMap->setCubeMapId(_assetsStorage->getCubeMapTexture(1)->getId());
+    cubeMap->addMaterial(MaterialFactory::createSkyboxMaterial());
+    cubeMap->setTexture("cubeMap", _assetsStorage->getCubeMapTexture(1));
     cubeMap->setShaderStrategy(_assetsStorage->getShaderStrategy(1));
     cubeMap->fillInVBO();
-    cubeMap->createVertexArrayObject();
+    cubeMap->initVertexArrayObject();
 
     cubeMap->setXScale(10);
     cubeMap->setYScale(10);
@@ -39,13 +40,12 @@ Scene::Scene(std::shared_ptr<AssetsStorage> assetsStorage, int width, int height
     std::shared_ptr<RenderableObject> object = std::make_shared<RenderableObject>();
     _currentRenderableObject = object;
     object->setMesh(_assetsStorage->getMesh(4));
-
-    object->setShaderStrategy(_assetsStorage->getShaderStrategy(4));
-    object->setKa(0.5f);
-    object->setColorMapId(_assetsStorage->getTexture(2)->getId());
-    object->setCubeMapId(_assetsStorage->getCubeMapTexture(1)->getId());
+    object->setShaderStrategy(_assetsStorage->getShaderStrategy(0));
+    object->addMaterial(MaterialFactory::createDefaultMaterial());
+    object->setTexture("colorMap", _assetsStorage->getTexture(2));
+    object->setTexture("cubeMap", _assetsStorage->getCubeMapTexture(1));
     object->fillInVBO();
-    object->createVertexArrayObject();
+    object->initVertexArrayObject();
 
     auto node = std::make_shared<ObjectNode>();
     node->setObject(object);
@@ -74,7 +74,7 @@ Scene::Scene(std::shared_ptr<AssetsStorage> assetsStorage, int width, int height
 }
 
 void Scene::setSkybox(int index){
-    _skyBox->setCubeMapId(index);
+    //_skyBox->setCubeMapId(index);
     //TO DO : apply to each object of the scene
     //_currentObject->setCubeMapId(index);
 }
@@ -87,13 +87,11 @@ void Scene::setHeight(int height){
     _height = height;
 }
 
-void Scene::draw() const{
+void Scene::update()
+{
     _currentCamera->update();
     glm::mat4 mat(1.0);
     _sceneTree->updateScene(mat);
-    _sceneTree->displayScene(_currentCamera->getView(),
-                             _currentCamera->computePerspectiveProjection(),
-                             _lights);
 }
 
 void Scene::animate() {
@@ -162,10 +160,10 @@ void Scene::animate() {
                 //screenShot();
                 break;
               case 341:
-                getCurrentCamera()->roll(-10.0f);
+                //getCurrentCamera()->roll(-10.0f);
                 break;
               case 340:
-                getCurrentCamera()->roll(10.0f);
+                //getCurrentCamera()->roll(10.0f);
                 break;
               default:
                 break;
@@ -187,10 +185,22 @@ bool Scene::isReady() const{
     return _isReady;
 }
 
-std::shared_ptr<Camera> Scene::getCurrentCamera(){
+const std::shared_ptr<ObjectNode>& Scene::getSceneTree() const
+{
+    return _sceneTree;
+}
+
+const std::shared_ptr<Camera>& Scene::getCurrentCamera() const
+{
     return _currentCamera;
 }
 
-std::shared_ptr<RenderableObject> Scene::getCurrentRenderableObject(){
+const std::vector<std::shared_ptr<Light>>& Scene::getLights() const
+{
+    return _lights;
+}
+
+const std::shared_ptr<RenderableObject>& Scene::getCurrentRenderableObject() const
+{
     return _currentRenderableObject;
 }

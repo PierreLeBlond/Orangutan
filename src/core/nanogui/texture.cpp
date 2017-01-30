@@ -24,8 +24,16 @@ unsigned int Texture::getId() const {
     return _id;
 }
 
-bool Texture::load(std::string path) {
+Image_type Texture::getType() const {
+    return _type;
+}
 
+const std::string &Texture::getPath() const
+{
+    return _path;
+}
+
+bool Texture::load(std::string path) {
     _type = O_TEXTURE_2D;
 
     _path = path;

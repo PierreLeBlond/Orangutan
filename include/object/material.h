@@ -1,9 +1,8 @@
 #pragma once
 
 #include "core/texture.h"
-#include "object/object.h"
 #include "object/asset.h"
-#include "shader/shaderstrategy.h"
+#include "object/uniform.h"
 
 #include "glm/glm.hpp"
 
@@ -12,108 +11,193 @@
 #include "glm/gtx/transform2.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+#include <iostream>
 #include <vector>
+#include <map>
 #include <fstream>
 #include <memory>
 
-class ShaderStrategy;
-
-class Materialable
+class Material : public Asset
 {
 public:
 
-    virtual std::shared_ptr<const ShaderStrategy>   getShaderStrategy() const = 0;
-    virtual unsigned int                            getColorMapId() const = 0;
-    virtual unsigned int                            getCubeMapId() const = 0;
-    virtual unsigned int                            getRenderMapId() const = 0;
+                                    Material(const std::string &name = "untitled");
 
-    virtual glm::vec4                               getColor() const = 0;
-    virtual glm::vec3                               getKd() const = 0;
-    virtual glm::vec3                               getKa() const = 0;
-    virtual glm::vec3                               getKs() const = 0;
-    virtual float                                   getTr() const = 0;
-    virtual float                                   getNs() const = 0;
-    virtual float                                   getRefractionRatio() const = 0;
-    virtual float                                   getReflexionPercentage() const = 0;
-    virtual float                                   getEdgeFilterThreshold() const = 0;
-
-    virtual void                                    setShaderStrategy(std::shared_ptr<const ShaderStrategy> shaderStrategy) = 0;
-
-    virtual void                                    setMtl(glm::vec3 Kd, glm::vec3 Ks, glm::vec3 Ka, float Ns, float Tr) = 0;
-
-    virtual void                                    setColorMapId(unsigned int id) = 0;
-    virtual void                                    setCubeMapId(unsigned int id) = 0;
-    virtual void                                    setRenderMapId(unsigned int id) = 0;
-
-    virtual void                                    setColor(glm::vec4 color) = 0;
-    virtual void                                    setKd(float Kd) = 0;
-    virtual void                                    setKa(float Ka) = 0;
-    virtual void                                    setKs(float Ks) = 0;
-    virtual void                                    setNs(float Ns) = 0;
-    virtual void                                    setRefractionRatio(float ratio) = 0;
-    virtual void                                    setReflexionPercentage(float percentage) = 0;
-    virtual void                                    setEdgeFilterThreshold(float threshold) = 0;
-};
-
-class Material : public Asset, public Materialable
-{
-public:
-                                                    Material(std::string name = "untitled");
-
-    virtual std::shared_ptr<const ShaderStrategy>   getShaderStrategy() const;
-
-    virtual unsigned int                            getColorMapId()	const;
-    virtual unsigned int                            getCubeMapId() const;
-    virtual unsigned int                            getRenderMapId() const;
-
-    virtual glm::vec4                               getColor() const;
-    virtual glm::vec3                               getKd() const;
-    virtual glm::vec3                               getKa() const;
-    virtual glm::vec3                               getKs() const;
-    virtual float                                   getTr() const;
-    virtual float                                   getNs() const;
-    virtual float                                   getRefractionRatio() const;
-    virtual float                                   getReflexionPercentage() const;
-
-    virtual float                                   getEdgeFilterThreshold() const;
-
-    virtual void                                    setShaderStrategy(std::shared_ptr<const ShaderStrategy> shaderStrategy);
-
-    virtual void                                    setMtl(glm::vec3 Kd, glm::vec3 Ks, glm::vec3 Ka, float Ns, float Tr);
-
-    virtual void                                    setColorMapId(unsigned int id);
-    virtual void                                    setCubeMapId(unsigned int id);
-    virtual void                                    setRenderMapId(unsigned int id);
-
-    virtual void                                    setColor(glm::vec4 color);
-    virtual void                                    setKd(float Kd);
-    virtual void                                    setKa(float Ka);
-    virtual void                                    setKs(float Ks);
-    virtual void                                    setNs(float Ns);
-    virtual void                                    setRefractionRatio(float ratio);
-    virtual void                                    setReflexionPercentage(float percentage);
-
-    virtual void                                    setEdgeFilterThreshold(float threshold);
+    template<class T>
+        bool                        createUniform(const std::string& name,
+                                                  const T& value = T(),
+                                                  const T& minValue = T(),
+                                                  const T& maxValue = T())
+        {
+            Uniform<T> u(name, value, minValue, maxValue);
+            return addUniform(u);//implement move semantic
+        }
 
 
+    void                            addMaterial(Material m);
+    const std::vector<Material>&    getMaterials() const;
+
+    template <class T>
+    bool                            addUniform(const Uniform<T> &u,
+                                               std::vector<Uniform<T>> &uniforms)
+    {
+        unsigned int i = 0;
+        bool result = true;
+        while(i < uniforms.size() && !result)
+        {
+            const Uniform<T> &uniform = uniforms[i];
+            if(uniform.getName() == u.getName())
+            {
+                result = false;
+                std::cout << "Error, uniform with name " << u.getName() << " already exist" << std::endl;
+            }
+            ++i;
+        }
+        if(result)
+        {
+            std::cout << "pushing uniform " << u.getName() << std::endl;
+            uniforms.push_back(u);
+        }
+        return result;
+    }
+
+    bool                            addUniform(const Uniform<float> &u);
+    bool                            addUniform(const Uniform<int> &u);
+    bool                            addUniform(const Uniform<unsigned int> &u);
+    bool                            addUniform(const Uniform<bool> &u);
+    bool                            addUniform(const Uniform<glm::vec3> &u);
+    bool                            addUniform(const Uniform<glm::vec4> &u);
+    bool                            addUniform(const Uniform<glm::mat3> &u);
+    bool                            addUniform(const Uniform<glm::mat4> &u);
+
+    bool                            addTexture(const std::string& name,
+                                               std::shared_ptr<Texture> texture);
+
+    template <class T>
+    bool                            setUniform(const std::string& name,
+                                               const T& value,
+                                               std::vector<Uniform<T>> &uniforms)
+    {
+        bool result = false;
+        unsigned int i = 0;
+        while(i < uniforms.size() && !result)
+        {
+            Uniform<T> &uniform = uniforms.at(i);
+            if(uniform.getName() == name)
+            {
+                result = true;
+                uniform.setValue(value);
+            }
+            ++i;
+        }
+        i = 0;
+        while(i < _materials.size() && !result)
+        {
+            result = _materials[i].setUniform(name, value);
+            ++i;
+        }
+        return result;
+    }
+
+    bool                            setUniform(const std::string& name,
+                                                   float value);
+    bool                            setUniform(const std::string& name,
+                                               int value);
+    bool                            setUniform(const std::string& name,
+                                               unsigned int value);
+    bool                            setUniform(const std::string& name,
+                                               bool value);
+    bool                            setUniform(const std::string& name,
+                                               const glm::vec3& value);
+    bool                            setUniform(const std::string& name,
+                                               const glm::vec4& value);
+    bool                            setUniform(const std::string& name,
+                                               const glm::mat3& value);
+    bool                            setUniform(const std::string& name,
+                                               const glm::mat4& value);
+
+    bool                            setTexture(const std::string& name,
+                                               std::shared_ptr<Texture> texture);
+
+    template <class T>
+    bool                            getUniform(const std::string& name,
+                                               T& value,
+                                               const std::vector<Uniform<T>> &uniforms) const
+    {
+        bool result = false;
+        unsigned int i = 0;
+        while(i < uniforms.size() && !result)
+        {
+            const Uniform<T> &uniform = uniforms.at(i);
+            if(uniform.getName() == name)
+            {
+                result = true;
+                value = uniform.getValue();
+            }
+            ++i;
+        }
+        i = 0;
+        while(i < _materials.size() && !result)
+        {
+            result = _materials[i].getUniform(name, value);
+            ++i;
+        }
+        return result;
+    }
+
+    bool                            getUniform(const std::string& name,
+                                               float &value) const;
+    bool                            getUniform(const std::string& name,
+                                               int &value) const;
+    bool                            getUniform(const std::string& name,
+                                               unsigned int &value) const;
+    bool                            getUniform(const std::string& name,
+                                               bool &value) const;
+    bool                            getUniform(const std::string& name,
+                                               glm::vec3 &value) const;
+    bool                            getUniform(const std::string& name,
+                                               glm::vec4 &value) const;
+    bool                            getUniform(const std::string& name,
+                                               glm::mat3 &value) const;
+    bool                            getUniform(const std::string& name,
+                                               glm::mat4 &value) const;
+
+    bool                            getTexture(const std::string& name,
+                                               std::shared_ptr<
+                                               Texture> & texture) const;
+
+    const std::vector<
+        Uniform<float>>&            get1fUniforms() const;
+    const std::vector<
+        Uniform<int>>&              get1iUniforms() const;
+    const std::vector<
+        Uniform<unsigned int>>&     get1uiUniforms() const;
+    const std::vector<
+        Uniform<bool>>&             get1bUniforms() const;
+    const std::vector<
+        Uniform<glm::vec3>>&        get3fUniforms() const;
+    const std::vector<
+        Uniform<glm::vec4>>&        get4fUniforms() const;
+    const std::vector<
+        Uniform<glm::mat3>>&        get3x3fUniforms() const;
+    const std::vector<
+        Uniform<glm::mat4>>&        get4x4fUniforms() const;
+
+    const std::map<std::string,
+        std::shared_ptr<Texture>>&  getTextures() const;
 private:
-    unsigned int                                    _colorMapId;
-    unsigned int                                    _cubeMapId;
-    unsigned int                                    _renderMapId;
 
+    std::vector<Material>                           _materials;
 
-    glm::vec3                                       _Kd;
-    glm::vec3                                       _Ks;
-    glm::vec3                                       _Ka;
-    unsigned int                                    _illum;
-    float                                           _Ns;
-    float                                           _Tr;
-    glm::vec4                                       _color;
+    std::vector<Uniform<float>>                     _1funiforms;
+    std::vector<Uniform<int>>                       _1iuniforms;
+    std::vector<Uniform<unsigned int>>              _1uiuniforms;
+    std::vector<Uniform<bool>>                      _1buniforms;
+    std::vector<Uniform<glm::vec3>>                 _3funiforms;
+    std::vector<Uniform<glm::vec4>>                 _4funiforms;
+    std::vector<Uniform<glm::mat3>>                 _3x3funiforms;
+    std::vector<Uniform<glm::mat4>>                 _4x4funiforms;
 
-    float                                           _refractionRatio;
-    float                                           _reflexionPercentage;
-
-    float                                           _edgeFilterThreshold;
-
-    std::shared_ptr<const ShaderStrategy>           _shaderStrategy;
+    std::map<std::string, std::shared_ptr<Texture>> _textures;
 };
+

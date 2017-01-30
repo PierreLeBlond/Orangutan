@@ -37,7 +37,8 @@ void Screen::init()
         if(_scene->isReady())
         {
             _scene->animate();
-            _scene->draw();
+            _scene->update();
+            _renderer->draw(*_scene);
         }
     };
 
@@ -45,6 +46,7 @@ void Screen::init()
 
     _canvas->setAssetsStorage(_assetsStorage);
 
+    _mainTool.setNVGContext(nvgContext());
     _mainTool.setAssetsStorage(_assetsStorage);
     _mainTool.setCurrentObject(_scene->getCurrentRenderableObject());
 

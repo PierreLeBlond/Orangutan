@@ -117,22 +117,22 @@ glm::mat4 Camera::computeRotateViewMatrix() const
     return rotateViewMatrix;
 }
 
-glm::mat4 Camera::computePerspectiveProjection() const
+glm::mat4 Camera::getPerspectiveProjection() const
 {
     return glm::perspective(_fovy, (float)_width / (float)_height, 0.001f, 1000.0f);
 }
 
-glm::mat4 Camera::computeOrthoProjection() const
+glm::mat4 Camera::getOrthoProjection() const
 {
     return glm::ortho(-(float)_width*0.001f*_fovy, (float)_width*0.001f*_fovy, -(float)_height*0.001f*_fovy, (float)_height*0.001f*_fovy, 0.0f, 1000.0f);
 }
 
-glm::mat4 Camera::computeProjection() const
+glm::mat4 Camera::getProjection() const
 {
     if(_mode == PERSPECTIVE)
-        return computePerspectiveProjection();
+        return getPerspectiveProjection();
     else
-        return computeOrthoProjection();
+        return getOrthoProjection();
 }
 
 void Camera::setPerspectiveProjectionMode()

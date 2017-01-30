@@ -3,10 +3,13 @@
 
 #include "app/maintoolable.h"
 #include "app/nanogui/objecttool.h"
+#include "app/nanogui/tool.h"
 
 #include <nanogui/window.h>
 
-class MainTool : public MainToolable, public nanogui::Window
+#include <memory>
+
+class MainTool : public MainToolable, public Tool
 {
 public:
                                                 MainTool(nanogui::Widget *parent = 0, const std::string& label = "Unknow window");
@@ -16,10 +19,11 @@ public:
 
     void                                        setCurrentObject(std::shared_ptr<RenderableObject> object);
     void                                        setAssetsStorage(std::shared_ptr<AssetsStorage> assetsStorage);
+    void                                        setNVGContext(NVGcontext *context);
 
 private:
 
-    ObjectTool                                  _objectTool;
+    std::unique_ptr<ObjectTool>                 _objectTool;
 };
 
 #endif // MAIN_TOOL_H

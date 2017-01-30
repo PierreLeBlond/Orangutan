@@ -31,6 +31,8 @@ uniform vec3 Ks;
 uniform vec3 Kd;
 uniform vec3 Ka;
 
+uniform int levels;
+
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
@@ -41,14 +43,11 @@ uniform int nbDiffuseMap;
 
 layout(location = 0) out vec4 color_out;
 
-const int levels = 3;
-const float scaleFactor = 1.0 / levels;
-
 vec3 adPhong(Lighting light, vec3 s, vec3 normal)
 {
     vec3 ambient = light.La*Ka;
     float sDotN = max(dot(s, normal), 0.0);
-    vec3 diffuse = floor(sDotN * levels) * scaleFactor * Kd * light.Ld;
+    vec3 diffuse = floor(sDotN * levels) * (1.0/levels) * Kd * light.Ld;
     return diffuse + ambient;
 }
 
@@ -62,7 +61,7 @@ vec3 adPhongWithSpotLight(Lighting light, vec3 s, vec3 normal)
 
     if(angle < cutoff) {
         float spotFactor = pow(scal, light.exponent);
-        return ambient + spotFactor * light.Ld * Kd * floor(max(dot(s, normal), 0.0) * levels) * scaleFactor;
+        return ambient + spotFactor * light.Ld * Kd * floor(max(dot(s, normal), 0.0) * levels) * (1.0/levels);
     } else {
         return vec3(0.0);
     }

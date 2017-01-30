@@ -1,11 +1,29 @@
 #include "object/uniform.h"
 
-Uniform::Uniform(const std::string &name) : Asset(name)
+#include "glm/glm.hpp"
+
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/transform.hpp"
+#include "glm/gtx/transform2.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
+template <class T>
+Uniform<T>::Uniform(const std::string &name) : Asset(name)
 {}
 
 template <class T>
-Uniform<T>::Uniform(const std::string &name, const T& value) : Asset(name), 
+Uniform<T>::Uniform(const std::string &name, const T& value) : Asset(name),
     _value(value), _minValue(value), _maxValue(value)
+{}
+
+template <class T>
+Uniform<T>::Uniform(const std::string &name,
+                    const T& value, const T& minValue, const T& maxValue) : Asset(name),
+    _value(value), _minValue(minValue), _maxValue(maxValue)
+{}
+
+template <class T>
+Uniform<T>::~Uniform()
 {}
 
 template <class T>
@@ -43,3 +61,13 @@ void Uniform<T>::setMaxValue(const T &maxValue)
 {
     _maxValue = maxValue;
 }
+
+template class Uniform<float>;
+template class Uniform<int>;
+template class Uniform<unsigned int>;
+template class Uniform<bool>;
+template class Uniform<glm::vec3>;
+template class Uniform<glm::vec4>;
+template class Uniform<glm::mat3>;
+template class Uniform<glm::mat4>;
+

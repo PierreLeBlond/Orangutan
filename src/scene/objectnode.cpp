@@ -50,15 +50,22 @@ void ObjectNode::removeNode(std::shared_ptr<ObjectNode> node)
 	}
 }
 
-void ObjectNode::displayScene(const glm::mat4&  viewMatrix,
+void ObjectNode::draw(const glm::mat4&  viewMatrix,
                             const glm::mat4& projectionMatrix,
                             const std::vector<std::shared_ptr<Light>>& lights)
 {
     if(_object)
         _object->draw(viewMatrix, projectionMatrix, lights);
+}
+
+void ObjectNode::drawScene(const glm::mat4&  viewMatrix,
+                            const glm::mat4& projectionMatrix,
+                            const std::vector<std::shared_ptr<Light>>& lights)
+{
+    draw(viewMatrix, projectionMatrix, lights);
     for (unsigned int i = 0; i < _childs.size(); i++)
     {
-        _childs[i]->displayScene(viewMatrix, projectionMatrix, lights);
+        _childs[i]->drawScene(viewMatrix, projectionMatrix, lights);
     }
 }
 

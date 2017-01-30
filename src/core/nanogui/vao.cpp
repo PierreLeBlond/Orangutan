@@ -1,5 +1,7 @@
 #include "core/vao.h"
 
+#include <algorithm>
+
 #include <nanogui/opengl.h>
 
 Vao::Vao()
@@ -31,6 +33,16 @@ unsigned int Vao::addBuffer()
 
     _bufferIds.push_back(id);
     return id;
+}
+
+void Vao::deleteBuffer(unsigned int id)
+{
+    auto it = std::find(_bufferIds.begin(), _bufferIds.end(), id);
+    if(it != _bufferIds.end())
+    {
+         glDeleteBuffers(1, &id);
+         _bufferIds.erase(it);
+    }
 }
 
 void Vao::bind() const

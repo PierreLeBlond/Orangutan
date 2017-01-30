@@ -3,6 +3,7 @@
 
 #include "object/renderableobject.h"
 #include "object/camera.h"
+#include "object/materialfactory.h"
 
 #include "scene/objectnode.h"
 
@@ -22,15 +23,22 @@ public:
 
     void                            setSkybox(int index);
 
-    void                            draw() const;
+    void                            update();
     void                            animate();
 
     void                            setIsReady(bool isReady);
     bool                            isReady() const;
 
-    std::shared_ptr<Camera>         getCurrentCamera();
-    std::shared_ptr<
-        RenderableObject>           getCurrentRenderableObject();
+    const std::shared_ptr<
+        ObjectNode>&                getSceneTree() const;
+
+    const std::shared_ptr<Camera>&  getCurrentCamera() const;
+
+    const std::vector<
+        std::shared_ptr<Light>>&    getLights() const;
+
+    const std::shared_ptr<
+        RenderableObject>&          getCurrentRenderableObject() const;
 private:
 
     std::shared_ptr<AssetsStorage>              _assetsStorage;

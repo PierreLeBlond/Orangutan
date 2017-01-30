@@ -1,118 +1,234 @@
 #include "object/material.h"
 
+Material::Material(const std::string &name) : Asset(name)
+{}
 
-Material::Material(std::string name) : Asset(name),
-_colorMapId(-1), _cubeMapId(-1), _renderMapId(-1),
-    _Kd(glm::vec3(1.0f)), _Ks(glm::vec3(1.0f)), _Ka(glm::vec3(1.0f)),
-    _illum(1), _Ns(10.0f), _Tr(1.0f), _color(glm::vec4(255.0f, 255.0f, 255.0f, 255.0f)),
-    _refractionRatio(0), _reflexionPercentage(100), _edgeFilterThreshold(0.7)
+void Material::addMaterial(Material m)
 {
+    _materials.push_back(m);
 }
 
-std::shared_ptr<const ShaderStrategy> Material::getShaderStrategy() const{
-    return _shaderStrategy;
+const std::vector<Material>& Material::getMaterials() const
+{
+    return _materials;
 }
 
-unsigned int  Material::getColorMapId() const{
-    return _colorMapId;
+bool Material::addUniform(const Uniform<float> &u)
+{
+    return addUniform(u, _1funiforms);
 }
 
-unsigned int  Material::getCubeMapId() const{
-    return _cubeMapId;
+bool Material::addUniform(const Uniform<int> &u)
+{
+    return addUniform(u, _1iuniforms);
 }
 
-unsigned int  Material::getRenderMapId() const{
-    return _renderMapId;
+bool Material::addUniform(const Uniform<unsigned int> &u)
+{
+    return addUniform(u, _1uiuniforms);
 }
 
-glm::vec4 Material::getColor() const{
-    return _color;
+bool Material::addUniform(const Uniform<bool> &u)
+{
+    return addUniform(u, _1buniforms);
 }
 
-glm::vec3 Material::getKd() const{
-    return _Kd;
+bool Material::addUniform(const Uniform<glm::vec3> &u)
+{
+    return addUniform(u, _3funiforms);
 }
 
-glm::vec3 Material::getKa() const{
-    return _Ka;
+bool Material::addUniform(const Uniform<glm::vec4> &u)
+{
+    return addUniform(u, _4funiforms);
 }
 
-glm::vec3 Material::getKs() const{
-    return _Ks;
+bool Material::addUniform(const Uniform<glm::mat3> &u)
+{
+    return addUniform(u, _3x3funiforms);
 }
 
-float Material::getTr() const{
-    return _Tr;
+bool Material::addUniform(const Uniform<glm::mat4> &u)
+{
+    return addUniform(u, _4x4funiforms);
 }
 
-float Material::getNs() const{
-    return _Ns;
+bool Material::addTexture(const std::string& name,
+                          std::shared_ptr<Texture> texture)
+{
+    bool b = false;
+    if(_textures.find(name) == _textures.end())
+    {
+        _textures.insert(std::make_pair(name, texture));
+        b = true;
+    }
+    return b;
 }
 
-float Material::getRefractionRatio() const{
-    return _refractionRatio;
+bool Material::setUniform(const std::string& name, float value)
+{
+    return setUniform(name, value, _1funiforms);
 }
 
-float Material::getReflexionPercentage() const{
-    return _reflexionPercentage;
+bool Material::setUniform(const std::string& name, int value)
+{
+    return setUniform(name, value, _1iuniforms);
 }
 
-float Material::getEdgeFilterThreshold() const{
-    return _edgeFilterThreshold;
+bool Material::setUniform(const std::string& name, unsigned int value)
+{
+    return setUniform(name, value, _1uiuniforms);
 }
 
-void Material::setShaderStrategy(std::shared_ptr<const ShaderStrategy> shaderStrategy){
-    _shaderStrategy = shaderStrategy;
+bool Material::setUniform(const std::string& name, bool value)
+{
+    return setUniform(name, value, _1buniforms);
 }
 
-void Material::setMtl(glm::vec3 Kd, glm::vec3 Ks, glm::vec3 Ka, float Ns, float Tr) {
-    _Kd = Kd;
-    _Ks = Ks;
-    _Ka = Ka;
-    _Ns = Ns;
-    _Tr = Tr;
+bool Material::setUniform(const std::string& name, const glm::vec3 &value)
+{
+    return setUniform(name, value, _3funiforms);
 }
 
-void Material::setColorMapId(unsigned int  id){
-    _colorMapId = id;
+bool Material::setUniform(const std::string& name, const glm::vec4 &value)
+{
+    return setUniform(name, value, _4funiforms);
 }
 
-void Material::setCubeMapId(unsigned int  id){
-    _cubeMapId = id;
+bool Material::setUniform(const std::string& name, const glm::mat3 &value)
+{
+    return setUniform(name, value, _3x3funiforms);
 }
 
-void Material::setRenderMapId(unsigned int  id){
-    _renderMapId = id;
+bool Material::setUniform(const std::string& name, const glm::mat4 &value)
+{
+    return setUniform(name, value, _4x4funiforms);
 }
 
-void Material::setColor(glm::vec4 color){
-    _color = color;
+bool Material::setTexture(const std::string& name,
+                          std::shared_ptr<Texture> texture)
+{
+    bool b = false;
+    auto it = _textures.find(name);
+    if(it != _textures.end())
+    {
+        b = true;
+        it->second = texture;
+    }
+
+    if(!b)
+    {
+        for(auto& material : _materials)
+        {
+            b = material.setTexture(name, texture);
+        }
+    }
+    return b;
 }
 
-void Material::setKd(float Kd){
-    _Kd = glm::vec3(Kd);
+bool Material::getUniform(const std::string& name, float &value) const
+{
+    return getUniform(name, value, _1funiforms);
 }
 
-void Material::setKa(float Ka){
-    _Ka = glm::vec3(Ka);
+bool Material::getUniform(const std::string& name, int &value) const
+{
+    return getUniform(name, value, _1iuniforms);
 }
 
-void Material::setKs(float Ks){
-    _Ks = glm::vec3(Ks);
+bool Material::getUniform(const std::string& name, unsigned int &value) const
+{
+    return getUniform(name, value, _1uiuniforms);
 }
 
-void Material::setNs(float Ns){
-    _Ns = Ns;
+bool Material::getUniform(const std::string& name, bool &value) const
+{
+    return getUniform(name, value, _1buniforms);
 }
 
-void Material::setRefractionRatio(float ratio){
-    _refractionRatio = ratio;
+bool Material::getUniform(const std::string& name, glm::vec3 &value) const
+{
+    return getUniform(name, value, _3funiforms);
 }
 
-void Material::setReflexionPercentage(float percentage){
-    _reflexionPercentage = percentage;
+bool Material::getUniform(const std::string& name, glm::vec4 &value) const
+{
+    return getUniform(name, value, _4funiforms);
 }
 
-void Material::setEdgeFilterThreshold(float threshold){
-    _edgeFilterThreshold = threshold;
+bool Material::getUniform(const std::string& name, glm::mat3 &value) const
+{
+    return getUniform(name, value, _3x3funiforms);
+}
+
+bool Material::getUniform(const std::string& name, glm::mat4 &value) const
+{
+    return getUniform(name, value, _4x4funiforms);
+}
+
+bool Material::getTexture(const std::string& name, std::shared_ptr<Texture>& texture) const
+{
+    bool b = false;
+    auto it = _textures.find(name);
+    if(it != _textures.end())
+    {
+        b = true;
+        texture = it->second;
+    }
+
+    if(!b)
+    {
+        for(auto& material : _materials)
+        {
+            b = material.getTexture(name, texture);
+        }
+    }
+
+    return b;
+}
+
+const std::vector<Uniform<float>>& Material::get1fUniforms() const
+{
+    return _1funiforms;
+}
+
+const std::vector<Uniform<int>>& Material::get1iUniforms() const
+{
+    return _1iuniforms;
+}
+
+const std::vector<Uniform<unsigned int>>& Material::get1uiUniforms() const
+{
+    return _1uiuniforms;
+}
+
+const std::vector<Uniform<bool>>& Material::get1bUniforms() const
+{
+    return _1buniforms;
+}
+
+const std::vector<Uniform<glm::vec3>>& Material::get3fUniforms() const
+{
+    return _3funiforms;
+}
+
+const std::vector<Uniform<glm::vec4>>& Material::get4fUniforms() const
+{
+    return _4funiforms;
+}
+
+const std::vector<Uniform<glm::mat3>>& Material::get3x3fUniforms() const
+{
+    return _3x3funiforms;
+}
+
+const std::vector<Uniform<glm::mat4>>& Material::get4x4fUniforms() const
+{
+    return _4x4funiforms;
+}
+
+const std::map<std::string,
+      std::shared_ptr<Texture>>& Material::getTextures() const
+{
+    return _textures;
 }
