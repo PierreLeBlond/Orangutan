@@ -27,7 +27,7 @@ class ShaderMaterialable
 class ShaderMaterial : public ShaderMaterialable, public Material
 {
 public:
-                                                    ShaderMaterial(const std::string &name = "untitled");
+                                                    ShaderMaterial(const std::string &name = "ShaderMaterial X");
 
     virtual std::shared_ptr<const ShaderStrategy>   getShaderStrategy() const;
     virtual void                                    setShaderStrategy(

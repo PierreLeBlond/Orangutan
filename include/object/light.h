@@ -11,7 +11,6 @@ class Light : public Object
 {
 public:
                                     Light();
-    virtual                         ~Light();
 
     const glm::vec4&                getColor() const;
     const glm::vec3&                getLd() const;

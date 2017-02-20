@@ -12,8 +12,6 @@ public:
 
     virtual void                                init();
 
-    virtual void                                drawContents();
-
     virtual bool                                keyboardEvent(int key, int scancode, int action, int modifiers);
 
     virtual void                                draw(NVGcontext *ctx);
@@ -22,6 +20,8 @@ private:
 
     Canvas*                                     _canvas;
     MainTool                                    _mainTool;
+    int                                         _drawCall;
+    int                                         _time;
 };
 
 

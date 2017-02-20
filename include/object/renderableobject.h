@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/vao.h"
+#include "core/vertex/vao.h"
 
 #include "object/object.h"
 #include "object/mesh.h"
@@ -12,9 +12,7 @@
 class RenderableObject : public Object, public ShaderMaterialable
 {
 public:
-                                        RenderableObject();
-
-    virtual                             ~RenderableObject();
+                                        RenderableObject(const std::string& name = "RenderableObject");
 
     void                                initVertexArrayObject();
 
@@ -44,7 +42,9 @@ public:
         const ShaderStrategy> shaderStrategy);
 
     bool                                setTexture(const std::string& name,
-                                                   std::shared_ptr<Texture> texture);
+                                                   std::shared_ptr<DDTexture> texture);
+    bool                                setCubeTexture(const std::string& name,
+                                                   std::shared_ptr<CubeTexture> texture);
 
     template <class T>
     bool                    addUniform(Uniform<T> u)

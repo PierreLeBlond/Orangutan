@@ -8,7 +8,6 @@ class Rendererable
 {
 public:
                                                 Rendererable();
-    virtual                                     ~Rendererable();
 
     virtual void                                init() = 0;
     virtual void                                start() = 0;

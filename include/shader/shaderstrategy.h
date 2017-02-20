@@ -1,8 +1,8 @@
 #ifndef SHADERSTRATEGY_H
 #define SHADERSTRATEGY_H
 
-#include "core/shaderprogram.h"
-#include "core/vao.h"
+#include "core/shader/shaderwrapper.h"
+#include "core/vertex/vao.h"
 #include "core/debug.h"
 
 #include "object/material.h"
@@ -24,16 +24,15 @@ class ShaderStrategy : public Asset
 {
 public:
                                         ShaderStrategy(const std::string& name = "unknown");
-    virtual                             ~ShaderStrategy();
 
     template<class T>
     void                                setUniform(const Uniform<T>& uniform) const
     {
-        std::vector<std::string> names = _shaderProgram->getUniformsName();
+        std::vector<std::string> names = _shaderWrapper->getUniformsName();
         auto it = std::find(names.begin(), names.end(), uniform.getName());
         if(it != names.end())
         {
-            _shaderProgram->setUniform(uniform.getName(), uniform.getValue());
+            _shaderWrapper->setUniform(uniform.getName(), uniform.getValue());
         }
     }
 
@@ -54,9 +53,9 @@ public:
 
     void                                draw(const Vao &vao) const;
 
-    void                                setShaderProgram(std::shared_ptr<ShaderProgram> shaderProgram);
+    void                                setShaderWrapper(std::shared_ptr<ShaderWrapper> shaderWrapper);
     const std::shared_ptr<
-        ShaderProgram>&                 getShaderProgram() const;
+        ShaderWrapper>&                 getShaderWrapper() const;
 
     int                                 getVertexAttribute()            const { return _vertexAttribute; }
     int                                 getNormalAttribute()            const { return _normalAttribute; }
@@ -64,7 +63,7 @@ public:
 
 protected:
 
-    std::shared_ptr<ShaderProgram>      _shaderProgram;
+    std::shared_ptr<ShaderWrapper>      _shaderWrapper;
     unsigned int                        _programId;
 
     int                                 _vertexAttribute;

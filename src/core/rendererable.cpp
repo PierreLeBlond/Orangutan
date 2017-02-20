@@ -7,10 +7,6 @@ Rendererable::Rendererable() : _drawCall([](){})
 {
 }
 
-Rendererable::~Rendererable()
-{
-}
-
 void Rendererable::setDrawCall(std::function<void()> drawCall)
 {
     _drawCall = drawCall;

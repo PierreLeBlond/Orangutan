@@ -21,8 +21,8 @@ class Canvasable
     std::shared_ptr<AssetsStorage>              _assetsStorage;
 
     std::shared_ptr<Scene>                      _scene;
-    unsigned int                                      _width;
-    unsigned int                                      _height;
+    unsigned int                                _width;
+    unsigned int                                _height;
 
     bool                                        _asAScene;
 

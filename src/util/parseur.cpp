@@ -2,12 +2,10 @@
 
 using namespace std;
 
-Parseur::Parseur() {
-}
-
-vector<std::shared_ptr<Material>> Parseur::parseMtl(const char* filename) {
-/*
+vector<std::shared_ptr<Material>> Parseur::parseMtl(const std::string& filename) {
     vector<std::shared_ptr<Material>> materials;
+
+    /*
 
     std::cout << "-------------------------------------------------------" << std::endl;
     std::cout << "--- Loading " << filename << std::endl;
@@ -109,12 +107,11 @@ vector<std::shared_ptr<Material>> Parseur::parseMtl(const char* filename) {
 
         mtlStream.close();
     }
+*/
     return materials;
-    */
 }
 
-vector<std::shared_ptr<Mesh>> Parseur::parseObj(const char* filename) {
-
+vector<std::shared_ptr<Mesh>> Parseur::parseObj(const std::string& filename) {
     vector<std::shared_ptr<Mesh>> meshs;
 
     std::cout << "-------------------------------------------------------" << std::endl;
@@ -169,7 +166,10 @@ vector<std::shared_ptr<Mesh>> Parseur::parseObj(const char* filename) {
 
 
                 std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(std::string(name));
-                mesh->setObj(duplicatedVertices, duplicatedNormals, duplicatedTexCoords, faceIndexes);
+                mesh->setPositions(duplicatedVertices);
+                mesh->setNormals(duplicatedNormals);
+                mesh->setUvs(duplicatedTexCoords);
+                mesh->setFaces(faceIndexes);
                 meshs.push_back(mesh);
                 nbMesh++;
 
@@ -282,7 +282,11 @@ vector<std::shared_ptr<Mesh>> Parseur::parseObj(const char* filename) {
         }
 
         std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(std::string(name));
-        mesh->setObj(duplicatedVertices, duplicatedNormals, duplicatedTexCoords, faceIndexes);
+        mesh->setPositions(duplicatedVertices);
+        mesh->setNormals(duplicatedNormals);
+        mesh->setUvs(duplicatedTexCoords);
+        mesh->setFaces(faceIndexes);
+
         meshs.push_back(mesh);
         nbMesh++;
 

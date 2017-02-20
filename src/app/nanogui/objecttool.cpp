@@ -21,65 +21,47 @@ void ObjectTool::init()
     setPosition(Eigen::Vector2i(900, 0));
     setLayout(new nanogui::GroupLayout());
 
-    if(_object)
-    {
-        initShader(this);
-        _uniformPanel = new nanogui::Widget(this);
-        _uniformPanel->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Vertical,
-                                                nanogui::Alignment::Middle, 0, 5));
-        initMaterials(_uniformPanel, _object->getShaderMaterial(),
-                      _object->getShaderStrategy()->getShaderProgram()->getUniformsName());
-    }
+    update();
 }
 
 void ObjectTool::initShader(nanogui::Widget *widget)
 {
-    new nanogui::Label(widget, "Shader", "sans-bold");
-
-    const std::vector<
-        std::shared_ptr<
-        const ShaderStrategy>>& shaderStrategies = _assetsStorage->getShaderStrategies();
-
-    std::vector<std::string> names;
-
-    for(int i = 0; i < shaderStrategies.size(); ++i)
+    if(_object)
     {
-        names.push_back(shaderStrategies[i]->getName());
-    }
+        const std::vector<
+            std::shared_ptr<
+            const ShaderStrategy>>& shaderStrategies = _assetsStorage->getShaderStrategies();
 
-    nanogui::ComboBox* comboBox = new nanogui::ComboBox(widget, names);
-    comboBox->setSide(nanogui::Popup::Left);
-    comboBox->setCallback([&](int id){
-                         setShaderStrategy(id);
-                         updateMaterials();
-                         });
-}
+        std::vector<std::string> names;
 
-void ObjectTool::removeChildrenWidget(nanogui::Widget *widget)
-{
-    const std::vector<Widget *> children = widget->children();
-    for(auto &child : children)
-    {
-        removeChildrenWidget(child);
-        widget->removeChild(child);
+        int shaderStrategyId = 0;
+
+        for(unsigned int i = 0; i < shaderStrategies.size(); ++i)
+        {
+            names.push_back(shaderStrategies[i]->getName());
+            if(shaderStrategies[i] == _object->getShaderStrategy())
+                shaderStrategyId = i;
+        }
+
+        addComboBox(widget, nanogui::Popup::Left, "Shader", names, shaderStrategyId,
+                    [&](int id){
+                    _object->setShaderStrategy(_assetsStorage->getShaderStrategy(id));
+                    update();
+                    });
     }
 }
 
-void ObjectTool::updateMaterials()
+void ObjectTool::update()
 {
-    removeChildrenWidget(_uniformPanel);
-    //removeChild(_uniformPanel);
-    //_uniformPanel = new nanogui::Widget(this);
-    //_uniformPanel->setLayout(new nanogui::BoxLayout(nanogui::Orientation::Vertical,
-                                                    //nanogui::Alignment::Middle, 0, 5));
+    removeChildrenWidget(this);
 
-    initMaterials(_uniformPanel, _object->getShaderMaterial(),
-                  _object->getShaderStrategy()->getShaderProgram()->getUniformsName());
+    initShader(this);
+    initMaterials(this, _object->getShaderMaterial(),
+                  _object->getShaderStrategy()->getShaderWrapper()->getUniformsName());
 
-    if(_context)
+    if(_screen)
     {
-        performLayout(_context);
-        performLayout(_context);
+        _screen->performLayout();
     }
 }
 
@@ -87,7 +69,7 @@ void ObjectTool::initMaterials(nanogui::Widget *widget,
                                const Material& material,
                                const std::vector<std::string> &names)
 {
-    int uniformsCount = 0;
+    unsigned int uniformsCount = 0;
 
     for(const auto& uniform : material.get1fUniforms())
     {
@@ -113,7 +95,11 @@ void ObjectTool::initMaterials(nanogui::Widget *widget,
             uniformsCount++;
     }
 
-    std::cout << "Found " << uniformsCount << " uniforms for " << material.getName() << "." << std::endl;
+    for(const auto& texture : material.getCubeTextures())
+    {
+        if(std::find(names.begin(), names.end(), texture.first) != names.end())
+            uniformsCount++;
+    }
 
     if(uniformsCount > 0)
     {
@@ -201,9 +187,28 @@ void ObjectTool::initMaterials(nanogui::Widget *widget,
             {
                 addTextures(widget,
                             texture.first,
-                            names,
+                            textureNames,
                             [&](int i){
                             _object->setTexture(texture.first, _assetsStorage->getTexture(i));
+                            });
+            }
+        }
+
+        std::vector<std::string> cubeTextureNames;
+        for(const auto& texture : _assetsStorage->getCubeMapTextures())
+        {
+            cubeTextureNames.push_back(texture->getPath());
+        }
+
+        for(const auto& texture : material.getCubeTextures())
+        {
+            if(std::find(names.begin(), names.end(), texture.first) != names.end())
+            {
+                addTextures(widget,
+                            texture.first,
+                            cubeTextureNames,
+                            [&](int i){
+                            _object->setCubeTexture(texture.first, _assetsStorage->getCubeMapTexture(i));
                             });
             }
         }
@@ -213,5 +218,10 @@ void ObjectTool::initMaterials(nanogui::Widget *widget,
     {
         initMaterials(widget, subMaterial, names);
     }
+}
+
+void ObjectTool::setCurrentObject(std::shared_ptr<RenderableObject> object)
+{
+    _object = object;
 }
 

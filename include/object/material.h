@@ -1,6 +1,7 @@
 #pragma once
 
-#include "core/texture.h"
+#include "core/texture/cubetexture.h"
+#include "core/texture/ddtexture.h"
 #include "object/asset.h"
 #include "object/uniform.h"
 
@@ -71,7 +72,9 @@ public:
     bool                            addUniform(const Uniform<glm::mat4> &u);
 
     bool                            addTexture(const std::string& name,
-                                               std::shared_ptr<Texture> texture);
+                                               std::shared_ptr<DDTexture> texture);
+    bool                            addCubeTexture(const std::string& name,
+                                               std::shared_ptr<CubeTexture> texture);
 
     template <class T>
     bool                            setUniform(const std::string& name,
@@ -117,7 +120,9 @@ public:
                                                const glm::mat4& value);
 
     bool                            setTexture(const std::string& name,
-                                               std::shared_ptr<Texture> texture);
+                                               std::shared_ptr<DDTexture> texture);
+    bool                            setCubeTexture(const std::string& name,
+                                               std::shared_ptr<CubeTexture> texture);
 
     template <class T>
     bool                            getUniform(const std::string& name,
@@ -164,7 +169,10 @@ public:
 
     bool                            getTexture(const std::string& name,
                                                std::shared_ptr<
-                                               Texture> & texture) const;
+                                               DDTexture> & texture) const;
+    bool                            getCubeTexture(const std::string& name,
+                                               std::shared_ptr<
+                                               CubeTexture> & texture) const;
 
     const std::vector<
         Uniform<float>>&            get1fUniforms() const;
@@ -184,7 +192,9 @@ public:
         Uniform<glm::mat4>>&        get4x4fUniforms() const;
 
     const std::map<std::string,
-        std::shared_ptr<Texture>>&  getTextures() const;
+        std::shared_ptr<DDTexture>>&  getTextures() const;
+    const std::map<std::string,
+        std::shared_ptr<CubeTexture>>&  getCubeTextures() const;
 private:
 
     std::vector<Material>                           _materials;
@@ -198,6 +208,9 @@ private:
     std::vector<Uniform<glm::mat3>>                 _3x3funiforms;
     std::vector<Uniform<glm::mat4>>                 _4x4funiforms;
 
-    std::map<std::string, std::shared_ptr<Texture>> _textures;
+    std::map<std::string,
+        std::shared_ptr<DDTexture>>                 _textures;
+    std::map<std::string,
+        std::shared_ptr<CubeTexture>>               _cubeTextures;
 };
 

@@ -1,4 +1,4 @@
-#include "app/nanogui/screen.h"
+#include "app/nanogui/app.h"
 #include <iostream>
 
 int main(int argc, char *argv[])
@@ -7,10 +7,11 @@ int main(int argc, char *argv[])
         nanogui::init();
 
         /* scoped variables */ {
-            nanogui::ref<Screen> app = new Screen();
-            app->init();
-            app->drawAll();
-            app->setVisible(true);
+            App app;
+            app.init();
+            app.initAssets();
+            //app->drawAll();
+            //app->setVisible(true);
             nanogui::mainloop();
         }
 

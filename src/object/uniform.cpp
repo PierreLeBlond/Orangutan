@@ -23,10 +23,6 @@ Uniform<T>::Uniform(const std::string &name,
 {}
 
 template <class T>
-Uniform<T>::~Uniform()
-{}
-
-template <class T>
 const T& Uniform<T>::getValue() const
 {
     return _value;

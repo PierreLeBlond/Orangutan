@@ -8,19 +8,15 @@ ShaderStrategy::ShaderStrategy(const std::string& name) : Asset(name),
 {
 }
 
-ShaderStrategy::~ShaderStrategy()
-{
-}
-
 void ShaderStrategy::initAttribute()
 {
-    _shaderProgram->startUseProgram();
+    _shaderWrapper->start();
 
-    _vertexAttribute = _shaderProgram->getAttributeLocation("vertex_in");
-    _normalAttribute = _shaderProgram->getAttributeLocation("normal_in");
-    _textureCoordinateAttribute = _shaderProgram->getAttributeLocation("uv_in");
+    _vertexAttribute = _shaderWrapper->getAttributeLocation("vertex_in");
+    _normalAttribute = _shaderWrapper->getAttributeLocation("normal_in");
+    _textureCoordinateAttribute = _shaderWrapper->getAttributeLocation("uv_in");
 
-    _shaderProgram->stopUseProgram();
+    _shaderWrapper->stop();
 }
 
 void ShaderStrategy::setUniforms(const Material &material,
@@ -29,11 +25,11 @@ void ShaderStrategy::setUniforms(const Material &material,
                                  const glm::mat4& projectionMatrix,
                                  const std::vector<std::shared_ptr<Light>> &lights) const
 {
-    _shaderProgram->startUseProgram();
+    _shaderWrapper->start();
     setMatrixUniforms(modelMatrix, viewMatrix, projectionMatrix);
     setMaterialUniforms(material);
     setLightUniforms(lights, viewMatrix);
-    _shaderProgram->stopUseProgram();
+    _shaderWrapper->stop();
 }
 
 void ShaderStrategy::setLightUniforms(const std::vector<std::shared_ptr<Light>> &lights,
@@ -51,37 +47,37 @@ void ShaderStrategy::setLightUniforms(const std::vector<std::shared_ptr<Light>> 
         {
           case AMBIANT :
             if(nbAmbiantLights < MAX_LIGHT && light.getState()) {
-                _shaderProgram->setUniform("ambiantLights", nbAmbiantLights, "La", light.getLa()*glm::vec3(light.getColor())/255.0f);
+                _shaderWrapper->setUniform("ambiantLights", nbAmbiantLights, "La", light.getLa()*glm::vec3(light.getColor())/255.0f);
                 nbAmbiantLights++;
             }
             break;
           case DIRECTION :
             if(nbDirectionalLights < MAX_LIGHT && light.getState()) {
-                _shaderProgram->setUniform("directionalLights", nbDirectionalLights, "direction", glm::mat3(viewMatrix*light.getTransform().getModelMatrix())*glm::vec3(1.0, 0.0, 0.0));
-                _shaderProgram->setUniform("directionalLights", nbDirectionalLights, "La", light.getLa()*glm::vec3(light.getColor())/255.0f);
-                _shaderProgram->setUniform("directionalLights", nbDirectionalLights, "Ld", light.getLd()*glm::vec3(light.getColor())/255.0f);
-                _shaderProgram->setUniform("directionalLights", nbDirectionalLights, "Ls", light.getLs());
+                _shaderWrapper->setUniform("directionalLights", nbDirectionalLights, "direction", glm::mat3(viewMatrix*light.getTransform().getModelMatrix())*glm::vec3(1.0, 0.0, 0.0));
+                _shaderWrapper->setUniform("directionalLights", nbDirectionalLights, "La", light.getLa()*glm::vec3(light.getColor())/255.0f);
+                _shaderWrapper->setUniform("directionalLights", nbDirectionalLights, "Ld", light.getLd()*glm::vec3(light.getColor())/255.0f);
+                _shaderWrapper->setUniform("directionalLights", nbDirectionalLights, "Ls", light.getLs());
                 nbDirectionalLights++;
             }
             break;
           case PONCTUAL :
             if(nbPonctualLights < MAX_LIGHT && light.getState()) {
-                _shaderProgram->setUniform("ponctualLights", nbPonctualLights, "position", viewMatrix*light.getTransform().getModelMatrix()*glm::vec4(0.0, 0.0, 0.0, 1.0));
-                _shaderProgram->setUniform("ponctualLights", nbPonctualLights, "La", light.getLa()*glm::vec3(light.getColor())/255.0f);
-                _shaderProgram->setUniform("ponctualLights", nbPonctualLights, "Ld", light.getLd()*glm::vec3(light.getColor())/255.0f);
-                _shaderProgram->setUniform("ponctualLights", nbPonctualLights, "Ls", light.getLs());
+                _shaderWrapper->setUniform("ponctualLights", nbPonctualLights, "position", viewMatrix*light.getTransform().getModelMatrix()*glm::vec4(0.0, 0.0, 0.0, 1.0));
+                _shaderWrapper->setUniform("ponctualLights", nbPonctualLights, "La", light.getLa()*glm::vec3(light.getColor())/255.0f);
+                _shaderWrapper->setUniform("ponctualLights", nbPonctualLights, "Ld", light.getLd()*glm::vec3(light.getColor())/255.0f);
+                _shaderWrapper->setUniform("ponctualLights", nbPonctualLights, "Ls", light.getLs());
                 nbPonctualLights++;
             }
             break;
           case SPOT :
             if(nbSpotLights < MAX_LIGHT && light.getState()) {
-                _shaderProgram->setUniform("spotLights", nbSpotLights, "position", viewMatrix*light.getTransform().getModelMatrix()*glm::vec4(0.0, 0.0, 0.0, 1.0));
-                _shaderProgram->setUniform("spotLights", nbSpotLights, "direction", glm::normalize(glm::mat3(viewMatrix*lights[i]->getTransform().getModelMatrix()*light.getTransform().getModelMatrix())*glm::vec3(1.0, 0.0, 0.0)));
-                _shaderProgram->setUniform("spotLights", nbSpotLights, "La", light.getLa()*glm::vec3(light.getColor())/255.0f);
-                _shaderProgram->setUniform("spotLights", nbSpotLights, "Ld", light.getLd()*glm::vec3(light.getColor())/255.0f);
-                _shaderProgram->setUniform("spotLights", nbSpotLights, "Ls", light.getLs());
-                _shaderProgram->setUniform("spotLights", nbSpotLights, "exponent", light.getExponent());
-                _shaderProgram->setUniform("spotLights", nbSpotLights, "cutoff", light.getCutoffAngle());
+                _shaderWrapper->setUniform("spotLights", nbSpotLights, "position", viewMatrix*light.getTransform().getModelMatrix()*glm::vec4(0.0, 0.0, 0.0, 1.0));
+                _shaderWrapper->setUniform("spotLights", nbSpotLights, "direction", glm::normalize(glm::mat3(viewMatrix*lights[i]->getTransform().getModelMatrix()*light.getTransform().getModelMatrix())*glm::vec3(1.0, 0.0, 0.0)));
+                _shaderWrapper->setUniform("spotLights", nbSpotLights, "La", light.getLa()*glm::vec3(light.getColor())/255.0f);
+                _shaderWrapper->setUniform("spotLights", nbSpotLights, "Ld", light.getLd()*glm::vec3(light.getColor())/255.0f);
+                _shaderWrapper->setUniform("spotLights", nbSpotLights, "Ls", light.getLs());
+                _shaderWrapper->setUniform("spotLights", nbSpotLights, "exponent", light.getExponent());
+                _shaderWrapper->setUniform("spotLights", nbSpotLights, "cutoff", light.getCutoffAngle());
                 nbSpotLights++;
             }
             break;
@@ -90,19 +86,19 @@ void ShaderStrategy::setLightUniforms(const std::vector<std::shared_ptr<Light>> 
         }
     }
 
-    _shaderProgram->setUniform("nbPonctualLight", nbPonctualLights);
-    _shaderProgram->setUniform("nbAmbiantLight", nbAmbiantLights);
-    _shaderProgram->setUniform("nbDirectionLight", nbDirectionalLights);
-    _shaderProgram->setUniform("nbSpotLight", nbSpotLights);
+    _shaderWrapper->setUniform("nbPonctualLight", nbPonctualLights);
+    _shaderWrapper->setUniform("nbAmbiantLight", nbAmbiantLights);
+    _shaderWrapper->setUniform("nbDirectionLight", nbDirectionalLights);
+    _shaderWrapper->setUniform("nbSpotLight", nbSpotLights);
 }
 
 void ShaderStrategy::setMatrixUniforms(const glm::mat4& modelMatrix,
                                       const glm::mat4& viewMatrix,
                                       const glm::mat4& projectionMatrix) const
 {
-    _shaderProgram->setUniform("projectionMatrix", projectionMatrix);
-    _shaderProgram->setUniform("viewMatrix", viewMatrix);
-    _shaderProgram->setUniform("modelMatrix", modelMatrix);
+    _shaderWrapper->setUniform("projectionMatrix", projectionMatrix);
+    _shaderWrapper->setUniform("viewMatrix", viewMatrix);
+    _shaderWrapper->setUniform("modelMatrix", modelMatrix);
 }
 
 void ShaderStrategy::setMaterialUniforms(const Material &material) const
@@ -150,7 +146,13 @@ void ShaderStrategy::setMaterialUniforms(const Material &material) const
     for(const auto &pair : material.getTextures())
     {
         if(pair.second->getId() != -1)
-            _shaderProgram->bindTexture(pair.second->getType(), pair.first, pair.second->getId());
+            _shaderWrapper->bindTexture(pair.first, pair.second->getId());
+    }
+
+    for(const auto &pair : material.getCubeTextures())
+    {
+        if(pair.second->getId() != -1)
+            _shaderWrapper->bindCubeTexture(pair.first, pair.second->getId());
     }
 
     for(const auto &subMaterial : material.getMaterials())
@@ -159,20 +161,20 @@ void ShaderStrategy::setMaterialUniforms(const Material &material) const
     }
 }
 
-void ShaderStrategy::setShaderProgram(std::shared_ptr<ShaderProgram> shaderProgram)
+void ShaderStrategy::setShaderWrapper(std::shared_ptr<ShaderWrapper> shaderWrapper)
 {
-    _shaderProgram = shaderProgram;
-    _programId = _shaderProgram->getProgramId();
+    _shaderWrapper = shaderWrapper;
+    _programId = _shaderWrapper->getProgramId();
 }
 
-const std::shared_ptr<ShaderProgram>& ShaderStrategy::getShaderProgram() const
+const std::shared_ptr<ShaderWrapper>& ShaderStrategy::getShaderWrapper() const
 {
-     return _shaderProgram;
+     return _shaderWrapper;
 }
 
 void ShaderStrategy::draw(const Vao &vao) const
 {
-    _shaderProgram->startUseProgram();
+    _shaderWrapper->start();
 
     vao.bind();
     vao.bindIndexBuffer();
@@ -182,7 +184,7 @@ void ShaderStrategy::draw(const Vao &vao) const
     vao.unbindIndexBuffer();
     vao.unbind();
 
-    _shaderProgram->unbindTexture();
+    _shaderWrapper->unbindTexture();
 
-    _shaderProgram->stopUseProgram();
+    _shaderWrapper->stop();
 }

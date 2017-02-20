@@ -1,10 +1,15 @@
 #ifndef TOOL_H
 #define TOOL_H
 
-#include "app/objecttoolable.h"
-#include "scene/assetsstorage.h"
+#include "glm/glm.hpp"
+
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/transform.hpp"
+#include "glm/gtx/transform2.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 #include <nanogui/window.h>
+#include <nanogui/screen.h>
 #include <nanogui/layout.h>
 #include <nanogui/label.h>
 #include <nanogui/combobox.h>
@@ -13,6 +18,12 @@
 #include <nanogui/vscrollpanel.h>
 #include <nanogui/popupbutton.h>
 #include <nanogui/textbox.h>
+#include <nanogui/combobox.h>
+
+#include <iostream>
+#include <memory>
+
+#include "scene/assetsstorage.h"
 
 class Tool : public nanogui::Window
 {
@@ -22,6 +33,13 @@ class Tool : public nanogui::Window
     virtual                                     ~Tool();
 
     void                                        setNVGContext(NVGcontext *context);
+    void                                        setScreen(nanogui::Screen *screen);
+    void                                        setAssetsStorage(std::shared_ptr<AssetsStorage> assetsStorage);
+
+    virtual void                                init();
+    virtual void                                update();
+
+    void                                        removeChildrenWidget(nanogui::Widget *widget);
 
     template <class T>
         void                                    addSlider(nanogui::Widget *widget,
@@ -40,6 +58,7 @@ class Tool : public nanogui::Window
             nanogui::Slider* slider = new nanogui::Slider(panel);
             //slider->setHighlightedRange(std::make_pair(uniform.getMinValue(), uniform.getMaxValue()));
             T range = maxValue - minValue;
+            std::cout << name << " : " << range << std::endl;
             slider->setValue((float)(value - minValue)/range);
             slider->setFixedWidth(100);
 
@@ -49,8 +68,8 @@ class Tool : public nanogui::Window
             textBox->setFontSize(20);
             textBox->setAlignment(nanogui::TextBox::Alignment::Right);
 
-            slider->setCallback([&, textBox, range, callback](float value){
-                                T res = value*range + minValue;
+            slider->setCallback([&, textBox, range, callback](float res){
+                                res = res*range + minValue;
                                 callback(res);
                                 textBox->setValue(std::to_string(res).substr(0, 4));
                                 });
@@ -64,6 +83,13 @@ class Tool : public nanogui::Window
                                                            const std::vector<
                                                            std::function<void(float)>> &callbacks);
 
+    void                                        addComboBox(nanogui::Widget *widget,
+                                                            nanogui::Popup::Side side,
+                                                            const std::string &name,
+                                                            const std::vector<std::string> &items,
+                                                            int id,
+                                                            const std::function<void(int)> &callback);
+
     void                                        addTextures(nanogui::Widget *widget,
                                                             const std::string &name,
                                                             const std::vector<std::string> &textures,
@@ -71,6 +97,9 @@ class Tool : public nanogui::Window
 
   protected:
     NVGcontext*                                 _context;
+    nanogui::Screen*                            _screen;
+
+    std::shared_ptr<AssetsStorage>              _assetsStorage;
 };
 
 #endif // TOOL_H

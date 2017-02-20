@@ -3,8 +3,7 @@
 #include <iostream>
 
 MainTool::MainTool(nanogui::Widget* parent, const std::string& label) :
-    Tool(parent, label),
-    _objectTool(std::make_unique<ObjectTool>(parent, "material"))
+    Tool(parent, label)
 {
 }
 
@@ -16,22 +15,27 @@ void MainTool::init()
 {
     setFixedSize(Eigen::Vector2i(300, 600));
     setPosition(Eigen::Vector2i(0, 0));
-    _objectTool->setAssetsStorage(_assetsStorage);
-    _objectTool->setCurrentObject(_object);
-    _objectTool->init();
+
+    setLayout(new nanogui::GroupLayout());
 }
 
-void MainTool::setAssetsStorage(std::shared_ptr<AssetsStorage> assetsStorage){
-    _assetsStorage = assetsStorage;
-}
-
-void MainTool::setCurrentObject(std::shared_ptr<RenderableObject> object)
+const std::map<std::string, std::shared_ptr<Tool>>& MainTool::getTools() const
 {
-    _object = object;
+    return _tools;
 }
 
-void MainTool::setNVGContext(NVGcontext *context)
+void MainTool::addTool(const std::string& name, std::shared_ptr<Tool> tool)
 {
-    Tool::setNVGContext(context);
-    _objectTool->setNVGContext(context);
+    nanogui::Button *button = new nanogui::Button(this, name);
+    _tools.insert(std::make_pair(name, tool));
+    button->setCallback([&, name]{
+                        for(auto &t : _tools)
+                        {
+                            t.second->setVisible(false);
+                        }
+                        _tools.at(name)->setVisible(true);
+                        _screen->performLayout();
+                        });
 }
+
+

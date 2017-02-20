@@ -3,7 +3,7 @@ PROJECT(Orangutan)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -g -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -g -Wall -fPIC")
 
 option(USE_QT "Enable qt context" OFF)
 
@@ -55,6 +55,7 @@ set(LIBS
 file (GLOB APPSRCFILES src/app/*.cpp)
 file (GLOB CORESRCFILES src/core/*.cpp)
 file (GLOB OBJECTSRCFILES src/object/*.cpp)
+file (GLOB CAMERASRCFILES src/camera/*.cpp)
 file (GLOB PHYSICSSRCFILES src/physics/*.cpp)
 file (GLOB SCENESRCFILES src/scene/*.cpp)
 file (GLOB SHADERSRCFILES src/shader/*.cpp)
@@ -67,6 +68,7 @@ if(USE_QT)
         ${APPSRCFILES}
         ${CORESRCFILES}
         ${OBJECTSRCFILES}
+        ${CAMERASRCFILES}
         ${PHYSICSSRCFILES}
         ${SCENESRCFILES}
         ${SHADERSRCFILES}
@@ -76,17 +78,28 @@ if(USE_QT)
         )
 else()
     file (GLOB NANOGUIAPPSRCFILES src/app/nanogui/*.cpp)
+    file (GLOB NANOGUIVIEWSRCFILES src/view/nanogui/*.cpp)
     file (GLOB NANOGUICORESRCFILES src/core/nanogui/*.cpp)
+    file (GLOB NANOGUICORESHADERSRCFILES src/core/nanogui/shader/*.cpp)
+    file (GLOB NANOGUICORETEXTURESRCFILES src/core/nanogui/texture/*.cpp)
+    file (GLOB NANOGUICOREBUFFERSRCFILES src/core/nanogui/buffer/*.cpp)
+    file (GLOB NANOGUICOREVERTEXSRCFILES src/core/nanogui/vertex/*.cpp)
     set(SRCFILES
         ${APPSRCFILES}
         ${CORESRCFILES}
         ${OBJECTSRCFILES}
+        ${CAMERASRCFILES}
         ${PHYSICSSRCFILES}
         ${SCENESRCFILES}
         ${SHADERSRCFILES}
         ${UTILSRCFILES}
         ${NANOGUIAPPSRCFILES}
+        ${NANOGUIVIEWSRCFILES}
         ${NANOGUICORESRCFILES}
+        ${NANOGUICORESHADERSRCFILES}
+        ${NANOGUICORETEXTURESRCFILES}
+        ${NANOGUICOREBUFFERSRCFILES}
+        ${NANOGUICOREVERTEXSRCFILES}
         )
 endif()
 

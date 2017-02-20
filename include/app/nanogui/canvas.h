@@ -11,7 +11,10 @@
 class Canvas : public Canvasable, public nanogui::GLCanvas, public Rendererable
 {
 public:
-                                                Canvas(GLFWwindow *GLFWWindow, nanogui::Widget *parent = 0, unsigned int width = 600, unsigned int height = 400);
+                                                Canvas(GLFWwindow *GLFWWindow,
+                                                       nanogui::Widget *parent = 0,
+                                                       unsigned int width = 600,
+                                                       unsigned int height = 400);
     virtual                                     ~Canvas();
 
     virtual void                                init(){};
@@ -22,15 +25,28 @@ public:
 
     virtual void                                drawGL();
 
-    virtual bool                                keyboardEvent(int key, int scancode, int action, int modifiers);
+    virtual bool                                keyboardEvent(int key,
+                                                              int scancode,
+                                                              int action,
+                                                              int modifiers);
 
-    virtual bool                                mouseMotionEvent(const Eigen::Vector2i &p, const Eigen::Vector2i &rel, int button, int modifiers);
+    virtual bool                                mouseMotionEvent(const Eigen::Vector2i &p,
+                                                                 const Eigen::Vector2i &rel,
+                                                                 int button, int modifiers);
 
-    virtual bool                                mouseButtonEvent(const Eigen::Vector2i &p, int button, bool down, int modifiers);
+    virtual bool                                mouseButtonEvent(const Eigen::Vector2i &p,
+                                                                 int button,
+                                                                 bool down,
+                                                                 int modifiers);
 
-    virtual bool                                scrollEvent(const Eigen::Vector2i &p, const Eigen::Vector2f &rel);
+    virtual bool                                scrollEvent(const Eigen::Vector2i &p,
+                                                            const Eigen::Vector2f &rel);
 
-    virtual void                                createFrameBuffer(unsigned int *fboHandle, unsigned int *depthBuf, unsigned int *renderTex1, unsigned int *renderTex2, int width, int height);
+    virtual void                                createFrameBuffer(unsigned int *fboHandle,
+                                                                  unsigned int *depthBuf,
+                                                                  unsigned int *renderTex1,
+                                                                  unsigned int *renderTex2,
+                                                                  int width, int height);
 
 private:
     Eigen::Vector2i                             _lastMousePosition;

@@ -18,7 +18,7 @@ Material MaterialFactory::createPhongMaterial()
                     glm::vec3(1.0f, 1.0f, 1.0f));
     m.createUniform("Ns", 3.0f, 0.5f, 20.0f);
 
-    m.addTexture("colorMap", std::make_shared<Texture>());
+    m.addTexture("colorMap", std::make_shared<DDTexture>());
 
     return m;
 }
@@ -27,10 +27,10 @@ Material MaterialFactory::createRefractionMaterial()
 {
     Material m("Refraction");
 
-    m.createUniform("refractionRatio", 0.3f, 0.0f, 1.0f);
+    m.createUniform("refractionRatio", 0.8f, 0.0f, 2.0f);
     m.createUniform("reflexionRatio", 0.6f, 0.0f, 1.0f);
 
-    m.addTexture("cubeMap", std::make_shared<Texture>());
+    m.addCubeTexture("cubeMap", std::make_shared<CubeTexture>());
 
     return m;
 }
@@ -52,7 +52,7 @@ Material MaterialFactory::createSkyboxMaterial()
                     glm::vec3(0.0f, 0.0f, 0.0f),
                     glm::vec3(1.0f, 1.0f, 1.0f));
 
-    m.addTexture("cubeMap", std::make_shared<Texture>());
+    m.addCubeTexture("cubeMap", std::make_shared<CubeTexture>());
 
     return m;
 }

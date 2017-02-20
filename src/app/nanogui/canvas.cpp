@@ -2,16 +2,15 @@
 #include "util/keyboard.h"
 
 Canvas::Canvas(GLFWwindow *GLFWWindow, nanogui::Widget* parent, unsigned int width, unsigned int height) :
-    _GLFWWindow(GLFWWindow),
     Canvasable(width, height),
-    nanogui::GLCanvas(parent)
+    nanogui::GLCanvas(parent),
+    _GLFWWindow(GLFWWindow)
 {
     resize(width, height);
 
     nanogui::Color color(0.3f, 0.0f, 0.56f, 1.0f);
 
     setBackgroundColor(color);
-
 }
 
 Canvas::~Canvas()

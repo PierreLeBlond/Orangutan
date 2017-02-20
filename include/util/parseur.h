@@ -12,10 +12,8 @@
 class Parseur
 {
 public:
-                                        Parseur();
-
-    static std::vector<std::shared_ptr<Material> >      parseMtl(const char* filename);
-    static std::vector<std::shared_ptr<Mesh> >          parseObj(const char* filename);
+    static std::vector<std::shared_ptr<Material> >      parseMtl(const std::string& filename);
+    static std::vector<std::shared_ptr<Mesh> >          parseObj(const std::string& filename);
 };
 
 #endif // PARSEUR_H

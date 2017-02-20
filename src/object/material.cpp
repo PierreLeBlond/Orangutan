@@ -54,12 +54,24 @@ bool Material::addUniform(const Uniform<glm::mat4> &u)
 }
 
 bool Material::addTexture(const std::string& name,
-                          std::shared_ptr<Texture> texture)
+                          std::shared_ptr<DDTexture> texture)
 {
     bool b = false;
     if(_textures.find(name) == _textures.end())
     {
         _textures.insert(std::make_pair(name, texture));
+        b = true;
+    }
+    return b;
+}
+
+bool Material::addCubeTexture(const std::string& name,
+                          std::shared_ptr<CubeTexture> texture)
+{
+    bool b = false;
+    if(_cubeTextures.find(name) == _cubeTextures.end())
+    {
+        _cubeTextures.insert(std::make_pair(name, texture));
         b = true;
     }
     return b;
@@ -106,7 +118,7 @@ bool Material::setUniform(const std::string& name, const glm::mat4 &value)
 }
 
 bool Material::setTexture(const std::string& name,
-                          std::shared_ptr<Texture> texture)
+                          std::shared_ptr<DDTexture> texture)
 {
     bool b = false;
     auto it = _textures.find(name);
@@ -121,6 +133,27 @@ bool Material::setTexture(const std::string& name,
         for(auto& material : _materials)
         {
             b = material.setTexture(name, texture);
+        }
+    }
+    return b;
+}
+
+bool Material::setCubeTexture(const std::string& name,
+                          std::shared_ptr<CubeTexture> texture)
+{
+    bool b = false;
+    auto it = _cubeTextures.find(name);
+    if(it != _cubeTextures.end())
+    {
+        b = true;
+        it->second = texture;
+    }
+
+    if(!b)
+    {
+        for(auto& material : _materials)
+        {
+            b = material.setCubeTexture(name, texture);
         }
     }
     return b;
@@ -166,7 +199,7 @@ bool Material::getUniform(const std::string& name, glm::mat4 &value) const
     return getUniform(name, value, _4x4funiforms);
 }
 
-bool Material::getTexture(const std::string& name, std::shared_ptr<Texture>& texture) const
+bool Material::getTexture(const std::string& name, std::shared_ptr<DDTexture>& texture) const
 {
     bool b = false;
     auto it = _textures.find(name);
@@ -181,6 +214,27 @@ bool Material::getTexture(const std::string& name, std::shared_ptr<Texture>& tex
         for(auto& material : _materials)
         {
             b = material.getTexture(name, texture);
+        }
+    }
+
+    return b;
+}
+
+bool Material::getCubeTexture(const std::string& name, std::shared_ptr<CubeTexture>& texture) const
+{
+    bool b = false;
+    auto it = _cubeTextures.find(name);
+    if(it != _cubeTextures.end())
+    {
+        b = true;
+        texture = it->second;
+    }
+
+    if(!b)
+    {
+        for(auto& material : _materials)
+        {
+            b = material.getCubeTexture(name, texture);
         }
     }
 
@@ -228,7 +282,13 @@ const std::vector<Uniform<glm::mat4>>& Material::get4x4fUniforms() const
 }
 
 const std::map<std::string,
-      std::shared_ptr<Texture>>& Material::getTextures() const
+      std::shared_ptr<DDTexture>>& Material::getTextures() const
 {
     return _textures;
+}
+
+const std::map<std::string,
+      std::shared_ptr<CubeTexture>>& Material::getCubeTextures() const
+{
+    return _cubeTextures;
 }

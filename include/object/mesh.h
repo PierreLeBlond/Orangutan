@@ -16,44 +16,37 @@
 class Mesh : public Asset
 {
 public:
-                                            Mesh(std::string name = "untitled");
-                                            Mesh(const Mesh& mesh);
-                                            ~Mesh();
-    Mesh&                                   operator=(const Mesh& mesh);
+                                            Mesh(const std::string& name = "Mesh X");
 
-    void                                    setObj(std::vector<glm::vec3> vertexList,
-                                                std::vector<glm::vec3> normalList,
-                                                std::vector<glm::vec2> texCoordList,
-                                                std::vector<unsigned int> faceIndexes);
+    void                                    setPositions(const std::vector<glm::vec3>& positions);
+    void                                    setPositions(const std::vector<float>& positions);
+    void                                    setNormals(const std::vector<glm::vec3>& normals);
+    void                                    setNormals(const std::vector<float>& normals);
+    void                                    setUvs(const std::vector<glm::vec2>& uvs);
+    void                                    setUvs(const std::vector<float>& uvs);
+    void                                    setFaces(const std::vector<unsigned int>& faces);
 
-    inline unsigned int                     getNumberOfVertices() const { return _numberOfVertices; }
-    inline unsigned int                     getNumberOfNormals() const { return _numberOfNormals; }
-    inline unsigned int                     getNumberOfTexCoords() const { return _numberOfTexCoords; }
-    inline unsigned int                     getNumberOfTriangles() const { return _numberOfTriangles; }
-    inline const float*                     getPositions() const { return _positions; }
-    inline const float*                     getNormals() const { return _normals; }
-    inline const float*                     getTexCoords() const { return _texCoords; }
-    inline const unsigned int *             getIndexes() const { return _indexes; }
+    unsigned int                            getNumberOfPositions() const;
+    unsigned int                            getNumberOfNormals() const;
+    unsigned int                            getNumberOfUvs() const;
+    unsigned int                            getNumberOfFaces() const;
 
-    void                                    copyPositions(const float* positions);
-    void                                    copyNormals(const float* normals);
-    void                                    copyTexCoords(const float* texCoord);
-    void                                    copyIndexes(const unsigned int * indexes);
+    const std::vector<float>&               getPositions() const;
+    const std::vector<float>&               getNormals() const;
+    const std::vector<float>&               getUvs() const;
+    const std::vector<unsigned int>&        getFaces() const;
 
-    static std::shared_ptr<Mesh>            createSquare(const std::string& name = "square");
-    static std::shared_ptr<Mesh>            createCube(int resolution = 1, const std::string& name = "cube");
-    static std::shared_ptr<Mesh>            createSphere(int resolution = 8, const std::string& name = "sphere");
-    static std::shared_ptr<Mesh>            createCylinder( int resolution = 8, const std::string& name = "cylindre");
+    static std::shared_ptr<Mesh>            createSquare(const std::string& name = "Square X");
+    static std::shared_ptr<Mesh>            createCube(int resolution = 1,
+                                                       const std::string& name = "Cube X");
+    static std::shared_ptr<Mesh>            createSphere(int resolution = 8,
+                                                         const std::string& name = "Sphere X");
+    static std::shared_ptr<Mesh>            createCylinder(int resolution = 8,
+                                                           const std::string& name = "Cylindre X");
 
 private:
-
-    unsigned int                             _numberOfVertices;
-    unsigned int                             _numberOfNormals;
-    unsigned int                             _numberOfTexCoords;
-    unsigned int                             _numberOfTriangles;
-
-    float*                                  _positions;
-    float*                                  _normals;
-    float*                                  _texCoords;
-    unsigned int*                           _indexes;
+    std::vector<float>                       _positions;
+    std::vector<float>                       _normals;
+    std::vector<float>                       _uvs;
+    std::vector<unsigned int>                _faces;
 };

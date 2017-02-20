@@ -12,8 +12,6 @@
 
 class Transformable{
 public:
-    virtual                     ~Transformable(){}
-
     virtual void                setGlobalMatrix(const glm::mat4& sceneMatrix) = 0;
     virtual void                setModelMatrix(const glm::mat4& modelMatrix) = 0;
 
@@ -71,6 +69,11 @@ public:
     inline float getZPos() const { return _zPos;}
 
     inline glm::vec3 getPos() const { return glm::vec3(_xPos, _yPos, _zPos);}
+    inline glm::vec3 getGlobalPos() const { return glm::vec3(_globalMatrix[3][0],
+                                                              _globalMatrix[3][1],
+                                                              _globalMatrix[3][2]); }
+
+
 
     inline float getXScale() const {return _xScale;}
     inline float getYScale() const {return _yScale;}

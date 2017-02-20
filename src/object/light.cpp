@@ -1,12 +1,10 @@
 #include "object/light.h"
 
-Light::Light() : _Ld(glm::vec3(0.75f, 0.75f, 0.75f)), _La(glm::vec3(0.75f, 0.75f, 0.75f)), _Ls(glm::vec3(1.0f, 1.0f, 1.0f)),
-  _type(PONCTUAL), _state(true), _color(glm::vec4(255, 255, 255, 255)),
-  _cutoffAngle(30), _exponent(10)
-{
-}
-
-Light::~Light()
+Light::Light() : _color(glm::vec4(255, 255, 255, 255)),
+    _Ld(glm::vec3(0.75f, 0.75f, 0.75f)),
+    _La(glm::vec3(0.75f, 0.75f, 0.75f)),
+    _Ls(glm::vec3(1.0f, 1.0f, 1.0f)),
+    _type(PONCTUAL), _cutoffAngle(30), _exponent(10), _state(true)
 {
 }
 

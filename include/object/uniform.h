@@ -10,7 +10,6 @@ class Uniform : public Asset
                                     Uniform(const std::string &name);
                                     Uniform(const std::string &name, const T& value);
                                     Uniform(const std::string &name, const T& value, const T& minValue, const T& maxValue);
-    virtual                         ~Uniform();
 
     void                            setValue(const T& value);
     const T&                        getValue() const;

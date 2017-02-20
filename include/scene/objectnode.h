@@ -85,11 +85,8 @@ public:
     virtual void                setZTranslationBigAxe(int l);
 
 private:
-    /* Associated Object */
     std::shared_ptr<Object>                     _object;
-    /* Array of child nodes */
     std::vector<std::shared_ptr<ObjectNode>>    _childs;
-    /* Transform component */
     Transform                                   _transform;
 
 };
