@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-void* Image::loadPNG(const char* filename, int* width, int* height)
+unsigned char* Image::loadPNG(const char* filename, int* width, int* height)
 {
     unsigned char header[8];
     FILE* fp = fopen(filename, "rb");
@@ -54,7 +54,7 @@ void* Image::loadPNG(const char* filename, int* width, int* height)
                 std::cout << "Color type must be RGBA" << std::endl;
 
             unsigned int row_bytes = png_get_rowbytes(png_ptr, info_ptr);
-            unsigned char *data = (unsigned char*) malloc(row_bytes * *height);
+            unsigned char *data = new unsigned char[(row_bytes * *height)];
 
             png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);
 

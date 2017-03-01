@@ -5,7 +5,7 @@
 
 #include "util/util.h"
 
-class Camera : public ObjectNode, public Asset
+class Camera : public ObjectNode
 {
 public:
                                 Camera(unsigned int width, unsigned int height,

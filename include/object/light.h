@@ -10,7 +10,7 @@ enum light_type {
 class Light : public Object
 {
 public:
-                                    Light();
+                                    Light(const std::string& name = "Light X");
 
     const glm::vec4&                getColor() const;
     const glm::vec3&                getLd() const;

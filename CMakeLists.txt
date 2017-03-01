@@ -79,6 +79,7 @@ if(USE_QT)
 else()
     file (GLOB NANOGUIAPPSRCFILES src/app/nanogui/*.cpp)
     file (GLOB NANOGUIVIEWSRCFILES src/view/nanogui/*.cpp)
+    file (GLOB NANOGUIMODELSRCFILES src/model/*.cpp)
     file (GLOB NANOGUICORESRCFILES src/core/nanogui/*.cpp)
     file (GLOB NANOGUICORESHADERSRCFILES src/core/nanogui/shader/*.cpp)
     file (GLOB NANOGUICORETEXTURESRCFILES src/core/nanogui/texture/*.cpp)
@@ -95,6 +96,7 @@ else()
         ${UTILSRCFILES}
         ${NANOGUIAPPSRCFILES}
         ${NANOGUIVIEWSRCFILES}
+        ${NANOGUIMODELSRCFILES}
         ${NANOGUICORESRCFILES}
         ${NANOGUICORESHADERSRCFILES}
         ${NANOGUICORETEXTURESRCFILES}

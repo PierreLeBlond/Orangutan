@@ -12,7 +12,7 @@
 class Image
 {
 public:
-    static void*                        loadPNG(const char* filename, int* width, int* height);
+    static unsigned char*                        loadPNG(const char* filename, int* width, int* height);
 };
 
 #endif // IMAGE_H

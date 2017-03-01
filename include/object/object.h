@@ -13,8 +13,7 @@ class Light;
 class Object : public Asset, public Transformable
 {
 public:
-                                Object();
-                                Object(const std::string &name);
+                                Object(const std::string &name = "Object X");
 
     const Transform&            getTransform() const;
     void                        setTransform(const Transform& transform);

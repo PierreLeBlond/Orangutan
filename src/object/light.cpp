@@ -1,6 +1,8 @@
 #include "object/light.h"
 
-Light::Light() : _color(glm::vec4(255, 255, 255, 255)),
+Light::Light(const std::string& name) :
+    Object(name),
+    _color(glm::vec4(255, 255, 255, 255)),
     _Ld(glm::vec3(0.75f, 0.75f, 0.75f)),
     _La(glm::vec3(0.75f, 0.75f, 0.75f)),
     _Ls(glm::vec3(1.0f, 1.0f, 1.0f)),

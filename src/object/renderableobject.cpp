@@ -98,8 +98,6 @@ void RenderableObject::setShaderStrategy(std::shared_ptr<const ShaderStrategy>
                                          shaderStrategy)
 {
     _shaderMaterial.setShaderStrategy(shaderStrategy);
-    initVertexArrayObject();
-    fillInVBO();
 }
 
 bool RenderableObject::setTexture(const std::string& name,

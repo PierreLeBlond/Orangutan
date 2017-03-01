@@ -1,5 +1,12 @@
 #include "model/assetsfactory.h"
 
+AssetsFactory AssetsFactory::_instance;
+
+AssetsFactory& AssetsFactory::instance()
+{
+    return _instance;
+}
+
 std::vector<std::shared_ptr<Mesh>> AssetsFactory::importMeshs(const std::string& filename,
                                                               const std::string& name)
 {
@@ -12,7 +19,7 @@ std::vector<std::shared_ptr<Mesh>> AssetsFactory::importMeshs(const std::string&
     return meshs;
 }
 
-int AssetsFactory::importTexture(const std::string& filename,
+std::shared_ptr<DDTexture> AssetsFactory::importTexture(const std::string& filename,
                                  const std::string& name)
 {
     std::shared_ptr<DDTexture> texture = std::make_shared<DDTexture>(filename, name);
@@ -20,7 +27,7 @@ int AssetsFactory::importTexture(const std::string& filename,
     return texture;
 }
 
-int AssetsFactory::importCubeMapTexture(const std::string& filename,
+std::shared_ptr<CubeTexture> AssetsFactory::importCubeMapTexture(const std::string& filename,
                                         const std::string& name)
 {
     std::shared_ptr<CubeTexture> texture = std::make_shared<CubeTexture>();
@@ -29,7 +36,7 @@ int AssetsFactory::importCubeMapTexture(const std::string& filename,
     return texture;
 }
 
-int AssetsFactory::importShader(const std::string& vertexFilename,
+std::shared_ptr<ShaderWrapper> AssetsFactory::importShader(const std::string& vertexFilename,
                                 const std::string& fragmentFilename,
                                 const std::string& geometryFilename)
 {
@@ -38,7 +45,7 @@ int AssetsFactory::importShader(const std::string& vertexFilename,
     return shaderWrapper;
 }
 
-int AssetsFactory::createShaderStrategy(std::shared_ptr<ShaderWrapper> shaderWrapper,
+std::shared_ptr<ShaderStrategy> AssetsFactory::createShaderStrategy(std::shared_ptr<ShaderWrapper> shaderWrapper,
                                            const std::string& name)
 {
     std::shared_ptr<ShaderStrategy> strategy;

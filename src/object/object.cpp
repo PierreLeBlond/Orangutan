@@ -4,10 +4,6 @@
 
 using namespace std;
 
-Object::Object()
-{
-}
-
 Object::Object(const string &name) : Asset(name)
 {
 }

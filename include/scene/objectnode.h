@@ -18,10 +18,10 @@
 
 class LightNode;
 
-class ObjectNode : public Transformable
+class ObjectNode : public Transformable, public Asset
 {
 public:
-                                             ObjectNode();
+                                             ObjectNode(const std::string& name = "ObjectNode X");
 
     void                                     setObject(std::shared_ptr<Object> object);
     void                                     addChild(std::shared_ptr<ObjectNode> node);

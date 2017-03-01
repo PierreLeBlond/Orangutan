@@ -34,15 +34,17 @@ bool DDTexture::load(const std::string &path) {
 
     int w = 0, h = 0;
 
-    void* data = Image::loadPNG(_path.c_str(), &w, &h);
+    unsigned char* data = Image::loadPNG(_path.c_str(), &w, &h);
 
-    if(success = (data != NULL))
+    if(success = (data != nullptr))
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
         glBindTexture(GL_TEXTURE_2D, 0);
+
+        delete[] data;
     }
 
     return success;

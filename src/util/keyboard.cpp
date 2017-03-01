@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-Keyboard Keyboard::_instance=Keyboard();
+Keyboard Keyboard::_instance;
 
 Keyboard::Keyboard()
 {

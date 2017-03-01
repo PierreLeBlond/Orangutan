@@ -2,6 +2,11 @@
 
 #include <nanogui/opengl.h>
 
+ShaderWrapper::ShaderWrapper(const std::string& name) :
+    Asset(name)
+{
+}
+
 void ShaderWrapper::build(const std::string& vertexShaderPath,
                           const std::string& fragmentShaderPath,
                           const std::string& geometryShaderPath)

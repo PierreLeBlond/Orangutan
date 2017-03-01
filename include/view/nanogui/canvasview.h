@@ -14,6 +14,8 @@ public:
     void                                        start();
     void                                        stop();
 
+    void                                        setDrawCall(const std::function<void()>& drawcall);
+
     virtual void                                drawGL();
 
     virtual bool                                mouseMotionEvent(const Eigen::Vector2i &p,

@@ -15,13 +15,14 @@
 #include "core/shader/shaderprogram.h"
 #include "core/texture/texture.h"
 
+#include "object/asset.h"
+
 #define MAX_LIGHT 8
 
-class ShaderWrapper
+class ShaderWrapper : public Asset
 {
-public:
-    void                                        storeUniformLocation();
-    void                                        storeAttributeLocation();
+  public:
+                                                ShaderWrapper(const std::string& name = "ShaderWrapper X");
 
     void                                        build(const std::string& vertexShaderPath,
                                                       const std::string& fragmentShaderPath,
@@ -30,33 +31,36 @@ public:
     void                                        start() const;
     void                                        stop() const;
 
+    void                                        storeUniformLocation();
+    void                                        storeAttributeLocation();
+
     int                                         getUniformLocation(const std::string &name) const;
     std::vector<std::string>                    getUniformsName() const;
     int                                         getAttributeLocation(const std::string &name) const;
 
     template<typename T>
-    void                                        setUniform(const std::string &structName, const std::string &name, const T &val)
-    {
-         std::ostringstream ost;
-         ost << structName << "." << name;
-         setUniform(ost.str(), val);
-    }
+        void                                        setUniform(const std::string &structName, const std::string &name, const T &val)
+        {
+            std::ostringstream ost;
+            ost << structName << "." << name;
+            setUniform(ost.str(), val);
+        }
 
     template<typename T>
-    void                                        setUniform(const std::string &structName, int index, const std::string &name, const T &val)
-    {
-        std::ostringstream ost;
-        ost << structName << "[" << index << "]." << name;
-        setUniform(ost.str(), val);
-    }
+        void                                        setUniform(const std::string &structName, int index, const std::string &name, const T &val)
+        {
+            std::ostringstream ost;
+            ost << structName << "[" << index << "]." << name;
+            setUniform(ost.str(), val);
+        }
 
     template<typename T>
-    void                                        setUniform(const std::string &name, int index, const T &val)
-    {
-        std::ostringstream ost;
-        ost << name << "[" << index << "]";
-        setUniform(ost.str(), val);
-    }
+        void                                        setUniform(const std::string &name, int index, const T &val)
+        {
+            std::ostringstream ost;
+            ost << name << "[" << index << "]";
+            setUniform(ost.str(), val);
+        }
 
     void                                        setUniform(const std::string &name, const glm::vec3 &v);
     void                                        setUniform(const std::string &name, const glm::vec4 &v);
@@ -73,7 +77,7 @@ public:
 
     unsigned int                                getProgramId() const;
 
-private:
+  private:
     ShaderProgram                               _shaderProgram;
 
     std::map<std::string, int>                  _uniformLocations;

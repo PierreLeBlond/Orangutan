@@ -11,7 +11,7 @@ CanvasView::CanvasView(nanogui::Widget* parent, unsigned int width, unsigned int
     nanogui::Color color(0.3f, 0.0f, 0.56f, 1.0f);
 
     setBackgroundColor(color);
-    setDrawBorder(false);
+    setDrawBorder(true);
 }
 
 void CanvasView::start()
@@ -22,6 +22,11 @@ void CanvasView::start()
 void CanvasView::stop()
 {
     _draw = false;
+}
+
+void CanvasView::setDrawCall(const std::function<void()>& drawcall)
+{
+    _drawCall = drawcall;
 }
 
 void CanvasView::drawGL()

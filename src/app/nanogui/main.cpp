@@ -9,9 +9,8 @@ int main(int argc, char *argv[])
         /* scoped variables */ {
             App app;
             app.init();
-            app.initAssets();
-            //app->drawAll();
-            //app->setVisible(true);
+            app.initUniverse();
+            app.initScene();
             nanogui::mainloop();
         }
 

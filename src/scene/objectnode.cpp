@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-ObjectNode::ObjectNode()
+ObjectNode::ObjectNode(const std::string& name) : Asset(name)
 {
 }
 

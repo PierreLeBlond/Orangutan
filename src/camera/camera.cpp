@@ -5,7 +5,7 @@
 #include "glm/gtx/string_cast.hpp"
 
 Camera::Camera(unsigned int width, unsigned int height, const std::string& name) :
-    Asset(name),
+    ObjectNode(name),
     _mode(PERSPECTIVE),
     _fovy(75.0f), _width(width), _height(height),
     _eyePosition(glm::vec3(0.0f, 0.0f, 10.0f)),

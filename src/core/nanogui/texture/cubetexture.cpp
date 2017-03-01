@@ -27,7 +27,7 @@ bool CubeTexture::load(const std::string &path)
 
     bool success = true;
 
-    const char* suffixes[] = { "posx", "negx", "posy", "negy", "negz", "posz"};
+    std::string suffixes[] = { "posx", "negx", "posy", "negy", "negz", "posz"};
     std::string baseFileName = path;
     std::string extension = ".png";
 
@@ -65,9 +65,12 @@ bool CubeTexture::load(const std::string &path)
     {
         std::string texName = baseFileName + suffixes[i] + extension;
         int w = 0, h = 0;
-        void* data = Image::loadPNG(texName.c_str(), &w, &h);
-        if(success = (success && data != NULL))
+        unsigned char* data = Image::loadPNG(texName.c_str(), &w, &h);
+        if(success = (success && data != nullptr))
+        {
             glTexImage2D(targets[i], 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+            delete[] data;
+        }
     }
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

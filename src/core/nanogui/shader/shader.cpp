@@ -60,7 +60,7 @@ bool Shader::compile(const std::string& path)
 std::string Shader::fileToString(const std::string& filename)
 {
     FILE *fp;
-    char *content = NULL;
+    char *content = nullptr;
 
     int count = 0;
 
@@ -69,7 +69,7 @@ std::string Shader::fileToString(const std::string& filename)
         //fopen_s doesn't work on linux, let's keep good old fopen
         fp = fopen(filename.c_str(), "rt");
 
-        if (fp != NULL)
+        if (fp != nullptr)
         {
             fseek(fp, 0, SEEK_END);
             count = ftell(fp);
@@ -90,7 +90,10 @@ std::string Shader::fileToString(const std::string& filename)
         }
     }
 
-    return std::move(std::string(content));
+    std::string str(content);
+    delete[] content;
+
+    return str;
 }
 
 bool Shader::printShaderInfo(const std::string& msg)
