@@ -27,9 +27,11 @@ void Scene::build(Universe& universe)
     setCurrentCamera(trackBallCamera);
 
     _sceneTree->addChild(trackBallCamera);
-    /*std::shared_ptr<FreeCamera> freeCamera = std::make_shared<FreeCamera>(600, 600);
-    addCamera(freeCamera);*/
 
+    std::shared_ptr<FreeCamera> freeCamera = std::make_shared<FreeCamera>(600, 600);
+    addCamera(freeCamera);
+
+    _sceneTree->addChild(trackBallCamera);
 
     //CubeMap
     std::shared_ptr<RenderableObject> cubeMap =
@@ -94,7 +96,7 @@ void Scene::build(Universe& universe)
     addRenderableObject(minion);
 
     setCurrentRenderableObject(minion);
-    trackBallCamera->setFocus(getRenderableObjectLibrary().getCurrentItem());
+    trackBallCamera->setFocusObject(getRenderableObjectLibrary().getCurrentItem());
 
     node = std::make_shared<ObjectNode>();
     node->setObject(minion);

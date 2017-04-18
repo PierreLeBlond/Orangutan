@@ -1,4 +1,4 @@
-#include "app/nanogui/app.h"
+#include "app/app.h"
 #include <iostream>
 
 int main(int argc, char *argv[])
@@ -9,8 +9,6 @@ int main(int argc, char *argv[])
         /* scoped variables */ {
             App app;
             app.init();
-            app.initUniverse();
-            app.initScene();
             nanogui::mainloop();
         }
 

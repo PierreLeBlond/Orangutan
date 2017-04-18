@@ -31,6 +31,8 @@ class Universe : public ObjectLibrary
 
     void                                addScene(std::shared_ptr<Scene> item);
 
+    bool                                setCurrentScene(std::shared_ptr<Scene> item);
+
   private:
 
     Library<Mesh>                       _meshs;

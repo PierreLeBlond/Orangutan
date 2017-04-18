@@ -1,4 +1,4 @@
-#include "view/nanogui/view.h"
+#include "view/view.h"
 #include <nanovg.h>
 
 View::View(nanogui::Widget *parent, const std::string& label) :
@@ -39,16 +39,17 @@ void View::addSliders(nanogui::Widget *widget,
 }
 
 void View::addTextures(nanogui::Widget *widget,
+                       NVGcontext* context,
                        const std::string &name,
                        const std::vector<std::string> &textures,
                        const std::function<void(int)> &callback)
 {
     std::vector<std::pair<int, std::string>> images;
 
-    for(const auto& name : textures)
+    for(const auto& path : textures)
     {
-        //int id = nvgCreateImage(_context, name.c_str(), 0);
-        //images.push_back(std::make_pair(id, name));
+        int id = nvgCreateImage(context, path.c_str(), 0);
+        images.push_back(std::make_pair(id, path));
     }
 
     nanogui::PopupButton *popupButton = new nanogui::PopupButton(widget, name);

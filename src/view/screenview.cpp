@@ -1,4 +1,4 @@
-#include "view/nanogui/screenview.h"
+#include "view/screenview.h"
 #include "core/debug.h"
 
 #include <nanogui/window.h>

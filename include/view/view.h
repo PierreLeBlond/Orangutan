@@ -81,6 +81,7 @@ class View : public nanogui::Window
                                                             const std::function<void(int)> &callback);
 
     void                                        addTextures(nanogui::Widget *widget,
+                                                            NVGcontext* context,
                                                             const std::string &name,
                                                             const std::vector<std::string> &textures,
                                                             const std::function<void(int)> &callback);

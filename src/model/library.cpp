@@ -34,7 +34,7 @@ template <class T>
 bool Library<T>::getItemById(unsigned int index, std::shared_ptr<T>& item) const
 {
     bool success = false;
-    if(success = (index < _items.size()))
+    if((success = (index < _items.size())))
     {
         item = _items[index];
     }
@@ -58,7 +58,7 @@ template <class T>
 bool Library<T>::setCurrentItemById(unsigned int index)
 {
     bool success = false;
-    if(success = (index < _items.size()))
+    if((success = (index < _items.size())))
         _currentItemId = index;
     return success;
 }
@@ -68,7 +68,7 @@ bool Library<T>::setCurrentItemByValue(std::shared_ptr<T> item)
 {
     bool success = false;
     for(unsigned int id = 0; !success && id < _items.size(); ++id)
-        if(success = (item.get() == _items[id].get()))
+        if((success = (item.get() == _items[id].get())))
             _currentItemId = id;
     return success;
 }

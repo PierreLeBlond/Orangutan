@@ -65,20 +65,6 @@ void Screen::init()
 
     _mainTool.addTool("Camera Tool", cameraTool);
 
-    std::vector<std::string> cameraNames;
-
-    for(const auto& camera : _scene->getCameras())
-        cameraNames.push_back(camera->getName());
-
-    _mainTool.addComboBox(&_mainTool, nanogui::Popup::Right,
-                          "Cameras", cameraNames, 0,
-                          [&, cameraTool](int id){
-                          _scene->setCurrentCamera(_scene->getCameras().at(id));
-                          cameraTool->setCamera(_scene->getCurrentCamera());
-                          _scene->getCurrentCamera()->setFocus(_scene->getCurrentRenderableObject());
-                          cameraTool->update();
-                          });
-
     new nanogui::Label(this, "Object");
 
     std::shared_ptr<ObjectTool> objectTool = std::make_shared<ObjectTool>(this, "Object");

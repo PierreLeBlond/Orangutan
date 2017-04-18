@@ -9,48 +9,9 @@ FreeCamera::FreeCamera(unsigned int width, unsigned int height, const std::strin
 {
 }
 
-void FreeCamera::pitch(float pitchAngle)
-{
-    _pitchAngle = ((int)(_pitchAngle + pitchAngle)) % 360;
-    glm::mat4 pitchMatrix = glm::rotate(_pitchAngle, 0.0f, 0.0f, 1.0f);
-    glm::mat4 yawMatrix = glm::rotate(_yawAngle, 0.0f, -1.0f, 0.0f);
-    glm::mat4 rollMatrix = glm::rotate(_rollAngle, 1.0f, 0.0f, 0.0f);
-
-    _roll = glm::vec3(rollMatrix*yawMatrix*pitchMatrix*glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-    _yaw = glm::vec3(rollMatrix*yawMatrix*pitchMatrix*glm::vec4(0.0f, -1.0f, 0.0f, 1.0f));
-
-    _pitch = glm::cross(_yaw, _roll);
-}
-
-void FreeCamera::yaw(float yawAngle)
-{
-    _yawAngle = ((int)(_yawAngle + yawAngle)) % 360;
-    glm::mat4 pitchMatrix = glm::rotate(_pitchAngle, 0.0f, 0.0f, 1.0f);
-    glm::mat4 yawMatrix = glm::rotate(_yawAngle, 0.0f, -1.0f, 0.0f);
-    glm::mat4 rollMatrix = glm::rotate(_rollAngle, 1.0f, 0.0f, 0.0f);
-
-    _roll = glm::vec3(rollMatrix*yawMatrix*pitchMatrix*glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-    _yaw = glm::vec3(rollMatrix*yawMatrix*pitchMatrix*glm::vec4(0.0f, -1.0f, 0.0f, 1.0f));
-
-    _pitch = glm::cross(_yaw, _roll);
-}
-
-void FreeCamera::roll(float rollAngle)
-{
-    _rollAngle = ((int)(_rollAngle + rollAngle)) % 360;
-    glm::mat4 pitchMatrix = glm::rotate(_pitchAngle, 0.0f, 0.0f, 1.0f);
-    glm::mat4 yawMatrix = glm::rotate(_yawAngle, 0.0f, -1.0f, 0.0f);
-    glm::mat4 rollMatrix = glm::rotate(_rollAngle, 1.0f, 0.0f, 0.0f);
-
-    _roll = glm::vec3(rollMatrix*yawMatrix*pitchMatrix*glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-    _yaw = glm::vec3(rollMatrix*yawMatrix*pitchMatrix*glm::vec4(0.0f, -1.0f, 0.0f, 1.0f));
-
-    _pitch = glm::cross(_yaw, _roll);
-}
-
 void FreeCamera::update()
 {
-    _viewMatrix = glm::lookAt(_eyePosition, _roll + _eyePosition, -_yaw);
+    _viewMatrix = glm::lookAt(_eyePosition, _eyePosition - _roll, _yaw);
     if(PERSPECTIVE == _mode)
         _projectionMatrix = glm::perspective(_fovy, (float)_width / (float)_height,
                                              0.001f, 1000.0f);

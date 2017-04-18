@@ -59,3 +59,8 @@ void Universe::addScene(std::shared_ptr<Scene> item)
 {
     _scenes.addItem(item);
 }
+
+bool Universe::setCurrentScene(std::shared_ptr<Scene> item)
+{
+    return _scenes.setCurrentItemByValue(item);
+}

@@ -1,4 +1,4 @@
-#include "view/nanogui/canvasview.h"
+#include "view/canvasview.h"
 
 CanvasView::CanvasView(nanogui::Widget* parent, unsigned int width, unsigned int height) :
     nanogui::GLCanvas(parent),

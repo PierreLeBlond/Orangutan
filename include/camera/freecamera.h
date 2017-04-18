@@ -9,10 +9,6 @@ public:
                                 FreeCamera(unsigned int width, unsigned int height,
                                            const std::string &name = "Free Camera X");
 
-    virtual void                pitch(float pitchAngle);
-    virtual void                yaw(float yawAngle);
-    virtual void                roll(float rollAngle);
-
     /**
      * brief Update the model, view and projection matrices.
      * Call it whenever you want to retrieve those.

@@ -24,11 +24,13 @@ public:
 
     void                        setSpeed(float speed);
 
-    void                        setFocus(std::shared_ptr<Object> focus);
+    void                        setFocusObject(std::shared_ptr<Object> focusObject);
+    void                        updateFocus();
+    glm::vec3                   getFocus() const;
 
-    virtual void                pitch(float pitchAngle) = 0;
-    virtual void                yaw(float yawAngle) = 0;
-    virtual void                roll(float rollAngle) = 0;
+    void                        pitch(float pitchAngle);
+    void                        yaw(float yawAngle);
+    void                        roll(float rollAngle);
 
     /**
      * brief Update the model, view and projection matrices.
@@ -50,7 +52,8 @@ protected:
     glm::mat4                   _projectionMatrix;
 
     glm::vec3                   _eyePosition;
-    std::shared_ptr<Object>     _focus;
+    glm::vec3                   _focus;
+    std::shared_ptr<Object>     _focusObject;
 
     float                       _latitude;
     float                       _longitude;
@@ -59,9 +62,9 @@ protected:
     float                       _pitchAngle;
     float                       _rollAngle;
 
-    glm::vec3                   _roll;
     glm::vec3                   _yaw;
     glm::vec3                   _pitch;
+    glm::vec3                   _roll;
 
     float                       _speed;
 };
