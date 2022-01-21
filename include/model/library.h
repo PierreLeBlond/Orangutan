@@ -1,31 +1,29 @@
 #ifndef LIBRARY_H
 #define LIBRARY_H
 
-#include <vector>
 #include <memory>
+#include <vector>
 
-template<class T>
-class Library
-{
-  public:
-    const std::vector<std::shared_ptr<T>>&                  getItems() const;
+template <class T>
+class Library {
+ public:
+  const std::vector<std::shared_ptr<T>>& get_items() const;
 
-    const std::vector<std::shared_ptr<T>>&                  getItemsByName(const std::string& name) const;
+  const std::vector<std::shared_ptr<T>> GetItemsByName(
+      const std::string& name) const;
 
-    bool                                                    getItemById(unsigned int index,
-                                                                    std::shared_ptr<T>& item) const;
+  void GetItemById(unsigned int index, std::shared_ptr<T>& item) const;
 
-    void                                                    addItem(std::shared_ptr<T> item);
+  void AddItem(std::shared_ptr<T> item);
 
-    std::shared_ptr<T>                                      getCurrentItem() const;
+  std::shared_ptr<T> get_current_item() const;
 
-    bool                                                    setCurrentItemById(unsigned int index);
-    bool                                                    setCurrentItemByValue(std::shared_ptr<T> item);
+  void SetCurrentItemById(unsigned int index);
+  void SetCurrentItemByValue(std::shared_ptr<T> item);
 
-
-  private:
-    unsigned int                                            _currentItemId;
-    std::vector<std::shared_ptr<T>>                         _items;
+ private:
+  std::shared_ptr<T> current_item_;
+  std::vector<std::shared_ptr<T>> items_;
 };
 
-#endif //LIBRARY_H
+#endif  // LIBRARY_H

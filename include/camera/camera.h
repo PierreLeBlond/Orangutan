@@ -2,71 +2,65 @@
 #define CAMERA_H
 
 #include "scene/objectnode.h"
-
 #include "util/util.h"
 
-class Camera : public ObjectNode
-{
-public:
-                                Camera(unsigned int width, unsigned int height,
-                                       const std::string &name = "Camera X");
+class Camera : public ObjectNode {
+ public:
+  Camera(const std::string& name);
 
-    const glm::mat4&            getView() const;
-    const glm::mat4&            getProjection() const;
+  [[nodiscard]] const glm::mat4& get_view_matrix() const;
+  void set_view_matrix(const glm::mat4& view_matrix);
 
-    void                        setPerspectiveProjectionMode();
-    void                        setOrthoProjectionMode();
+  [[nodiscard]] const glm::mat4& get_projection_matrix() const;
+  void set_projection_matrix(const glm::mat4& projection_matrix);
 
-    void                        setFovy(float z);
+  [[nodiscard]] const glm::vec3& get_focus_point() const;
+  void set_focus_point(const glm::vec3& focus_point);
+  void set_focus_object(std::shared_ptr<Object> focus_object);
+  void UpdateFocus();
 
-    void                        setWidth(unsigned int w);
-    void                        setHeight(unsigned int h);
+  [[nodiscard]] const float get_fovy() const;
+  void set_fovy(float fovy);
 
-    void                        setSpeed(float speed);
+  [[nodiscard]] const float get_aspect_ratio() const;
+  void set_aspect_ratio(float aspect_ratio);
 
-    void                        setFocusObject(std::shared_ptr<Object> focusObject);
-    void                        updateFocus();
-    glm::vec3                   getFocus() const;
+  [[nodiscard]] const float get_speed() const;
+  void set_speed(float speed);
 
-    void                        pitch(float pitchAngle);
-    void                        yaw(float yawAngle);
-    void                        roll(float rollAngle);
+  void UpdateYawPitchRoll();
 
-    /**
-     * brief Update the model, view and projection matrices.
-     * Call it whenever you want to retrieve those.
-     */
-    virtual void                update() = 0;
-    virtual void                move(int direction) = 0;
+  [[nodiscard]] const glm::vec3& get_pitch() const;
+  void Pitch(float pitchAngle);
+  [[nodiscard]] const glm::vec3& get_yaw() const;
+  void Yaw(float yawAngle);
+  [[nodiscard]] const glm::vec3& get_roll() const;
+  void Roll(float rollAngle);
 
-    void                        focus();
+  void Update() override = 0;
+  void Move(glm::vec3& direction) override = 0;
 
-protected:
-    int                         _mode;
-    int                         _type;
-    float                       _fovy;
-    unsigned int                _width;
-    unsigned int                _height;
+  void Focus();
 
-    glm::mat4                   _viewMatrix;
-    glm::mat4                   _projectionMatrix;
+ private:
+  float fovy_;
+  float aspect_ratio_;
 
-    glm::vec3                   _eyePosition;
-    glm::vec3                   _focus;
-    std::shared_ptr<Object>     _focusObject;
+  glm::mat4 view_matrix_;
+  glm::mat4 projection_matrix_;
 
-    float                       _latitude;
-    float                       _longitude;
+  glm::vec3 focus_point_;
+  std::shared_ptr<Object> focus_object_;
 
-    float                       _yawAngle;
-    float                       _pitchAngle;
-    float                       _rollAngle;
+  float yaw_angle_;
+  float pitch_angle_;
+  float roll_angle_;
 
-    glm::vec3                   _yaw;
-    glm::vec3                   _pitch;
-    glm::vec3                   _roll;
+  glm::vec3 yaw_;
+  glm::vec3 pitch_;
+  glm::vec3 roll_;
 
-    float                       _speed;
+  float speed_;
 };
 
-#endif // CAMERA_H
+#endif  // CAMERA_H

@@ -1,25 +1,27 @@
 #ifndef CANVAS_PRESENTER_H
 #define CANVAS_PRESENTER_H
 
+#include <memory>
+
+#include "camera/cameracontroller.h"
 #include "presenter/presenter.h"
-#include "view/canvasview.h"
+#include "view/canvas.h"
 
-#include "scene/renderer.h"
+class CanvasPresenter : public Presenter {
+ public:
+  CanvasPresenter(std::shared_ptr<Universe> universe, NVGcontext* context,
+                  Canvas* canvas);
 
-class CanvasPresenter : public Presenter
-{
-public:
-                                                CanvasPresenter(std::shared_ptr<Presenter> parent = nullptr);
+  void Init() override;
+  void Resize(unsigned int width, unsigned int height);
+  void Update() override;
 
-    virtual void                                init();
-    virtual void                                update();
+ private:
+  Canvas* canvas_;
 
-    void                                        setCanvasView(nanogui::ref<CanvasView> canvasView);
+  CameraController camera_controller_;
 
-private:
-
-    nanogui::ref<CanvasView>                    _canvasView;
-    std::unique_ptr<Renderer>                   _renderer;
+  double last_update_time_;
 };
 
-#endif // CANVAS_PRESENTER_H
+#endif  // CANVAS_PRESENTER_H

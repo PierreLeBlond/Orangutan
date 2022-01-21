@@ -1,24 +1,22 @@
 #ifndef SCREEN_PRESENTER_H
 #define SCREEN_PRESENTER_H
 
+#include <memory>
+
+#include "nanogui/screen.h"
 #include "presenter/presenter.h"
-#include "view/screenview.h"
 
-class ScreenPresenter : public Presenter
-{
-public:
-                                                ScreenPresenter(std::shared_ptr<Presenter> parent = nullptr);
-    virtual void                                init();
-    virtual void                                update();
+class ScreenPresenter : public Presenter {
+ public:
+  ScreenPresenter(nanogui::Screen* screen, std::shared_ptr<Universe> universe);
+  void Init() override;
+  void Draw();
+  void Update() override;
 
-    virtual void                                notifyChangeToModel();
-    virtual NVGcontext*                         getContext();
+  [[nodiscard]] nanogui::Screen* get_screen() const;
 
-    void                                        setScreenView(nanogui::ref<ScreenView> screenView);
-
-private:
-
-    nanogui::ref<ScreenView>                    _screenView;
+ private:
+  nanogui::Screen* screen_;
 };
 
-#endif // SCREEN_PRESENTER_H
+#endif  // SCREEN_PRESENTER_H

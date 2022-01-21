@@ -3,14 +3,12 @@
 
 #include "core/texture/texture.h"
 
-class CubeTexture : public Texture
-{
-public:
-                                CubeTexture(const std::string &name = "CubeTexture X");
-                                CubeTexture(const std::string &path,
-                                            const std::string &name);
+class CubeTexture : public Texture {
+ public:
+  CubeTexture(const std::string &name = "CubeTexture X");
+  CubeTexture(const std::string &path, const std::string &name);
 
-    virtual bool                load(const std::string &path);
+  bool load(const std::string &path) override;
 };
 
-#endif // CUBETEXTURE_H
+#endif  // CUBETEXTURE_H

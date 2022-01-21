@@ -1,33 +1,30 @@
 #ifndef PRESENTER_H
 #define PRESENTER_H
 
-#include "model/universe.h"
-
 #include <memory>
 #include <vector>
 
-class Presenter
-{
-  public:
-                                                Presenter(std::shared_ptr<Presenter> parent = nullptr);
+#include "model/universe.h"
 
-    virtual void                                init() = 0;
+class Presenter {
+ public:
+  Presenter(std::shared_ptr<Universe> universe, NVGcontext* context);
 
-    virtual void                                update() = 0;
+  virtual void Init() = 0;
+  virtual void Update() = 0;
 
-    virtual void                                notifyChangeToModel();
+  [[nodiscard]] std::shared_ptr<Universe> get_universe() const;
 
-    virtual NVGcontext*                         getContext();
+  [[nodiscard]] NVGcontext* get_context() const;
 
-    void                                        setUniverse(std::shared_ptr<Universe> universe);
+  [[nodiscard]] const std::vector<std::shared_ptr<Presenter>>&
+  get_child_presenters() const;
+  void AddChildPresenter(std::shared_ptr<Presenter> child_presenter);
 
-    void                                        addChildPresenter(std::shared_ptr<Presenter> childPresenter);
-
-  protected:
-    std::shared_ptr<Universe>                   _universe;
-
-    std::shared_ptr<Presenter>                  _parentPresenter;
-    std::vector<std::shared_ptr<Presenter>>     _childPresenters;
+ private:
+  std::shared_ptr<Universe> universe_;
+  NVGcontext* context_;
+  std::vector<std::shared_ptr<Presenter>> child_presenters_;
 };
 
-#endif // PRESENTER_H
+#endif  // PRESENTER_H

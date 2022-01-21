@@ -1,37 +1,31 @@
 #ifndef OBJECTSFACTORY_H
 #define OBJECTSFACTORY_H
 
+#include <memory>
+#include <vector>
+
 #include "model/universe.h"
 
-#include <vector>
-#include <memory>
+class ObjectsFactory {
+ public:
+  ObjectsFactory(const ObjectsFactory&) = delete;
+  ObjectsFactory(ObjectsFactory&&) = delete;
 
-class ObjectsFactory
-{
-public:
+  ObjectsFactory& operator=(const ObjectsFactory&) = delete;
+  ObjectsFactory& operator=(ObjectsFactory&&) = delete;
 
-                                            ObjectsFactory(const ObjectsFactory&) = delete;
-                                            ObjectsFactory(ObjectsFactory&&) = delete;
+  static ObjectsFactory& instance();
 
+  static std::shared_ptr<RenderableObject> createRenderableObject(
+      const Universe& universe, const std::string& name,
+      const Material& material, int meshId, int shaderStrategyId, int textureId,
+      int cubeMapId);
 
-    ObjectsFactory&                          operator=(const ObjectsFactory&) = delete;
-    ObjectsFactory&                          operator=(ObjectsFactory&&) = delete;
+ private:
+  ObjectsFactory(){};
+  ~ObjectsFactory(){};
 
-    static ObjectsFactory&                   instance();
-
-    static std::shared_ptr<RenderableObject> createRenderableObject(const Universe& universe,
-                                                                   const std::string& name,
-                                                                   const Material& material,
-                                                                   int meshId,
-                                                                   int shaderStrategyId,
-                                                                   int textureId,
-                                                                   int cubeMapId);
-
-private:
-                                            ObjectsFactory(){};
-                                            ~ObjectsFactory(){};
-
-    static ObjectsFactory                    _instance;
+  static ObjectsFactory _instance;
 };
 
-#endif // OBJECTSFACTORY_H
+#endif  // OBJECTSFACTORY_H

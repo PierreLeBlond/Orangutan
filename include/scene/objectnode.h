@@ -1,92 +1,66 @@
 #pragma once
 
-#include "physics/transformable.h"
-
-#include "object/object.h"
-#include "object/light.h"
-
-#include "glm/glm.hpp"
-
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtx/transform.hpp"
-#include "glm/gtx/transform2.hpp"
-#include "glm/gtc/type_ptr.hpp"
-
-#include <vector>
 #include <list>
 #include <memory>
+#include <vector>
+
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/gtx/transform.hpp"
+#include "glm/gtx/transform2.hpp"
+#include "object/light.h"
+#include "object/object.h"
+#include "physics/transformable.h"
 
 class LightNode;
 
-class ObjectNode : public Transformable, public Asset
-{
-public:
-                                             ObjectNode(const std::string& name = "ObjectNode X");
+class ObjectNode : public Transformable, public Asset {
+ public:
+  ObjectNode(const std::string& name);
 
-    void                                     setObject(std::shared_ptr<Object> object);
-    void                                     addChild(std::shared_ptr<ObjectNode> node);
-    void                                     removeChild(std::shared_ptr<ObjectNode> node);
-    void                                     removeNode(std::shared_ptr<ObjectNode> node);
+  void set_object(std::shared_ptr<Object> object);
+  void AddChild(std::shared_ptr<ObjectNode> node);
+  void RemoveChild(std::shared_ptr<ObjectNode> node);
+  void RemoveNode(std::shared_ptr<ObjectNode> node);
 
-    void                                     draw(const glm::mat4& viewMatrix,
-                                                const glm::mat4& projectionMatrix,
-                                                const std::vector<std::shared_ptr<Light>>& lights);
-    void                                     drawScene(const glm::mat4& viewMatrix,
-                                                const glm::mat4& projectionMatrix,
-                                                const std::vector<std::shared_ptr<Light>>& lights);
-    void                                     updateScene(const glm::mat4& mat);
-    void                                     animateScene();
+  void Draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix,
+            const std::vector<std::shared_ptr<Light>>& lights) const;
+  void DrawScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix,
+                 const std::vector<std::shared_ptr<Light>>& lights) const;
+  void UpdateScene(const glm::mat4& mat);
+  void AnimateScene();
 
-    std::vector<std::shared_ptr<ObjectNode>> getChilds() const { return _childs;}
+  [[nodiscard]] std::vector<std::shared_ptr<ObjectNode>> get_childs() const {
+    return childs_;
+  }
 
-    const Transform&                         getTransform() const {return _transform;}
+  [[nodiscard]] const Transform& get_transform() const { return transform_; }
 
-    //Inherit from transformable
-    virtual void                setGlobalMatrix(const glm::mat4& sceneMatrix);
-    virtual void                setModelMatrix(const glm::mat4& modelMatrix);
+  // Inherit from transformable
+  void SetParentMatrix(const glm::mat4& parent_matrix) override;
+  void set_model_matrix(const glm::mat4& model_matrix) override;
 
-    virtual void                setXRotation(float angle);
-    virtual void                setYRotation(float angle);
-    virtual void                setZRotation(float angle);
+  void SetXRotation(float angle) override;
+  void SetYRotation(float angle) override;
+  void SetZRotation(float angle) override;
 
-    virtual void                setXScale(float scale);
-    virtual void                setYScale(float scale);
-    virtual void                setZScale(float scale);
+  void SetXScale(float scale) override;
+  void SetYScale(float scale) override;
+  void SetZScale(float scale) override;
 
-    virtual void                setXPos(int x);
-    virtual void                setXPos(float x);
+  void SetXPos(float x) override;
+  void SetYPos(float y) override;
+  void SetZPos(float z) override;
 
-    virtual void                setYPos(int y);
-    virtual void                setYPos(float y);
+  void set_position(const glm::vec3& position) override;
 
-    virtual void                setZPos(int z);
-    virtual void                setZPos(float z);
+  void Move(glm::vec3& direction) override;
+  void Animate() override;
+  void Update() override;
 
-    virtual void                setTranslationMatrix(const glm::vec3& vector);
-
-    virtual void                move(int direction);
-    virtual void                animate();
-    virtual void                update();
-
-    virtual void                setXRotationSpeed(float speed);
-    virtual void                setYRotationSpeed(float speed);
-    virtual void                setZRotationSpeed(float speed);
-
-    virtual void                setXTranslationSpeed(float speed);
-    virtual void                setYTranslationSpeed(float speed);
-    virtual void                setZTranslationSpeed(float speed);
-
-    virtual void                setXTranslationSmallAxe(int l);
-    virtual void                setYTranslationSmallAxe(int l);
-    virtual void                setZTranslationSmallAxe(int l);
-
-    virtual void                setXTranslationBigAxe(int l);
-    virtual void                setYTranslationBigAxe(int l);
-    virtual void                setZTranslationBigAxe(int l);
-
-private:
-    std::shared_ptr<Object>                     _object;
-    std::vector<std::shared_ptr<ObjectNode>>    _childs;
-    Transform                                   _transform;
-
+ private:
+  std::shared_ptr<Object> object_;
+  std::vector<std::shared_ptr<ObjectNode>> childs_;
+  Transform transform_;
 };

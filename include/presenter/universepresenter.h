@@ -4,18 +4,16 @@
 #include "presenter/presenter.h"
 #include "view/view.h"
 
-class UniversePresenter : public Presenter
-{
-public:
-                                                UniversePresenter(std::shared_ptr<Presenter> parent = nullptr);
-    virtual void                                init();
-    virtual void                                update();
+class UniversePresenter : public Presenter {
+ public:
+  UniversePresenter(std::shared_ptr<Universe> universe, NVGcontext* context,
+                    View* view);
+  void Init() override;
+  void Resize(unsigned int width, unsigned int height);
+  void Update() override;
 
-    void                                        setView(nanogui::ref<View> view);
-
-private:
-
-    nanogui::ref<View>                          _view;
+ private:
+  View* view_;
 };
 
-#endif // UNIVERSE_PRESENTER_H
+#endif  // UNIVERSE_PRESENTER_H

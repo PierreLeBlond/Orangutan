@@ -5,20 +5,20 @@
 
 enum { Color, DepthStencil, NumRenderBuffers };
 
-enum menu_mode{
-    OBJECT, NODE, CAMERA, LIGHT
+enum menu_mode { OBJECT, NODE, CAMERA, LIGHT };
+
+enum mode { PERSPECTIVE, ORTHO };
+
+enum direction { FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN };
+
+enum shaderProgramType {
+  GOURAUD,
+  PHONG,
+  ENVIRONMENTMAP,
+  SKYBOX,
+  TOON,
+  EDGEFILTER,
+  GAUSSIANBLURFILTER
 };
 
-enum mode{
-    PERSPECTIVE, ORTHO
-};
-
-enum direction{
-    FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN
-};
-
-enum shaderProgramType{
-    GOURAUD, PHONG, ENVIRONMENTMAP, SKYBOX, TOON, EDGEFILTER, GAUSSIANBLURFILTER
-};
-
-#endif // UTIL_H
+#endif  // UTIL_H

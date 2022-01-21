@@ -5,18 +5,17 @@
 
 #include "core/handle.h"
 
-class ShaderProgramHandle : public Handle
-{
-public:
-                                                ShaderProgramHandle();
-                                                ShaderProgramHandle(const ShaderProgramHandle& handle);
-                                                ShaderProgramHandle(ShaderProgramHandle&& handle) noexcept;
+class ShaderProgramHandle : public Handle {
+ public:
+  ShaderProgramHandle();
+  ShaderProgramHandle(const ShaderProgramHandle& handle);
+  ShaderProgramHandle(ShaderProgramHandle&& handle) noexcept;
 
-                                                ~ShaderProgramHandle() noexcept;
+  ~ShaderProgramHandle() noexcept;
 
-    ShaderProgramHandle&                        operator=(const ShaderProgramHandle& handle);
-    ShaderProgramHandle&                        operator=(ShaderProgramHandle&& handle);
+  ShaderProgramHandle& operator=(const ShaderProgramHandle& handle);
+  ShaderProgramHandle& operator=(ShaderProgramHandle&& handle);
 };
 
-#endif //SHADER_PROGRAM_HANDLE_H
+#endif  // SHADER_PROGRAM_HANDLE_H
 

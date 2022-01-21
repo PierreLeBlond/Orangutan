@@ -4,21 +4,19 @@
 #include "presenter/presenter.h"
 #include "view/view.h"
 
-class RenderableObjectPresenter : public Presenter
-{
-public:
-                                                RenderableObjectPresenter(std::shared_ptr<Presenter> parent = nullptr);
-    virtual void                                init();
-    virtual void                                update();
+class RenderableObjectPresenter : public Presenter {
+ public:
+  RenderableObjectPresenter(std::shared_ptr<Universe> universe,
+                            NVGcontext* context, View* view);
+  void Init() override;
+  void Resize(unsigned int width, unsigned int height);
+  void Update() override;
 
-    void                                        setView(nanogui::ref<View> view);
+  void UpdateMaterial(const Material& material,
+                      const std::vector<std::string>& names);
 
-    void                                        updateMaterial(const Material &material,
-                                                               const std::vector<std::string> &names);
-
-private:
-
-    nanogui::ref<View>                          _view;
+ private:
+  View* view_;
 };
 
-#endif // RENDERABLE_OBJECT_PRESENTER_H
+#endif  // RENDERABLE_OBJECT_PRESENTER_H

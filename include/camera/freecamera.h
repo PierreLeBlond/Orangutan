@@ -3,18 +3,12 @@
 
 #include "camera/camera.h"
 
-class FreeCamera : public Camera
-{
-public:
-                                FreeCamera(unsigned int width, unsigned int height,
-                                           const std::string &name = "Free Camera X");
+class FreeCamera : public Camera {
+ public:
+  FreeCamera(const std::string &name);
 
-    /**
-     * brief Update the model, view and projection matrices.
-     * Call it whenever you want to retrieve those.
-     */
-    virtual void                update();
-    virtual void                move(int direction);
+  void Update() override;
+  void Move(glm::vec3 &direction) override;
 };
 
-#endif // FREE_CAMERA_H
+#endif  // FREE_CAMERA_H

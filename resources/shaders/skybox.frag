@@ -8,8 +8,8 @@ uniform samplerCube cubeMap;
 
 out vec4 color;
 
-void main(void)
-{
-    color = texture(cubeMap, uv_out)*vec4(Ka, 1.0);
+void main(void) {
+  vec3 ray = uv_out;
+  color = texture(cubeMap, ray)*vec4(Ka, 1.0);
 }
 

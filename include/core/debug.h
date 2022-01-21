@@ -3,10 +3,9 @@
 
 #include <iostream>
 
-class Debug
-{
-  public:
-    static void                             getError(std::string str = "unknown");
+class Debug {
+ public:
+  static void getError(std::string str = "unknown");
 };
 
-#endif // DEBUG_H
+#endif  // DEBUG_H

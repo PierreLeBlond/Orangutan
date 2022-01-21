@@ -9,7 +9,7 @@ if(NOT GLM_FOUND)
 
 FIND_PATH(GLM_INCLUDE_DIR glm/glm.hpp
   PATHS
-  ${PROJECT_SOURCE_DIR}/ext/GLM/
+  ${PROJECT_SOURCE_DIR}/ext/glm/
   /usr/local/include
   /usr/X11/include
   /usr/include

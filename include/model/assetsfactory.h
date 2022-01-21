@@ -1,47 +1,42 @@
 #ifndef ASSETSFACTORY_H
 #define ASSETSFACTORY_H
 
+#include <memory>
+#include <vector>
+
+#include "core/texture/texture.h"
+#include "shader/shaderstrategy.h"
 #include "util/parseur.h"
 #include "util/util.h"
 
-#include "shader/shaderstrategy.h"
-#include "core/texture/texture.h"
+class AssetsFactory {
+ public:
+  AssetsFactory(const AssetsFactory&) = delete;
+  AssetsFactory(AssetsFactory&&) = delete;
 
-#include <vector>
-#include <memory>
+  AssetsFactory& operator=(const AssetsFactory&) = delete;
+  AssetsFactory& operator=(AssetsFactory&&) = delete;
 
-class AssetsFactory
-{
-public:
+  static AssetsFactory& instance();
 
-                                            AssetsFactory(const AssetsFactory&) = delete;
-                                            AssetsFactory(AssetsFactory&&) = delete;
+  std::vector<std::shared_ptr<Mesh>> importMeshs(
+      const std::string& filename, const std::string& name = "Mesh X");
+  std::shared_ptr<DDTexture> importTexture(
+      const std::string& filename, const std::string& name = "2DTexture X");
+  std::shared_ptr<CubeTexture> importCubeMapTexture(
+      const std::string& filename, const std::string& name = "CubeTexture X");
+  std::shared_ptr<ShaderWrapper> importShader(
+      const std::string& vertexFilename, const std::string& fragmentFilename,
+      const std::string& geometryFilename = "");
 
+  std::shared_ptr<ShaderStrategy> createShaderStrategy(
+      std::shared_ptr<ShaderWrapper> shaderWrapper, const std::string& name);
 
-    AssetsFactory&                          operator=(const AssetsFactory&) = delete;
-    AssetsFactory&                          operator=(AssetsFactory&&) = delete;
+ private:
+  AssetsFactory() = default;
+  ~AssetsFactory() = default;
 
-    static AssetsFactory&                   instance();
-
-    std::vector<std::shared_ptr<Mesh>>      importMeshs(const std::string& filename,
-                                                        const std::string& name = "Mesh X");
-    std::shared_ptr<DDTexture>              importTexture(const std::string& filename,
-                                                          const std::string& name = "2DTexture X");
-    std::shared_ptr<CubeTexture>            importCubeMapTexture(const std::string& filename,
-                                                                 const std::string& name = "CubeTexture X");
-    std::shared_ptr<ShaderWrapper>          importShader(const std::string& vertexFilename,
-                                                         const std::string& fragmentFilename,
-                                                         const std::string& geometryFilename = "");
-
-    std::shared_ptr<ShaderStrategy>         createShaderStrategy(std::shared_ptr<ShaderWrapper> shaderWrapper,
-                                                                 const std::string& name);
-
-private:
-                                            AssetsFactory(){};
-                                            ~AssetsFactory(){};
-
-    static AssetsFactory                    _instance;
-
+  static AssetsFactory _instance;
 };
 
-#endif // ASSETSFACTORY_H
+#endif  // ASSETSFACTORY_H

@@ -3,16 +3,15 @@
 
 #include <string>
 
-class Asset
-{
-public:
-                                Asset(const std::string &name = "untitled");
+class Asset {
+ public:
+  Asset(const std::string &name = "untitled");
 
-    const std::string&          getName() const;
-    void                        setName(const std::string &name);
+  [[nodiscard]] const std::string &getName() const;
+  void setName(const std::string &name);
 
-private:
-    std::string                 _name;
+ private:
+  std::string _name;
 };
 
-#endif // ASSET_H
+#endif  // ASSET_H

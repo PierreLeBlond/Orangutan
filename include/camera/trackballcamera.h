@@ -4,21 +4,15 @@
 #include "camera/camera.h"
 #include "object/object.h"
 
-class TrackBallCamera : public Camera
-{
-public:
-                                TrackBallCamera(unsigned int width, unsigned int height,
-                                                const std::string &name = "Track Ball Camera X");
+class TrackBallCamera : public Camera {
+ public:
+  TrackBallCamera(const std::string &name);
 
-    /**
-     * brief Update the model, view and projection matrices.
-     * Call it whenever you want to retrieve those.
-     */
-    virtual void                update();
-    virtual void                move(int direction);
+  void Update() override;
+  void Move(glm::vec3 &direction) override;
 
-private:
-    float                       _radius;
+ private:
+  float _radius;
 };
 
-#endif // TRACK_BALL_CAMERA_H
+#endif  // TRACK_BALL_CAMERA_H

@@ -3,17 +3,16 @@
 
 #include "core/handle.h"
 
-class TextureHandle : public Handle
-{
-  public:
-                                TextureHandle();
-                                TextureHandle(const TextureHandle& handle) = delete;
-                                TextureHandle(TextureHandle&& handle) noexcept;
+class TextureHandle : public Handle {
+ public:
+  TextureHandle();
+  TextureHandle(const TextureHandle& handle) = delete;
+  TextureHandle(TextureHandle&& handle) noexcept;
 
-                                ~TextureHandle() noexcept;
+  ~TextureHandle() noexcept;
 
-    TextureHandle&              operator=(const TextureHandle& handle) = delete;
-    TextureHandle&              operator=(TextureHandle&& handle);
+  TextureHandle& operator=(const TextureHandle& handle) = delete;
+  TextureHandle& operator=(TextureHandle&& handle);
 };
 
-#endif // TEXTURE_HANDLE_H
+#endif  // TEXTURE_HANDLE_H

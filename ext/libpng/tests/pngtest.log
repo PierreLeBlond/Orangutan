@@ -1,6 +1,6 @@
 
  Testing libpng version 1.6.26
-   with zlib   version 1.2.8
+   with zlib   version 1.2.11
 
 libpng version 1.6.26 - October 20, 2016
 Copyright (c) 1998-2002,2004,2006-2016 Glenn Randers-Pehrson
@@ -16,7 +16,7 @@ Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.
 Files ./tests/badcrc.png and pngout.png are different
    Was ./tests/badcrc.png written with the same maximum IDAT chunk size (8192 bytes),
    filtering heuristic (libpng default), compression level (zlib default),
-   and zlib version (1.2.8)?
+   and zlib version (1.2.11)?
 
 
  PASS (1 zero samples)
@@ -41,12 +41,9 @@ Files ./tests/badcrc.png and pngout.png are different
   height_max = 1000000
   cache_max  = 1000
   malloc_max = 8000000
-libpng error: Not enough image data
-libpng error: Not enough image data
-libpng error: Not enough image data
 
  Testing libpng version 1.6.26
-   with zlib   version 1.2.8
+   with zlib   version 1.2.11
 
 libpng version 1.6.26 - October 20, 2016
 Copyright (c) 1998-2002,2004,2006-2016 Glenn Randers-Pehrson
@@ -56,21 +53,32 @@ Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.
 
  pngtest (10626): libpng version 1.6.26 - October 20, 2016
 
- Testing ./tests/badadler.png:./tests/badadler.png: libpng warning: IDAT: ADLER32 checksum mismatch
-./tests/badadler.png: libpng warning: Not enough image data
-./tests/badadler.png -> pngout.png: libpng read error
- FAIL
+ Testing ./tests/badadler.png:
+ Image width = 1, height = 1
 
- Testing ./tests/badadler.png:./tests/badadler.png: libpng warning: IDAT: ADLER32 checksum mismatch
-./tests/badadler.png: libpng warning: Not enough image data
-./tests/badadler.png -> pngout.png: libpng read error
- FAIL
+Files ./tests/badadler.png and pngout.png are different
+   Was ./tests/badadler.png written with the same maximum IDAT chunk size (8192 bytes),
+   filtering heuristic (libpng default), compression level (zlib default),
+   and zlib version (1.2.11)?
 
- Testing ./tests/badadler.png:./tests/badadler.png: libpng warning: IDAT: ADLER32 checksum mismatch
-./tests/badadler.png: libpng warning: Not enough image data
-./tests/badadler.png -> pngout.png: libpng read error
- FAIL
- libpng FAILS test
+
+ PASS (1 zero samples)
+
+ Testing ./tests/badadler.png:
+ Pass 0: rw
+ Image width = 1, height = 1
+
+Files ./tests/badadler.png and pngout.png are different
+
+ PASS (1 zero samples)
+
+ Testing ./tests/badadler.png:rw
+ Image width = 1, height = 1
+
+Files ./tests/badadler.png and pngout.png are different
+
+ PASS (1 zero samples)
+ libpng passes test
  Default limits:
   width_max  = 1000000
   height_max = 1000000
@@ -78,7 +86,7 @@ Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.
   malloc_max = 8000000
 
  Testing libpng version 1.6.26
-   with zlib   version 1.2.8
+   with zlib   version 1.2.11
 
 libpng version 1.6.26 - October 20, 2016
 Copyright (c) 1998-2002,2004,2006-2016 Glenn Randers-Pehrson

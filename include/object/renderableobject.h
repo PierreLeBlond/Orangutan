@@ -1,82 +1,71 @@
 #pragma once
 
-#include "core/vertex/vao.h"
-
-#include "object/object.h"
-#include "object/mesh.h"
-#include "object/shadermaterial.h"
-
-#include "util/util.h"
 #include <vector>
 
-class RenderableObject : public Object, public ShaderMaterialable
-{
-public:
-                                        RenderableObject(const std::string& name = "RenderableObject");
+#include "core/vertex/vao.h"
+#include "object/mesh.h"
+#include "object/object.h"
+#include "object/shadermaterial.h"
+#include "util/util.h"
 
-    void                                initVertexArrayObject();
+class RenderableObject : public Object, public ShaderMaterialable {
+ public:
+  RenderableObject(const std::string& name = "RenderableObject");
 
-    void                                fillInVBO();
+  void initVertexArrayObject();
 
-    virtual void                        draw(const glm::mat4& viewMatrix,
-                                             const glm::mat4& projectionMatrix,
-                                             const std::vector<std::shared_ptr<Light>> &lights);
+  void fillInVBO();
 
-    void                                setMesh(
-                                            std::shared_ptr<const Mesh> mesh);
+  void draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix,
+            const std::vector<std::shared_ptr<Light>>& lights) override;
 
-    const ShaderMaterial&               getShaderMaterial() const;
-    void                                setShaderMaterial(const ShaderMaterial& shadermaterial);
+  void setMesh(std::shared_ptr<const Mesh> mesh);
 
-    unsigned int                        getIdOfPositionArray()  const;
-    unsigned int                        getIdOfIndexArray()     const;
-    unsigned int                        getIdOfNormalArray()    const;
-    unsigned int                        getIdOfTexCoordArray()  const;
+  [[nodiscard]] const ShaderMaterial& getShaderMaterial() const;
+  void setShaderMaterial(const ShaderMaterial& shadermaterial);
 
-    const Vao&                          getVao()                const;
+  [[nodiscard]] unsigned int getIdOfPositionArray() const;
+  [[nodiscard]] unsigned int getIdOfIndexArray() const;
+  [[nodiscard]] unsigned int getIdOfNormalArray() const;
+  [[nodiscard]] unsigned int getIdOfTexCoordArray() const;
 
-    virtual std::shared_ptr<
-                const ShaderStrategy>   getShaderStrategy() const;
-    virtual void                        setShaderStrategy(
-        std::shared_ptr<
-        const ShaderStrategy> shaderStrategy);
+  [[nodiscard]] const Vao& getVao() const;
 
-    bool                                setTexture(const std::string& name,
-                                                   std::shared_ptr<DDTexture> texture);
-    bool                                setCubeTexture(const std::string& name,
-                                                   std::shared_ptr<CubeTexture> texture);
+  [[nodiscard]] std::shared_ptr<const ShaderStrategy> getShaderStrategy()
+      const override;
+  void setShaderStrategy(
+      std::shared_ptr<const ShaderStrategy> shaderStrategy) override;
 
-    template <class T>
-    bool                    addUniform(Uniform<T> u)
-    {
-        return _shaderMaterial.addUniform(u);
-    }
+  bool setTexture(const std::string& name, std::shared_ptr<DDTexture> texture);
+  bool setCubeTexture(const std::string& name,
+                      std::shared_ptr<CubeTexture> texture);
 
-    template <class T>
-    bool                    setUniform(const std::string& name,
-                                               const T &value)
-    {
-        return _shaderMaterial.setUniform(name, value);
-    }
+  template <class T>
+  bool addUniform(Uniform<T> u) {
+    return _shaderMaterial.addUniform(u);
+  }
 
-    template <class T>
-    bool                    getUniform(const std::string& name,
-                                               T &value) const
-    {
-        return _shaderMaterial.getUniform(name, value);
-    }
+  template <class T>
+  bool setUniform(const std::string& name, const T& value) {
+    return _shaderMaterial.setUniform(name, value);
+  }
 
-    void                    addMaterial(Material m);
+  template <class T>
+  bool getUniform(const std::string& name, T& value) const {
+    return _shaderMaterial.getUniform(name, value);
+  }
 
-private:
-    std::shared_ptr<const Mesh>         _mesh;
+  void addMaterial(Material m);
 
-    ShaderMaterial                      _shaderMaterial;
+ private:
+  std::shared_ptr<const Mesh> _mesh;
 
-    unsigned int                        _idOfPositionArray;
-    unsigned int                        _idOfIndexArray;
-    unsigned int                        _idOfNormalArray;
-    unsigned int                        _idOfTexCoordArray;
+  ShaderMaterial _shaderMaterial;
 
-    Vao                                 _vao;
+  unsigned int _idOfPositionArray;
+  unsigned int _idOfIndexArray;
+  unsigned int _idOfNormalArray;
+  unsigned int _idOfTexCoordArray;
+
+  Vao _vao;
 };
