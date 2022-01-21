@@ -10,6 +10,7 @@
 #include "model/assetsfactory.h"
 #include "model/objectsfactory.h"
 #include "nanogui/formhelper.h"
+#include "nanogui/vector.h"
 #include "object/materialfactory.h"
 #include "object/renderableobject.h"
 #include "view/screen.h"
@@ -40,6 +41,7 @@ void App::Init(GLFWwindow *window) {
   // Init Universe presenter
   // nanogui will take ownership via its own reference counter
   auto *universe_view = new View(screen, "Universe");
+  universe_view->set_position(nanogui::Vector2i(20, 20));
 
   _universePresenter = std::make_shared<UniversePresenter>(
       _universe, _screenPresenter->get_context(), universe_view);
@@ -48,6 +50,7 @@ void App::Init(GLFWwindow *window) {
   // Init RenderableObject presenter
   // nanogui will take ownership via its own reference counter
   auto *renderable_object_view = new View(screen, "Renderable Object");
+  renderable_object_view->set_position(nanogui::Vector2i(20, 20));
 
   _renderableObjectPresenter = std::make_shared<RenderableObjectPresenter>(
       _universe, _screenPresenter->get_context(), renderable_object_view);
@@ -64,8 +67,6 @@ void App::Draw() { _screenPresenter->Draw(); }
 
 void App::Resize(unsigned int width, unsigned int height) {
   _canvasPresenter->Resize(width, height);
-  _universePresenter->Resize(width / 5, height);
-  _renderableObjectPresenter->Resize(width / 5, height);
 }
 
 void App::BindEvents(GLFWwindow *window, orangutan::Screen *screen) {
@@ -159,6 +160,7 @@ void App::BindEvents(GLFWwindow *window, orangutan::Screen *screen) {
   };
   resize_callback_bounce = [screen](GLFWwindow *, int width, int height) {
     screen->resize_callback_event(width, height);
+    screen->perform_layout();
   };
 
   glfwSetFramebufferSizeCallback(window, resize_callback);

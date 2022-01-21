@@ -1,3 +1,7 @@
 [submodule "ext/nanogui"]
 	path = ext/nanogui
 	url = https://github.com/mitsuba-renderer/nanogui.git
+[submodule "ext/assimp"]
+	path = ext/assimp
+	url = https://github.com/assimp/assimp.git
+	branch = assimp_5.0_release

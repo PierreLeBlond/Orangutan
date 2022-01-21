@@ -10,11 +10,6 @@ void UniversePresenter::Init() {
   Update();
 }
 
-void UniversePresenter::Resize(unsigned int width, unsigned int height) {
-  view_->set_size(nanogui::Vector2i(width, height));
-  view_->perform_layout(get_context());
-}
-
 void UniversePresenter::Update() {
   view_->clear();
 

@@ -10,13 +10,6 @@ void RenderableObjectPresenter::Init() {
   Update();
 }
 
-void RenderableObjectPresenter::Resize(unsigned int width,
-                                       unsigned int height) {
-  view_->set_size(nanogui::Vector2i(width, height));
-  view_->set_position(nanogui::Vector2i(4 * width, 0));
-  view_->perform_layout(get_context());
-}
-
 void RenderableObjectPresenter::Update() {
   view_->clear();
 

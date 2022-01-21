@@ -1,4 +1,5 @@
 build/
 CMakeFiles/
+.cache/
 .clang-tidy
 .ycm_extra_conf.py

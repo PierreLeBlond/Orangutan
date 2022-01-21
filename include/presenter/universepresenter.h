@@ -9,7 +9,6 @@ class UniversePresenter : public Presenter {
   UniversePresenter(std::shared_ptr<Universe> universe, NVGcontext* context,
                     View* view);
   void Init() override;
-  void Resize(unsigned int width, unsigned int height);
   void Update() override;
 
  private:

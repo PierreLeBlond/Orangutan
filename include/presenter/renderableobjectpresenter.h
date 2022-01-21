@@ -9,7 +9,6 @@ class RenderableObjectPresenter : public Presenter {
   RenderableObjectPresenter(std::shared_ptr<Universe> universe,
                             NVGcontext* context, View* view);
   void Init() override;
-  void Resize(unsigned int width, unsigned int height);
   void Update() override;
 
   void UpdateMaterial(const Material& material,
