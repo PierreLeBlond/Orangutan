@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+namespace orangutan {
+
 Shader::Shader(ShaderType type, const std::string& path)
     : _handle(type), _path(path) {}
 
@@ -91,3 +93,5 @@ bool Shader::printShaderInfo(const std::string& msg) {
 
   return (infologLength == 1);
 }
+
+}  // namespace orangutan

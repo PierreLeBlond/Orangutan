@@ -2,14 +2,21 @@
 
 in vec3 uv_out;
 
-uniform vec3 Ka;
+struct Ibl {
+  samplerCube irradiance;
+  samplerCube radiance;
+};
 
-uniform samplerCube cubeMap;
+uniform Ibl ibl;
 
-out vec4 color;
+out vec4 color_out;
 
 void main(void) {
-  vec3 ray = uv_out;
-  color = texture(cubeMap, ray)*vec4(Ka, 1.0);
+  vec3 color = textureLod(ibl.radiance, uv_out, 1.0).rgb;
+
+  color = color / (color + vec3(1.0));
+  color = pow(color, vec3(1.0/2.2));
+
+  color_out = vec4(color, 1.0f);
 }
 

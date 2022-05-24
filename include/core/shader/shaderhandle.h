@@ -1,9 +1,11 @@
-#ifndef SHADER_HANDLE_H
-#define SHADER_HANDLE_H
+#ifndef ORANGUTAN_CORE_SHADER_SHADER_HANDLE_H
+#define ORANGUTAN_CORE_SHADER_SHADER_HANDLE_H
 
 #include <nanogui/opengl.h>
 
 #include "core/handle.h"
+
+namespace orangutan {
 
 // TODO Put Opengl related stuff in implementation
 enum class ShaderType {
@@ -30,4 +32,6 @@ class ShaderHandle : public Handle {
   ShaderType _type;
 };
 
-#endif  // SHADER_HANDLE_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_CORE_SHADER_SHADER_HANDLE_H

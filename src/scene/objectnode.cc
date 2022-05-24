@@ -3,73 +3,54 @@
 
 #include <iostream>
 
-ObjectNode::ObjectNode(const std::string& name) : Asset(name) {}
+namespace orangutan {
 
-void ObjectNode::set_object(std::shared_ptr<Object> object) {
-  object_ = object;
-}
+ObjectNode::ObjectNode(const std::string& name)
+    : Asset(name), object_(nullptr) {}
 
-void ObjectNode::AddChild(std::shared_ptr<ObjectNode> node) {
-  childs_.push_back(node);
-}
+void ObjectNode::set_object(Object* object) { object_ = object; }
 
-void ObjectNode::RemoveChild(std::shared_ptr<ObjectNode> node) {
-  unsigned int i = 0;
-  while (i < childs_.size() && childs_[i] != node) {
-    i++;
-  }
-  if (i < childs_.size()) {
-    childs_.erase(childs_.begin() + i);
-  }
-}
-
-void ObjectNode::RemoveNode(std::shared_ptr<ObjectNode> node) {
-  unsigned int i = 0;
-  while (i < childs_.size() && childs_[i] != node) {
-    i++;
-  }
-  if (i < childs_.size()) {
-    childs_.erase(childs_.begin() + i);
-  } else {
-    for (auto& child : childs_) {
-      child->RemoveNode(node);
-    }
-  }
-}
+void ObjectNode::AddChild(ObjectNode* node) { childs_.push_back(node); }
 
 void ObjectNode::Draw(const glm::mat4& viewMatrix,
+                      const glm::vec3& camera_position,
                       const glm::mat4& projectionMatrix,
-                      const std::vector<std::shared_ptr<Light>>& lights) const {
+                      const std::vector<Light*>& lights, const Ibl& ibl,
+                      const Texture& brdf) const {
   if (object_) {
-    object_->draw(viewMatrix, projectionMatrix, lights);
+    object_->draw(viewMatrix, camera_position, projectionMatrix, lights, ibl,
+                  brdf);
   }
 }
 
-void ObjectNode::DrawScene(
-    const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix,
-    const std::vector<std::shared_ptr<Light>>& lights) const {
-  Draw(viewMatrix, projectionMatrix, lights);
+void ObjectNode::DrawRecursively(const glm::mat4& viewMatrix,
+                                 const glm::vec3& camera_position,
+                                 const glm::mat4& projectionMatrix,
+                                 const std::vector<Light*>& lights,
+                                 const Ibl& ibl, const Texture& brdf) const {
+  Draw(viewMatrix, camera_position, projectionMatrix, lights, ibl, brdf);
   for (auto& _child : childs_) {
-    _child->DrawScene(viewMatrix, projectionMatrix, lights);
+    _child->DrawRecursively(viewMatrix, camera_position, projectionMatrix,
+                            lights, ibl, brdf);
   }
 }
 
-void ObjectNode::AnimateScene() {
+void ObjectNode::AnimateRecursively() {
   transform_.Animate();
   if (object_) object_->Animate();
   for (auto& child : childs_) {
-    child->AnimateScene();
+    child->AnimateRecursively();
   }
 }
 
-void ObjectNode::UpdateScene(const glm::mat4& mat) {
+void ObjectNode::UpdateRecursively(const glm::mat4& mat) {
   /*if(_object)
       _object->update();
   _transform.update();*/
   SetParentMatrix(mat);
   if (object_) object_->SetParentMatrix(mat * transform_.get_model_matrix());
   for (auto& child : childs_) {
-    child->UpdateScene(mat * transform_.get_model_matrix());
+    child->UpdateRecursively(mat * transform_.get_model_matrix());
   }
 }
 
@@ -110,3 +91,4 @@ void ObjectNode::Animate() { transform_.Animate(); }
 
 void ObjectNode::Update() { transform_.Update(); }
 
+}  // namespace orangutan

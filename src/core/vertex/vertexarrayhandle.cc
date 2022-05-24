@@ -2,6 +2,8 @@
 
 #include <nanogui/opengl.h>
 
+namespace orangutan {
+
 VertexArrayHandle::VertexArrayHandle() : Handle() {
   unsigned int id = 0;
   glGenVertexArrays(1, &id);
@@ -27,3 +29,4 @@ VertexArrayHandle& VertexArrayHandle::operator=(VertexArrayHandle&& handle) {
   return *this;
 }
 
+}  // namespace orangutan

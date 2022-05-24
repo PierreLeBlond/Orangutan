@@ -1,10 +1,13 @@
-#ifndef SCENE_H
-#define SCENE_H
+#ifndef ORANGUTAN_SCENE_SCENE_H
+#define ORANGUTAN_SCENE_SCENE_H
 
 #include <memory>
 
 #include "object/asset.h"
 #include "scene/objectnode.h"
+#include "texture/ibl.h"
+
+namespace orangutan {
 
 class Universe;
 
@@ -16,15 +19,25 @@ class Scene : public Asset {
   void Build(const Universe& universe);
   void Update();
   void Animate();
+  void Draw(const glm::mat4& view, const glm::vec3 camera_position,
+            const glm::mat4& projection);
 
   void set_is_ready(bool isReady);
   [[nodiscard]] bool get_is_ready() const;
 
-  [[nodiscard]] const std::shared_ptr<ObjectNode>& get_scene_tree() const;
+  [[nodiscard]] const ObjectNode& get_scene_tree() const;
+
+  void SetIbl(Ibl* ibl);
+  void SetBrdf(Texture* brdf);
 
  private:
-  std::shared_ptr<ObjectNode> scene_tree_;
+  ObjectNode scene_tree_;
+  std::vector<Light*> lights_;
+  Ibl* ibl_;
+  Texture* brdf_;
   bool is_ready_;
 };
 
-#endif  // SCENE_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_SCENE_SCENE_H

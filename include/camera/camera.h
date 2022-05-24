@@ -1,8 +1,10 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef ORANGUTAN_CAMERA_CAMERA_H
+#define ORANGUTAN_CAMERA_CAMERA_H
 
 #include "scene/objectnode.h"
 #include "util/util.h"
+
+namespace orangutan {
 
 class Camera : public ObjectNode {
  public:
@@ -63,4 +65,6 @@ class Camera : public ObjectNode {
   float speed_;
 };
 
-#endif  // CAMERA_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_CAMERA_CAMERA_H

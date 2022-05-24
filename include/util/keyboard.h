@@ -1,8 +1,10 @@
-#ifndef KEYBOARD_H
-#define KEYBOARD_H
+#ifndef ORANGUTAN_UTIL_KEYBOARD_H
+#define ORANGUTAN_UTIL_KEYBOARD_H
 
 #include <memory>
 #include <vector>
+
+namespace orangutan {
 
 enum KeyState { kReleased, kPressed, kUnknow };
 
@@ -28,4 +30,6 @@ class Keyboard {
   ~Keyboard();
 };
 
-#endif  // KEYBOARD_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_UTIL_KEYBOARD_H

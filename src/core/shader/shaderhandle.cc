@@ -1,5 +1,7 @@
 #include "core/shader/shaderhandle.h"
 
+namespace orangutan {
+
 ShaderHandle::ShaderHandle(ShaderType type) : _type(type) {
   setId(glCreateShader((GLenum)type));
 }
@@ -47,3 +49,5 @@ ShaderHandle& ShaderHandle::operator=(ShaderHandle&& handle) {
 }
 
 ShaderType ShaderHandle::getType() const { return _type; }
+
+}  // namespace orangutan

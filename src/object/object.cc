@@ -2,9 +2,9 @@
 
 #include <iostream>
 
-using namespace std;
+namespace orangutan {
 
-Object::Object(const string& name) : Asset(name) {}
+Object::Object(const std::string& name) : Asset(name) {}
 
 const Transform& Object::getTransform() const { return _transform; }
 
@@ -12,9 +12,10 @@ void Object::setTransform(const Transform& transform) {
   _transform = transform;
 }
 
-void Object::draw(const glm::mat4& viewMatrix,
+void Object::draw(const glm::mat4& viewMatrix, const glm::vec3& camera_position,
                   const glm::mat4& projectionMatrix,
-                  const std::vector<std::shared_ptr<Light>>& lights) {
+                  const std::vector<Light*>& lights, const Ibl& ibl,
+                  const Texture& brdf) {
   // By default, nothing to draw
 }
 
@@ -54,3 +55,4 @@ void Object::Animate() { _transform.Animate(); }
 
 void Object::Update() { _transform.Update(); }
 
+}  // namespace orangutan

@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+namespace orangutan {
+
 ShaderProgram::ShaderProgram()
     : _vertexShader(ShaderType::VERTEX),
       _fragmentShader(ShaderType::FRAGMENT),
@@ -91,3 +93,5 @@ void ShaderProgram::start() const { glUseProgram(_handle.getId()); }
 void ShaderProgram::stop() const { glUseProgram(0); }
 
 unsigned int ShaderProgram::getId() const { return _handle.getId(); }
+
+}  // namespace orangutan

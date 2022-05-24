@@ -1,5 +1,5 @@
-#ifndef SHADER_PROGRAM_H
-#define SHADER_PROGRAM_H
+#ifndef ORANGUTAN_CORE_SHADER_SHADER_PROGRAM_H
+#define ORANGUTAN_CORE_SHADER_SHADER_PROGRAM_H
 
 #include "core/shader/shader.h"
 #include "core/shader/shaderprogramhandle.h"
@@ -10,6 +10,8 @@
 #include "glm/gtx/transform2.hpp"
 
 #define MAX_LIGHT 8
+
+namespace orangutan {
 
 class ShaderProgram {
  public:
@@ -37,4 +39,6 @@ class ShaderProgram {
   Shader _geometryShader;
 };
 
-#endif  // SHADER_PROGRAM_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_CORE_SHADER_SHADER_PROGRAM_H

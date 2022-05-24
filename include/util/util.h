@@ -1,15 +1,11 @@
-#ifndef UTIL_H
-#define UTIL_H
+#ifndef ORANGUTAN_UTIL_UTIL_H
+#define ORANGUTAN_UTIL_UTIL_H
 
 #define BUFFER_OFFSET(offset) ((void *)(offset))
 
+namespace orangutan {
+
 enum { Color, DepthStencil, NumRenderBuffers };
-
-enum menu_mode { OBJECT, NODE, CAMERA, LIGHT };
-
-enum mode { PERSPECTIVE, ORTHO };
-
-enum direction { FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN };
 
 enum shaderProgramType {
   GOURAUD,
@@ -21,4 +17,6 @@ enum shaderProgramType {
   GAUSSIANBLURFILTER
 };
 
-#endif  // UTIL_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_UTIL_UTIL_H

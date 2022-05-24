@@ -2,6 +2,8 @@
 
 #include <nanogui/opengl.h>
 
+namespace orangutan {
+
 TextureHandle::TextureHandle() : Handle() {
   unsigned int id = 0;
   glGenTextures(1, &id);
@@ -25,4 +27,6 @@ TextureHandle& TextureHandle::operator=(TextureHandle&& handle) {
   handle.setId(0);
   return *this;
 }
+
+}  // namespace orangutan
 

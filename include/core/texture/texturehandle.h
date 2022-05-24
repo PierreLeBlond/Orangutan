@@ -3,6 +3,8 @@
 
 #include "core/handle.h"
 
+namespace orangutan {
+
 class TextureHandle : public Handle {
  public:
   TextureHandle();
@@ -14,5 +16,7 @@ class TextureHandle : public Handle {
   TextureHandle& operator=(const TextureHandle& handle) = delete;
   TextureHandle& operator=(TextureHandle&& handle);
 };
+
+}  // namespace orangutan
 
 #endif  // TEXTURE_HANDLE_H

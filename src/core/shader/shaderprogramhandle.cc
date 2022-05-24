@@ -2,6 +2,8 @@
 
 #include <nanogui/opengl.h>
 
+namespace orangutan {
+
 ShaderProgramHandle::ShaderProgramHandle() : Handle() {
   setId(glCreateProgram());
 }
@@ -48,3 +50,4 @@ ShaderProgramHandle& ShaderProgramHandle::operator=(
   return *this;
 }
 
+}  // namespace orangutan

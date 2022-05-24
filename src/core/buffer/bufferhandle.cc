@@ -2,6 +2,8 @@
 
 #include <nanogui/opengl.h>
 
+namespace orangutan {
+
 BufferHandle::BufferHandle() : Handle() {
   unsigned int id = 0;
   glGenBuffers(1, &id);
@@ -25,4 +27,6 @@ BufferHandle& BufferHandle::operator=(BufferHandle&& handle) {
   handle.setId(0);
   return *this;
 }
+
+}  // namespace orangutan
 

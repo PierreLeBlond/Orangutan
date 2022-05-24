@@ -1,8 +1,10 @@
-#ifndef TRACK_BALL_CAMERA_H
-#define TRACK_BALL_CAMERA_H
+#ifndef ORANGUTAN_CAMERA_TRACK_BALL_CAMERA_H
+#define ORANGUTAN_CAMERA_TRACK_BALL_CAMERA_H
 
 #include "camera/camera.h"
 #include "object/object.h"
+
+namespace orangutan {
 
 class TrackBallCamera : public Camera {
  public:
@@ -15,4 +17,6 @@ class TrackBallCamera : public Camera {
   float _radius;
 };
 
-#endif  // TRACK_BALL_CAMERA_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_CAMERA_TRACK_BALL_CAMERA_H

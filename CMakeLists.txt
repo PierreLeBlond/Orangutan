@@ -19,10 +19,12 @@ set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 # Make include root directory
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
+# glm
 set(glm_DIR ${PROJECT_SOURCE_DIR}/ext/glm)
 find_package(glm REQUIRED)
 set(GLM_LIBRARY glm::glm)
 
+# nanogui
 # Disable building extras we won't need (pure C++ project)
 set(NANOGUI_BUILD_EXAMPLES OFF CACHE BOOL " " FORCE)
 set(NANOGUI_BUILD_PYTHON  OFF CACHE BOOL " " FORCE)
@@ -37,22 +39,30 @@ add_definitions(${NANOGUI_EXTRA_DEFS})
 # On top of adding the path to nanogui/include, you may need extras
 include_directories(${NANOGUI_EXTRA_INCS})
 
-# For reliability of parallel build, make the NanoGUI targets dependencies
 set_property(TARGET glfw glfw_objects nanogui PROPERTY FOLDER "dependencies")
 
-find_package(SOIL REQUIRED)
-include_directories( ${SOIL_INCLUDE_DIR} )
+# assimp
+find_package(assimp 4.1 QUIET)
+if (NOT assimp_FOUND)
+    message(STATUS "Assimp not installed. Compiling from source.")
+    set(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
+    set(ASSIMP_BUILD_TESTS OFF)
+    add_subdirectory ("ext/assimp")
+    set(assimp_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/assimp/include/" "${CMAKE_CURRENT_BINARY_DIR}/ext/assimp/include/")
+  endif (NOT assimp_FOUND)
+include_directories( ${assimp_INCLUDE_DIR} )
 
-find_package(LIBPNG REQUIRED)
-include_directories( ${LIBPNG_INCLUDE_DIR} )
+find_package(STB REQUIRED)
+include_directories( ${STB_INCLUDE_DIR} )
 
-set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -lGL")
+find_package(GLI REQUIRED)
+include_directories( ${GLI_INCLUDE_DIR} )
+
+set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -lGL -luuid")
 
 link_directories(
   /usr/local/lib
   /opt/local/lib
-  ${SOIL_LIB_DIRS}
-  ${LIBPNG_LIB_DIRS}
   )
 
 set(LIBS
@@ -60,45 +70,11 @@ set(LIBS
   ${GLM_LIBRARY}
   nanogui
   ${NANOGUI_EXTRA_LIBS}
-  ${SOIL_LIBRARY}
-  ${LIBPNG_LIBRARY}
+  assimp
   )
 
-file (GLOB APPSRCFILES src/app/*.cc)
-file (GLOB CORESRCFILES src/core/*.cc)
-file (GLOB CORESHADERSRCFILES src/core/shader/*.cc)
-file (GLOB CORETEXTURESRCFILES src/core/texture/*.cc)
-file (GLOB COREBUFFERSRCFILES src/core/buffer/*.cc)
-file (GLOB COREVERTEXSRCFILES src/core/vertex/*.cc)
-file (GLOB OBJECTSRCFILES src/object/*.cc)
-file (GLOB CAMERASRCFILES src/camera/*.cc)
-file (GLOB PHYSICSSRCFILES src/physics/*.cc)
-file (GLOB SCENESRCFILES src/scene/*.cc)
-file (GLOB SHADERSRCFILES src/shader/*.cc)
-file (GLOB UTILSRCFILES src/util/*.cc)
-file (GLOB MODELSRCFILES src/model/*.cc)
-file (GLOB PRESENTERSRCFILES src/presenter/*.cc)
-file (GLOB VIEWSRCFILES src/view/*.cc)
+file (GLOB_RECURSE SRC_FILES src/*.cc)
 
-set(SRCFILES
-  ${VIEWSRCFILES}
-  ${CORESHADERSRCFILES}
-  ${CORETEXTURESRCFILES}
-  ${COREBUFFERSRCFILES}
-  ${COREVERTEXSRCFILES}
-  ${APPSRCFILES}
-  ${CORESRCFILES}
-  ${OBJECTSRCFILES}
-  ${PATTERNSRCFILES}
-  ${CAMERASRCFILES}
-  ${PHYSICSSRCFILES}
-  ${SCENESRCFILES}
-  ${SHADERSRCFILES}
-  ${UTILSRCFILES}
-  ${MODELSRCFILES}
-  ${PRESENTERSRCFILES}
-  )
-
-add_executable(Orangutan ${SRCFILES})
+add_executable(Orangutan ${SRC_FILES})
 
 target_link_libraries(Orangutan ${LIBS})

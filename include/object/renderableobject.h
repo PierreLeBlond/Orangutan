@@ -1,71 +1,72 @@
-#pragma once
+#ifndef ORANGUTAN_OBJECT_RENDERABLE_OBJECT_H
+#define ORANGUTAN_OBJECT_RENDERABLE_OBJECT_H
 
+#include <memory>
 #include <vector>
 
 #include "core/vertex/vao.h"
-#include "object/mesh.h"
+#include "material/material.h"
+#include "material/shaderstrategy.h"
+#include "mesh/mesh.h"
 #include "object/object.h"
-#include "object/shadermaterial.h"
 #include "util/util.h"
 
-class RenderableObject : public Object, public ShaderMaterialable {
+namespace orangutan {
+
+class RenderableObject : public Object {
  public:
-  RenderableObject(const std::string& name = "RenderableObject");
+  RenderableObject(const std::string& name);
 
-  void initVertexArrayObject();
+  void UpdateVertexArrayObject();
 
-  void fillInVBO();
+  void draw(const glm::mat4& viewMatrix, const glm::vec3& camera_position,
+            const glm::mat4& projectionMatrix,
+            const std::vector<Light*>& lights, const Ibl& ibl,
+            const Texture& brdf) override;
+  void Draw();
 
-  void draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix,
-            const std::vector<std::shared_ptr<Light>>& lights) override;
+  [[nodiscard]] const Mesh& get_mesh() const;
+  void set_mesh(const Mesh* mesh);
 
-  void setMesh(std::shared_ptr<const Mesh> mesh);
+  [[nodiscard]] Material& get_material() const;
+  void set_material(Material* material);
 
-  [[nodiscard]] const ShaderMaterial& getShaderMaterial() const;
-  void setShaderMaterial(const ShaderMaterial& shadermaterial);
+  [[nodiscard]] const ShaderStrategy& get_shader_strategy() const;
+  void set_shader_strategy(const ShaderStrategy* shader_strategy);
 
-  [[nodiscard]] unsigned int getIdOfPositionArray() const;
-  [[nodiscard]] unsigned int getIdOfIndexArray() const;
-  [[nodiscard]] unsigned int getIdOfNormalArray() const;
-  [[nodiscard]] unsigned int getIdOfTexCoordArray() const;
+  [[nodiscard]] unsigned int get_position_array_id() const;
+  [[nodiscard]] unsigned int get_index_array_id() const;
+  [[nodiscard]] unsigned int get_normal_array_id() const;
+  [[nodiscard]] unsigned int get_uv_array_id() const;
 
-  [[nodiscard]] const Vao& getVao() const;
+  [[nodiscard]] const Vao& get_vao() const;
 
-  [[nodiscard]] std::shared_ptr<const ShaderStrategy> getShaderStrategy()
-      const override;
-  void setShaderStrategy(
-      std::shared_ptr<const ShaderStrategy> shaderStrategy) override;
-
-  bool setTexture(const std::string& name, std::shared_ptr<DDTexture> texture);
-  bool setCubeTexture(const std::string& name,
-                      std::shared_ptr<CubeTexture> texture);
+  void SetTexture(const std::string& name, const Texture* texture);
+  void SetCubeTexture(const std::string& name, const CubeTexture* texture);
 
   template <class T>
-  bool addUniform(Uniform<T> u) {
-    return _shaderMaterial.addUniform(u);
+  void SetUniform(const std::string& name, const T& value) {
+    material_->SetUniform(name, value);
   }
 
   template <class T>
-  bool setUniform(const std::string& name, const T& value) {
-    return _shaderMaterial.setUniform(name, value);
+  void GetUniform(const std::string& name, T& value) const {
+    material_->GetUniform(name, value);
   }
-
-  template <class T>
-  bool getUniform(const std::string& name, T& value) const {
-    return _shaderMaterial.getUniform(name, value);
-  }
-
-  void addMaterial(Material m);
 
  private:
-  std::shared_ptr<const Mesh> _mesh;
+  const Mesh* mesh_;
+  const ShaderStrategy* shader_strategy_;
+  Material* material_;
 
-  ShaderMaterial _shaderMaterial;
+  unsigned int position_array_id_;
+  unsigned int index_array_id_;
+  unsigned int normal_array_id_;
+  unsigned int uv_array_id_;
 
-  unsigned int _idOfPositionArray;
-  unsigned int _idOfIndexArray;
-  unsigned int _idOfNormalArray;
-  unsigned int _idOfTexCoordArray;
-
-  Vao _vao;
+  Vao vao_;
 };
+
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_OBJECT_RENDERABLE_OBJECT_H

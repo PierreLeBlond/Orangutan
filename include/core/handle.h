@@ -1,5 +1,7 @@
-#ifndef HANDLE_H
-#define HANDLE_H
+#ifndef ORANGUTAN_CORE_HANDLE_H
+#define ORANGUTAN_CORE_HANDLE_H
+
+namespace orangutan {
 
 class Handle {
  public:
@@ -10,4 +12,6 @@ class Handle {
   unsigned int _id;
 };
 
-#endif  // HANDLE_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_CORE_HANDLE_H

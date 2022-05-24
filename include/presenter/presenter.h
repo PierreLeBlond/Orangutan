@@ -1,30 +1,34 @@
-#ifndef PRESENTER_H
-#define PRESENTER_H
+#ifndef ORANGUTAN_PRESENTER_PRESENTER_H
+#define ORANGUTAN_PRESENTER_PRESENTER_H
 
 #include <memory>
 #include <vector>
 
 #include "model/universe.h"
 
+namespace orangutan {
+
 class Presenter {
  public:
-  Presenter(std::shared_ptr<Universe> universe, NVGcontext* context);
+  Presenter(Universe* universe, NVGcontext* context);
 
   virtual void Init() = 0;
   virtual void Update() = 0;
+  virtual void Resize(unsigned int width, unsigned int height) = 0;
 
-  [[nodiscard]] std::shared_ptr<Universe> get_universe() const;
+  [[nodiscard]] Universe& get_universe() const;
 
   [[nodiscard]] NVGcontext* get_context() const;
 
-  [[nodiscard]] const std::vector<std::shared_ptr<Presenter>>&
-  get_child_presenters() const;
-  void AddChildPresenter(std::shared_ptr<Presenter> child_presenter);
+  [[nodiscard]] const std::vector<Presenter*>& get_child_presenters() const;
+  void AddChildPresenter(Presenter& child_presenter);
 
  private:
-  std::shared_ptr<Universe> universe_;
+  Universe* universe_;
   NVGcontext* context_;
-  std::vector<std::shared_ptr<Presenter>> child_presenters_;
+  std::vector<Presenter*> child_presenters_;
 };
 
-#endif  // PRESENTER_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_PRESENTER_PRESENTER_H

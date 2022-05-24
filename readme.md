@@ -14,12 +14,3 @@ make
 #### OpenGL
 
 Install `libgl1-mesa-dev` package.
-
-#### libpng
-
-```
-cd ext/libpng
-./configure
-make check
-make install
-```

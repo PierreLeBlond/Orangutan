@@ -1,5 +1,5 @@
-#ifndef VAO_H
-#define VAO_H
+#ifndef ORANGUTAN_CORE_VERTEX_VAO_H
+#define ORANGUTAN_CORE_VERTEX_VAO_H
 
 #include <iostream>
 #include <vector>
@@ -7,6 +7,8 @@
 #include "core/buffer/bufferhandle.h"
 #include "core/vertex/vertexarrayhandle.h"
 #include "util/util.h"
+
+namespace orangutan {
 
 enum O_Type { O_FLOAT = 0, O_INT = 1 };
 
@@ -43,4 +45,6 @@ class Vao {
   int _nbElements;
 };
 
-#endif  // VAO_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_CORE_VERTEX_VAO_H

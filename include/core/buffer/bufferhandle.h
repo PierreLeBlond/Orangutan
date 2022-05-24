@@ -1,9 +1,11 @@
-#ifndef BUFFER_HANDLE_H
-#define BUFFER_HANDLE_H
+#ifndef ORANGUTAN_CORE_BUFFER_BUFFER_HANDLE_H
+#define ORANGUTAN_CORE_BUFFER_BUFFER_HANDLE_H
 
 #include <nanogui/opengl.h>
 
 #include "core/handle.h"
+
+namespace orangutan {
 
 class BufferHandle : public Handle {
  public:
@@ -18,4 +20,6 @@ class BufferHandle : public Handle {
   BufferHandle& operator=(BufferHandle&& handle);
 };
 
-#endif  // BUFFER_HANDLE_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_CORE_BUFFER_BUFFER_HANDLE_H

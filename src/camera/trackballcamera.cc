@@ -4,6 +4,8 @@
 
 #include "glm/gtx/string_cast.hpp"
 
+namespace orangutan {
+
 const float kDefaultRadius = 10.0f;
 const float kNear = 0.001f;
 const float kFar = 1000.0f;
@@ -25,3 +27,4 @@ void TrackBallCamera::Move(glm::vec3 &direction) {
   const float speed = get_speed();
 }
 
+}  // namespace orangutan

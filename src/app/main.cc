@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
   }
   glfwMakeContextCurrent(window);
 
-  App app;
+  orangutan::App app;
   app.Init(window);
 
   glfwMaximizeWindow(window);
@@ -51,6 +51,10 @@ int main(int argc, char *argv[]) {
   glViewport(0, 0, width, height);
   glfwSwapInterval(0);
   glfwSwapBuffers(window);
+
+  // Global opengl options
+  glEnable(
+      GL_TEXTURE_CUBE_MAP_SEAMLESS);  // Avoid seams when precomputing cube maps
 
   while (!glfwWindowShouldClose(window)) {
     // Check if any events have been activated (key pressed, mouse moved etc.)

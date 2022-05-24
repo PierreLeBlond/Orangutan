@@ -1,9 +1,11 @@
-#ifndef SHADER_PROGRAM_HANDLE_H
-#define SHADER_PROGRAM_HANDLE_H
+#ifndef ORANGUTAN_CORE_SHADER_SHADER_PROGRAM_HANDLE_H
+#define ORANGUTAN_CORE_SHADER_SHADER_PROGRAM_HANDLE_H
 
 #define MAX_ATTACHED_SHADER 3
 
 #include "core/handle.h"
+
+namespace orangutan {
 
 class ShaderProgramHandle : public Handle {
  public:
@@ -17,5 +19,7 @@ class ShaderProgramHandle : public Handle {
   ShaderProgramHandle& operator=(ShaderProgramHandle&& handle);
 };
 
-#endif  // SHADER_PROGRAM_HANDLE_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_CORE_SHADER_SHADER_PROGRAM_HANDLE_H
 

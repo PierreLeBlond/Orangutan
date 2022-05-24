@@ -10,12 +10,11 @@ out vec4 color_out;
 
 const vec3 lum = vec3(0.2126, 0.7152, 0.0722);
 
-float luminance(vec3 color){
+float luminance(vec3 color) {
     return dot(lum, color);
 }
 
-void main(void)
-{
+void main(void) {
     ivec2 pix = ivec2(gl_FragCoord.xy);
     float s00 = luminance(texelFetchOffset(renderTex, pix, 0, ivec2(-1, 1)).rgb);
     float s10 = luminance(texelFetchOffset(renderTex, pix, 0, ivec2(-1, 0)).rgb);

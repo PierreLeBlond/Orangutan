@@ -1,45 +1,30 @@
-#ifndef LIGHT_H
-#define LIGHT_H
+#ifndef ORANGUTAN_OBJECT_LIGHT_H
+#define ORANGUTAN_OBJECT_LIGHT_H
 
 #include "object/object.h"
+
+namespace orangutan {
 
 enum light_type { AMBIANT = 0, DIRECTION, PONCTUAL, SPOT };
 
 class Light : public Object {
  public:
-  Light(const std::string& name = "Light X");
+  Light(const std::string& name);
 
-  [[nodiscard]] const glm::vec4& getColor() const;
-  [[nodiscard]] const glm::vec3& getLd() const;
-  [[nodiscard]] const glm::vec3& getLa() const;
-  [[nodiscard]] const glm::vec3& getLs() const;
-  [[nodiscard]] int getType() const;
-  [[nodiscard]] float getCutoffAngle() const;
-  [[nodiscard]] float getExponent() const;
+  [[nodiscard]] const glm::vec3& get_color() const;
+  [[nodiscard]] const float get_intensity() const;
+  [[nodiscard]] const float get_falloff_radius() const;
 
-  [[nodiscard]] bool getState() const;
-
-  void setColor(const glm::vec4& color);
-  void setLd(float Ld);
-  void setLa(float La);
-  void setLs(float Ls);
-  void setType(int type);
-  void setCutoffAngle(float angle);
-  void setExponent(float exponent);
-  void setState(bool state);
+  void set_color(const glm::vec3& color);
+  void set_intensity(float intensity);
+  void set_falloff_radius(float falloff_radius);
 
  private:
-  glm::vec4 _color;
-  glm::vec3 _Ld;
-  glm::vec3 _La;
-  glm::vec3 _Ls;
-
-  int _type;
-
-  float _cutoffAngle;
-  float _exponent;
-
-  bool _state;
+  glm::vec3 color_;
+  float intensity_;
+  float falloff_radius_;
 };
 
-#endif  // LIGHT_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_OBJECT_LIGHT_H

@@ -5,19 +5,23 @@
 
 #include "camera/camera.h"
 
+namespace orangutan {
+
 class CameraController {
  public:
-  CameraController(std::shared_ptr<Camera> camera);
+  CameraController(Camera* camera);
 
-  void set_camera(std::shared_ptr<Camera> camera);
+  void set_camera(Camera* camera);
   void Update(double delta_time);
 
   void SetSize(unsigned int width, unsigned int height);
 
  private:
-  std::shared_ptr<Camera> camera_;
+  Camera* camera_;
   unsigned int width_;
   unsigned int height_;
 };
+
+}  // namespace orangutan
 
 #endif  // ORANGUTAN_CAMERA_CAMERA_CONTROLLER_H

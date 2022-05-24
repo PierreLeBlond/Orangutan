@@ -1,41 +1,21 @@
 #include "presenter/universepresenter.h"
 
-UniversePresenter::UniversePresenter(std::shared_ptr<Universe> universe,
-                                     NVGcontext* context, View* view)
-    : Presenter(std::move(universe), context), view_(view) {}
+namespace orangutan {
+
+UniversePresenter::UniversePresenter(Universe* universe, NVGcontext* context,
+                                     Window* window)
+    : Presenter(universe, context), window_(window) {}
 
 void UniversePresenter::Init() {
-  view_->set_layout(new nanogui::GroupLayout());
+  window_->set_layout(new nanogui::GroupLayout());
 
   Update();
 }
 
-void UniversePresenter::Update() {
-  view_->clear();
-
-  std::vector<std::string> renderableObjectNames;
-
-  const std::vector<std::shared_ptr<RenderableObject>>& renderableObjects =
-      get_universe()->get_renderable_object_library().get_items();
-
-  std::shared_ptr<RenderableObject> currentRenderableObject =
-      get_universe()->get_renderable_object_library().get_current_item();
-
-  unsigned int renderableObjectId = 0;
-
-  for (unsigned int i = 0; i < renderableObjects.size(); ++i) {
-    renderableObjectNames.push_back(renderableObjects[i]->getName());
-    if (renderableObjects[i] == currentRenderableObject) renderableObjectId = i;
-  }
-
-  view_->addComboBox(view_, nanogui::Popup::Right, "Objects",
-                     renderableObjectNames, renderableObjectId,
-                     [&, renderableObjects](int id) {
-                       // scene->setCurrentRenderableObject(renderableObjects.at(id));
-                       // scene->getCameraLibrary().getCurrentItem()->set_focus_object(
-                       // renderableObjects.at(id));
-                       // scene->getCameraLibrary().getCurrentItem()->UpdateFocus();
-                       // scene->getCameraLibrary().getCurrentItem()->Focus();
-                       // notifyChangeToModel();
-                     });
+void UniversePresenter::Resize(unsigned int width, unsigned int height) {
+  window_->Resize(width, height);
 }
+
+void UniversePresenter::Update() { window_->clear(); }
+
+}  // namespace orangutan

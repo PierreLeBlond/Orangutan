@@ -1,9 +1,11 @@
-#ifndef SHADER_H
-#define SHADER_H
+#ifndef ORANGUTAN_CORE_SHADER_SHADER_H
+#define ORANGUTAN_CORE_SHADER_SHADER_H
 
 #include <string>
 
 #include "core/shader/shaderhandle.h"
+
+namespace orangutan {
 
 class Shader {
  public:
@@ -23,4 +25,6 @@ class Shader {
   bool printShaderInfo(const std::string& msg);
 };
 
-#endif  // SHADER_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_CORE_SHADER_SHADER_H

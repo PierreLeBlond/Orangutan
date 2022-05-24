@@ -3,6 +3,8 @@
 #include <chrono>
 #include <iostream>
 
+namespace orangutan {
+
 const glm::vec3 kNormalizedUpVector = glm::vec3(0.0f, 1.0f, 0.0f);
 const glm::vec3 kNormalizedRightVector = glm::vec3(1.0f, 0.0f, 0.0f);
 const glm::vec3 kNormalizedForwardVector = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -103,3 +105,4 @@ void Transform::Update() {
                   y_scale_matrix_ * z_scale_matrix_;
 }
 
+}  // namespace orangutan

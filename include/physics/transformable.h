@@ -1,5 +1,5 @@
-#ifndef TRANSFORMABLE_H
-#define TRANSFORMABLE_H
+#ifndef ORANGUTAN_PHYSICS_TRANSFORMABLE_H
+#define ORANGUTAN_PHYSICS_TRANSFORMABLE_H
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -7,6 +7,8 @@
 #include "glm/gtx/transform.hpp"
 #include "glm/gtx/transform2.hpp"
 #include "util/util.h"
+
+namespace orangutan {
 
 class Transformable {
  public:
@@ -87,4 +89,6 @@ class Transform : public Transformable {
   glm::vec3 position_;
 };
 
-#endif  // TRANSFORMABLE_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_PHYSICS_TRANSFORMABLE_H

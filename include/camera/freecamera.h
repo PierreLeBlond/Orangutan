@@ -1,7 +1,9 @@
-#ifndef FREE_CAMERA_H
-#define FREE_CAMERA_H
+#ifndef ORANGUTAN_CAMERA_FREE_CAMERA_H
+#define ORANGUTAN_CAMERA_FREE_CAMERA_H
 
 #include "camera/camera.h"
+
+namespace orangutan {
 
 class FreeCamera : public Camera {
  public:
@@ -11,4 +13,6 @@ class FreeCamera : public Camera {
   void Move(glm::vec3 &direction) override;
 };
 
-#endif  // FREE_CAMERA_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_CAMERA_FREE_CAMERA_H

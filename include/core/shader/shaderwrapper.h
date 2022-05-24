@@ -1,9 +1,9 @@
-#ifndef SHADER_WRAPPER_H
-#define SHADER_WRAPPER_H
+#ifndef ORANGUTAN_CORE_SHADER_SHADER_WRAPPER_H
+#define ORANGUTAN_CORE_SHADER_SHADER_WRAPPER_H
 
 #include <iostream>
-#include <map>
 #include <sstream>
+#include <unordered_map>
 
 #include "core/shader/shaderprogram.h"
 #include "core/texture/texture.h"
@@ -17,9 +17,11 @@
 
 #define MAX_LIGHT 8
 
+namespace orangutan {
+
 class ShaderWrapper : public Asset {
  public:
-  ShaderWrapper(const std::string &name = "ShaderWrapper X");
+  ShaderWrapper(const std::string &name);
 
   void build(const std::string &vertexShaderPath,
              const std::string &fragmentShaderPath,
@@ -76,8 +78,14 @@ class ShaderWrapper : public Asset {
  private:
   ShaderProgram _shaderProgram;
 
-  std::map<std::string, int> _uniformLocations;
-  std::map<std::string, int> _attributeLocations;
+  std::unordered_map<std::string, int> _uniformLocations;
+  std::unordered_map<std::string, int> _attributeLocations;
+
+  std::unordered_map<std::string, int> texture_bindings_;
+
+  bool AssertUniformExists(const std::string &name) const;
 };
 
-#endif  // SHADER_WRAPPER_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_CORE_SHADER_SHADER_WRAPPER_H

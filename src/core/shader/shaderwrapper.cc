@@ -2,7 +2,13 @@
 
 #include <nanogui/opengl.h>
 
+namespace orangutan {
+
 ShaderWrapper::ShaderWrapper(const std::string &name) : Asset(name) {}
+
+bool ShaderWrapper::AssertUniformExists(const std::string &name) const {
+  return _uniformLocations.find(name) != _uniformLocations.end();
+}
 
 void ShaderWrapper::build(const std::string &vertexShaderPath,
                           const std::string &fragmentShaderPath,
@@ -90,46 +96,78 @@ int ShaderWrapper::getAttributeLocation(const std::string &name) const {
 }
 
 void ShaderWrapper::setUniform(const std::string &name, const glm::vec3 &v) {
+  if (!AssertUniformExists(name)) {
+    return;
+  }
   glUniform3fv(_uniformLocations[name], 1, glm::value_ptr(v));
 }
 
 void ShaderWrapper::setUniform(const std::string &name, const glm::vec4 &v) {
+  if (!AssertUniformExists(name)) {
+    return;
+  }
   glUniform4fv(_uniformLocations[name], 1, glm::value_ptr(v));
 }
 
 void ShaderWrapper::setUniform(const std::string &name, const glm::mat3 &m) {
+  if (!AssertUniformExists(name)) {
+    return;
+  }
   glUniformMatrix3fv(_uniformLocations[name], 1, GL_FALSE, glm::value_ptr(m));
 }
 
 void ShaderWrapper::setUniform(const std::string &name, const glm::mat4 &m) {
+  if (!AssertUniformExists(name)) {
+    return;
+  }
   glUniformMatrix4fv(_uniformLocations[name], 1, GL_FALSE, glm::value_ptr(m));
 }
 
 void ShaderWrapper::setUniform(const std::string &name, float val) {
+  if (!AssertUniformExists(name)) {
+    return;
+  }
   glUniform1f(_uniformLocations[name], val);
 }
 
 void ShaderWrapper::setUniform(const std::string &name, int val) {
+  if (!AssertUniformExists(name)) {
+    return;
+  }
   glUniform1i(_uniformLocations[name], val);
 }
 
 void ShaderWrapper::setUniform(const std::string &name, unsigned int val) {
+  if (!AssertUniformExists(name)) {
+    return;
+  }
   glUniform1ui(_uniformLocations[name], val);
 }
 
 void ShaderWrapper::setUniform(const std::string &name, bool val) {
+  if (!AssertUniformExists(name)) {
+    return;
+  }
   glUniform1i(_uniformLocations[name], val);
 }
 
 void ShaderWrapper::bindTexture(const std::string &name, unsigned int id) {
-  glUniform1i(_uniformLocations[name], 0);
-  glActiveTexture(GL_TEXTURE0 + 0);
+  // Looks like we can't introspectively get samplers names before we want to
+  // bind them
+  if (texture_bindings_.find(name) == texture_bindings_.end()) {
+    texture_bindings_[name] = texture_bindings_.size();
+    glUniform1i(_uniformLocations[name], texture_bindings_[name]);
+  }
+  glActiveTexture(GL_TEXTURE0 + texture_bindings_[name]);
   glBindTexture(GL_TEXTURE_2D, id);
 }
 
 void ShaderWrapper::bindCubeTexture(const std::string &name, unsigned int id) {
-  glUniform1i(_uniformLocations[name], 2);
-  glActiveTexture(GL_TEXTURE0 + 2);
+  if (texture_bindings_.find(name) == texture_bindings_.end()) {
+    texture_bindings_[name] = texture_bindings_.size();
+    glUniform1i(_uniformLocations[name], texture_bindings_[name]);
+  }
+  glActiveTexture(GL_TEXTURE0 + texture_bindings_[name]);
   glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 }
 
@@ -141,3 +179,5 @@ void ShaderWrapper::unbindTexture() {
 unsigned int ShaderWrapper::getProgramId() const {
   return _shaderProgram.getId();
 }
+
+}  // namespace orangutan

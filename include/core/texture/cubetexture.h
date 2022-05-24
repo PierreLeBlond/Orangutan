@@ -1,14 +1,22 @@
-#ifndef CUBETEXTURE_H
-#define CUBETEXTURE_H
+#ifndef ORANGUTAN_CORE_TEXTURE_CUBETEXTURE_H
+#define ORANGUTAN_CORE_TEXTURE_CUBETEXTURE_H
 
 #include "core/texture/texture.h"
 
+namespace orangutan {
+
 class CubeTexture : public Texture {
  public:
-  CubeTexture(const std::string &name = "CubeTexture X");
-  CubeTexture(const std::string &path, const std::string &name);
+  CubeTexture(const std::string &name);
+  CubeTexture(const std::string &name, TextureHandle handle);
 
-  bool load(const std::string &path) override;
+  [[nodiscard]] unsigned int get_size() const;
+  void set_size(unsigned int size);
+
+ private:
+  unsigned int size_;
 };
 
-#endif  // CUBETEXTURE_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_CORE_TEXTURE_CUBETEXTURE_H

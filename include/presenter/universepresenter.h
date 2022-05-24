@@ -1,18 +1,22 @@
-#ifndef UNIVERSE_PRESENTER_H
-#define UNIVERSE_PRESENTER_H
+#ifndef ORANGUTAN_PRESENTER_UNIVERSE_PRESENTER_H
+#define ORANGUTAN_PRESENTER_UNIVERSE_PRESENTER_H
 
 #include "presenter/presenter.h"
-#include "view/view.h"
+#include "ui/window.h"
+
+namespace orangutan {
 
 class UniversePresenter : public Presenter {
  public:
-  UniversePresenter(std::shared_ptr<Universe> universe, NVGcontext* context,
-                    View* view);
+  UniversePresenter(Universe* universe, NVGcontext* context, Window* window);
   void Init() override;
+  void Resize(unsigned int width, unsigned int height) override;
   void Update() override;
 
  private:
-  View* view_;
+  Window* window_;
 };
 
-#endif  // UNIVERSE_PRESENTER_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_PRESENTER_UNIVERSE_PRESENTER_H

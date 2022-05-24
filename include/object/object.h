@@ -1,5 +1,5 @@
-#ifndef OBJECT_H
-#define OBJECT_H
+#ifndef ORANGUTAN_OBJECT_OBJECT_H
+#define ORANGUTAN_OBJECT_OBJECT_H
 
 #include <memory>
 #include <string>
@@ -7,19 +7,24 @@
 
 #include "object/asset.h"
 #include "physics/transformable.h"
+#include "texture/ibl.h"
+
+namespace orangutan {
 
 class Light;
 
 class Object : public Asset, public Transformable {
  public:
-  Object(const std::string& name = "Object X");
+  Object(const std::string& name);
 
   [[nodiscard]] const Transform& getTransform() const;
   void setTransform(const Transform& transform);
 
   virtual void draw(const glm::mat4& viewMatrix,
+                    const glm::vec3& camera_position,
                     const glm::mat4& projectionMatrix,
-                    const std::vector<std::shared_ptr<Light>>& lights);
+                    const std::vector<Light*>& lights, const Ibl& ibl,
+                    const Texture& brdf);
 
   // Inherit from transformable
   void SetParentMatrix(const glm::mat4& parent_matrix) override;
@@ -47,4 +52,6 @@ class Object : public Asset, public Transformable {
   Transform _transform;
 };
 
-#endif  // OBJECT_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_OBJECT_OBJECT_H

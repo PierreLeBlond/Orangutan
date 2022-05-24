@@ -7,6 +7,8 @@
 
 #include "glm/gtx/string_cast.hpp"
 
+namespace orangutan {
+
 const float kDefaultFovy = 75.0f;
 const float kMinFovy = 10.0f;
 const float kMaxFovy = 100.0f;
@@ -147,3 +149,5 @@ void Camera::Roll(float rollAngle) {
   roll_angle_ = fmod(roll_angle_ + rollAngle, 2.0f * glm::pi<float>());
   UpdateYawPitchRoll();
 }
+
+}  // namespace orangutan

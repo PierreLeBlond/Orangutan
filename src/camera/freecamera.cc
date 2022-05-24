@@ -4,6 +4,8 @@
 
 #include "glm/gtx/string_cast.hpp"
 
+namespace orangutan {
+
 const float kNear = 0.001f;
 const float kFar = 1000.0f;
 
@@ -27,3 +29,5 @@ void FreeCamera::Move(glm::vec3& direction) {
   glm::vec3 scaled_camera_direction = speed * camera_direction;
   ObjectNode::Move(scaled_camera_direction);
 }
+
+}  // namespace orangutan

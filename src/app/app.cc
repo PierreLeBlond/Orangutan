@@ -3,73 +3,79 @@
 #include <nanogui/layout.h>
 
 #include <memory>
+#include <string>
 
 #include "GLFW/glfw3.h"
 #include "camera/freecamera.h"
 #include "camera/trackballcamera.h"
+#include "material/materialfactory.h"
+#include "mesh/meshfactory.h"
 #include "model/assetsfactory.h"
-#include "model/objectsfactory.h"
 #include "nanogui/formhelper.h"
 #include "nanogui/vector.h"
-#include "object/materialfactory.h"
 #include "object/renderableobject.h"
-#include "view/screen.h"
+#include "object/renderableobjectfactory.h"
+#include "texture/texturefactory.h"
+#include "ui/screen.h"
+
+namespace orangutan {
 
 void App::Init(GLFWwindow *window) {
   InitUniverse();
 
   // nanogui will take ownership via its own reference counter
-  auto *screen = new orangutan::Screen(window);
-
-  screen->set_resize_callback(
-      [&](nanogui::Vector2i size) { Resize(size.x(), size.y()); });
+  auto *screen = new Screen(window);
 
   // Init Screen presenter
-  _screenPresenter = std::make_shared<ScreenPresenter>(screen, _universe);
+  screen_presenter_ =
+      std::make_unique<ScreenPresenter>(screen, universe_.get());
 
   BindEvents(window, screen);
 
-  // Init Canvas presenter
+  // Init Canvas
 
   // nanogui will take ownership via its own reference counter
   auto *canvas = new Canvas(screen);
 
-  _canvasPresenter = std::make_shared<CanvasPresenter>(
-      _universe, _screenPresenter->get_context(), canvas);
-  _screenPresenter->AddChildPresenter(_canvasPresenter);
+  canvas_manager_ = std::make_unique<CanvasManager>(
+      canvas, universe_->get_camera_library().GetItemByName("free_camera"),
+      scene_.get());
+  screen_presenter_->ConnectToResizeSignal(
+      [&](unsigned int width, unsigned int height) {
+        canvas_manager_->Resize(width, height);
+      });
+
+  texture_manager_ =
+      std::make_unique<TextureManager>(universe_.get(), canvas, scene_.get());
+
+  // nanogui will take ownership via its own reference counter
+  texture_window_ =
+      new TextureWindow(screen, "texture", texture_manager_.get());
+  texture_window_->set_top(20);
+  texture_window_->set_right(20);
+  screen_presenter_->ConnectToResizeSignal(
+      [&](unsigned int width, unsigned int height) {
+        texture_window_->Resize(width, height);
+      });
 
   // Init Universe presenter
   // nanogui will take ownership via its own reference counter
-  auto *universe_view = new View(screen, "Universe");
-  universe_view->set_position(nanogui::Vector2i(20, 20));
+  // auto *universe_view = new Window(screen, "Universe");
+  // universe_view->set_top(20);
+  // universe_view->set_left(20);
 
-  _universePresenter = std::make_shared<UniversePresenter>(
-      _universe, _screenPresenter->get_context(), universe_view);
-  _screenPresenter->AddChildPresenter(_universePresenter);
+  // universe_presenter_ = std::make_shared<UniversePresenter>(
+  // universe_, screen_presenter_->get_context(), universe_view);
+  // screen_presenter_->AddChildPresenter(universe_presenter_);
 
-  // Init RenderableObject presenter
-  // nanogui will take ownership via its own reference counter
-  auto *renderable_object_view = new View(screen, "Renderable Object");
-  renderable_object_view->set_position(nanogui::Vector2i(20, 20));
+  // universe_presenter_->Init();
 
-  _renderableObjectPresenter = std::make_shared<RenderableObjectPresenter>(
-      _universe, _screenPresenter->get_context(), renderable_object_view);
-  _screenPresenter->AddChildPresenter(_renderableObjectPresenter);
-
-  _canvasPresenter->Init();
-  _universePresenter->Init();
-  _renderableObjectPresenter->Init();
-
-  _screenPresenter->Init();
+  screen_presenter_->Init();
 }
 
-void App::Draw() { _screenPresenter->Draw(); }
+void App::Draw() { screen_presenter_->Draw(); }
 
-void App::Resize(unsigned int width, unsigned int height) {
-  _canvasPresenter->Resize(width, height);
-}
-
-void App::BindEvents(GLFWwindow *window, orangutan::Screen *screen) {
+void App::BindEvents(GLFWwindow *window, Screen *screen) {
   // Cheers to http://www.alecjacobson.com/weblog/?p=3779
 
   // cursor_pos_callback_event
@@ -160,176 +166,125 @@ void App::BindEvents(GLFWwindow *window, orangutan::Screen *screen) {
   };
   resize_callback_bounce = [screen](GLFWwindow *, int width, int height) {
     screen->resize_callback_event(width, height);
-    screen->perform_layout();
   };
 
   glfwSetFramebufferSizeCallback(window, resize_callback);
 }
 
 void App::InitUniverse() {
-  _universe = std::make_shared<Universe>();
+  universe_ = std::make_unique<Universe>();
 
-  // std::cout << "Shader phong" << std::endl;
-  std::shared_ptr<ShaderWrapper> shaderWrapper;
-  shaderWrapper = AssetsFactory::instance().importShader(
-      "../resources/shaders/phong.vert", "../resources/shaders/phong.frag");
-  _universe->AddShaderWrapper(shaderWrapper);
-  _universe->AddShaderStrategy(
-      AssetsFactory::instance().createShaderStrategy(shaderWrapper, "Phong"));
+  auto skybox_shader_wrapper = AssetsFactory::CreateShaderWrapper(
+      "skybox", "../resources/shaders/skybox.vert",
+      "../resources/shaders/skybox.frag");
+  auto skybox_shader_strategy = AssetsFactory::CreateShaderStrategy(
+      skybox_shader_wrapper.get(), "Skybox");
+  universe_->AddShaderWrapper(std::move(skybox_shader_wrapper));
+  universe_->AddShaderStrategy(std::move(skybox_shader_strategy));
 
-  // std::cout << "Shader skybox" << std::endl;
-  shaderWrapper = AssetsFactory::instance().importShader(
-      "../resources/shaders/skybox.vert", "../resources/shaders/skybox.frag");
-  _universe->AddShaderWrapper(shaderWrapper);
-  _universe->AddShaderStrategy(
-      AssetsFactory::instance().createShaderStrategy(shaderWrapper, "Skybox"));
+  auto pbr_shader_wrapper = AssetsFactory::CreateShaderWrapper(
+      "pbr", "../resources/shaders/pbr.vert", "../resources/shaders/pbr.frag");
+  auto pbr_shader_strategy =
+      AssetsFactory::CreateShaderStrategy(pbr_shader_wrapper.get(), "pbr");
+  universe_->AddShaderWrapper(std::move(pbr_shader_wrapper));
+  universe_->AddShaderStrategy(std::move(pbr_shader_strategy));
 
-  // std::cout << "Shader environment" << std::endl;
-  shaderWrapper = AssetsFactory::instance().importShader(
-      "../resources/shaders/environmentmap.vert",
-      "../resources/shaders/environmentmap.frag");
-  _universe->AddShaderWrapper(shaderWrapper);
-  _universe->AddShaderStrategy(AssetsFactory::instance().createShaderStrategy(
-      shaderWrapper, "Environment"));
+  auto brdf = TextureFactory::CreateBrdfMap();
+  universe_->AddTexture(std::move(brdf));
 
-  // std::cout << "Shader gouraud" << std::endl;
-  shaderWrapper = AssetsFactory::instance().importShader(
-      "../resources/shaders/shader.vert", "../resources/shaders/shader.frag");
-  _universe->AddShaderWrapper(shaderWrapper);
-  _universe->AddShaderStrategy(
-      AssetsFactory::instance().createShaderStrategy(shaderWrapper, "Gouraud"));
+  auto subway_ibl = TextureFactory::ImportIBLFromDds(
+      "subway", "../resources/images/ibl/subway/subway_irradiance.dds",
+      "../resources/images/ibl/subway/subway_radiance.dds");
+  universe_->AddIbl(std::move(subway_ibl));
 
-  // std::cout << "Shader toon" << std::endl;
-  shaderWrapper = AssetsFactory::instance().importShader(
-      "../resources/shaders/toon.vert", "../resources/shaders/toon.frag");
-  _universe->AddShaderWrapper(shaderWrapper);
-  _universe->AddShaderStrategy(
-      AssetsFactory::instance().createShaderStrategy(shaderWrapper, "Toon"));
-  /*
-     std::cout << "Shader edge" << std::endl;
-     shaderWrapper =
-     AssetsFactory::instance().importShader("../resources/shaders/edgefilter.vert",
-     "../resources/shaders/edgefilter.frag");
-     AssetsFactory::instance().createNewScreenSpaceShaderStrategy(EDGEFILTER, 5,
-     "edgeFilter");
+  auto bridge_ibl = TextureFactory::ImportIBLFromDds(
+      "bridge", "../resources/images/ibl/bridge/bridge_irradiance.dds",
+      "../resources/images/ibl/bridge/bridge_radiance.dds");
+  universe_->AddIbl(std::move(bridge_ibl));
 
-     std::cout << "Shader gaussian" << std::endl;
-     shaderWrapper =
-     AssetsFactory::instance().importShader("../resources/shaders/edgefilter.vert",
-     "../resources/shaders/verticalgaussianblurfilter.frag");
-     AssetsFactory::instance().createNewScreenSpaceShaderStrategy(GAUSSIANBLURFILTER,
-     6, "verticalGaussianBlur");
+  auto studio_ibl = TextureFactory::ImportIBLFromDds(
+      "studio", "../resources/images/ibl/studio_3/studio_3_irradiance.dds",
+      "../resources/images/ibl/studio_3/studio_3_radiance.dds");
+  universe_->AddIbl(std::move(studio_ibl));
 
-     std::cout << "Shader gaussian" << std::endl;
-     shaderWrapper =
-     AssetsFactory::instance().importShader("../resources/shaders/edgefilter.vert",
-     "../resources/shaders/horizontalgaussianblurfilter.frag");
-     AssetsFactory::instance().createNewScreenSpaceShaderStrategy(GAUSSIANBLURFILTER,
-     7, "horizontalGaussianBlur");
-     */
+  universe_->AddMesh(MeshFactory::CreateCube("Cube"));
+  universe_->AddMesh(std::move(
+      AssetsFactory::ImportMeshs("../resources/meshes/sphere.obj")[0]));
 
-  std::shared_ptr<DDTexture> texture2D;
-  texture2D = AssetsFactory::instance().importTexture(
-      "../resources/images/Texture/dice.png", "dice");
-  _universe->AddTexture(texture2D);
-  texture2D = AssetsFactory::instance().importTexture(
-      "../resources/images/Texture/Minion.png", "minion");
-  _universe->AddTexture(texture2D);
-  texture2D = AssetsFactory::instance().importTexture(
-      "../resources/images/Texture/Mozart.png", "mozart");
-  _universe->AddTexture(texture2D);
+  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < 2; j++) {
+      const std::string material_name =
+          "pbr_material_" + std::to_string(i) + "_" + std::to_string(j);
+      auto material = MaterialFactory::CreatePbrMaterial(material_name);
+      material->SetUniform("albedo", glm::vec3(1.0f, 1.0f, 1.0f));
+      material->SetUniform("roughness", float(i) * 0.1f);
+      material->SetUniform("metalness", float(j) * 1.0f);
 
-  std::shared_ptr<CubeTexture> textureCube;
-  textureCube = AssetsFactory::instance().importCubeMapTexture(
-      "../resources/images/Skybox/space_", "space");
-  _universe->AddCubeTexture(textureCube);
-  textureCube = AssetsFactory::instance().importCubeMapTexture(
-      "../resources/images/Skybox/sky_", "sky");
-  _universe->AddCubeTexture(textureCube);
+      universe_->AddMaterial(std::move(material));
 
-  _universe->AddMesh(Mesh::createSquare("Square"));
-  _universe->AddMesh(Mesh::createCube(1, "Cube"));
-  //_universe->addMesh(Mesh::createSphere(8, "Sphere"));
-  //_universe->addMesh(Mesh::createCylinder(8, "Cylinder"));
+      const std::string renderable_object_name =
+          "sphere_" + std::to_string(i) + "_" + std::to_string(j);
 
-  std::shared_ptr<Mesh> mesh;
-  mesh = AssetsFactory::instance().importMeshs(
-      "../resources/meshes/minion.obj")[0];
-  _universe->AddMesh(mesh);
-  mesh = AssetsFactory::instance().importMeshs(
-      "../resources/meshes/mozart.obj")[0];
-  _universe->AddMesh(mesh);
-  mesh =
-      AssetsFactory::instance().importMeshs("../resources/meshes/axes.obj")[0];
-  _universe->AddMesh(mesh);
+      auto sphere = RenderableObjectFactory::CreateRenderableObject(
+          *universe_, renderable_object_name, "sphere", material_name, "pbr");
+      sphere->UpdateVertexArrayObject();
+
+      auto sphere_node =
+          std::make_unique<ObjectNode>(renderable_object_name + "_node");
+      sphere_node->set_object(sphere.get());
+
+      sphere_node->SetXPos((float)i * 3.0f - 13.5f);
+      sphere_node->SetYPos((float)j * 3.0f);
+
+      universe_->AddRenderableObject(std::move(sphere));
+      universe_->AddObjectNode(std::move(sphere_node));
+    }
+  }
+
+  auto sky_material = MaterialFactory::CreateSkyboxMaterial();
+  universe_->AddMaterial(std::move(sky_material));
 
   // Cameras
-  std::shared_ptr<TrackBallCamera> trackBallCamera =
-      std::make_shared<TrackBallCamera>("track_ball_camera");
-  _universe->AddCamera(trackBallCamera);
+  auto freeCamera = std::make_unique<FreeCamera>("free_camera");
+  freeCamera->set_speed(10.0f);
+  freeCamera->set_position(glm::vec3(0.0f, 0.0f, 20.0f));
+  universe_->AddCamera(std::move(freeCamera));
 
-  std::shared_ptr<FreeCamera> freeCamera =
-      std::make_shared<FreeCamera>("free_camera");
-  freeCamera->set_speed(5.0f);
-  freeCamera->set_position(glm::vec3(0.0f, 0.0f, 10.0f));
-  _universe->AddCamera(freeCamera);
-  _universe->SetCurrentCamera(freeCamera);
+  // Sky
+  auto sky = RenderableObjectFactory::CreateRenderableObject(
+      *universe_, "sky", "Cube", "Skybox", "Skybox");
+  sky->UpdateVertexArrayObject();
 
-  std::shared_ptr<RenderableObject> cubeMap =
-      ObjectsFactory::createRenderableObject(
-          *_universe, "skybox", MaterialFactory::createSkyboxMaterial(), 1, 1,
-          -1, 1);
-  ;
-  cubeMap->fillInVBO();
-  cubeMap->initVertexArrayObject();
+  auto sky_node = std::make_unique<ObjectNode>("sky_node");
+  sky_node->set_object(sky.get());
 
-  cubeMap->SetXScale(50);
-  cubeMap->SetYScale(50);
-  cubeMap->SetZScale(50);
-
-  _universe->AddRenderableObject(cubeMap);
-
-  auto cubeMapNode = std::make_shared<ObjectNode>("cube_map");
-  cubeMapNode->set_object(cubeMap);
-
-  _universe->AddObjectNode(cubeMapNode);
-
-  trackBallCamera->AddChild(cubeMapNode);
-
-  // Axes
-
-  std::shared_ptr<RenderableObject> axes =
-      ObjectsFactory::createRenderableObject(
-          *_universe, "Axes", MaterialFactory::createDefaultMaterial(), 4, 0, 1,
-          1);
-  axes->fillInVBO();
-  axes->initVertexArrayObject();
-
-  _universe->AddRenderableObject(axes);
-
-  auto axes_node = std::make_shared<ObjectNode>("axes_node");
-  axes_node->set_object(axes);
-
-  _universe->AddObjectNode(axes_node);
-
-  _universe->SetCurrentRenderableObject(axes);
+  universe_->AddRenderableObject(std::move(sky));
+  universe_->AddObjectNode(std::move(sky_node));
 
   // Lights
-  auto light = std::make_shared<Light>();
+  for (int i = 0; i < 2; i++) {
+    for (int j = 0; j < 2; j++) {
+      const std::string light_name =
+          "light_" + std::to_string(i) + "_" + std::to_string(j);
+      auto light = std::make_unique<Light>(light_name);
 
-  _universe->AddLight(light);
+      light->set_intensity(1.0f);
 
-  auto lightNode = std::make_shared<ObjectNode>("light_node");
-  lightNode->set_object(light);
+      auto lightNode = std::make_unique<ObjectNode>(light_name + "_node");
+      lightNode->set_object(light.get());
+      lightNode->set_position(
+          glm::vec3(5.0f * (i * 2.0f - 1.0f), 5.0f * (j * 2.0f - 1.0f), 5.0f));
 
-  _universe->AddObjectNode(lightNode);
+      universe_->AddLight(std::move(light));
+      universe_->AddObjectNode(std::move(lightNode));
+    }
+  }
 
-  _scene = std::make_shared<Scene>("scene");
-  _scene->Build(*_universe);
+  scene_ = std::make_unique<Scene>("scene");
+  scene_->Build(*universe_);
 
-  _universe->AddScene(_scene);
-  _universe->SetCurrentScene(_scene);
-
-  _universe->AddObjectNode(_scene->get_scene_tree());
+  scene_->SetIbl(universe_->get_ibl_library().GetItemByName("studio"));
+  scene_->SetBrdf(universe_->get_texture_library().GetItemByName("brdf"));
 }
 
+}  // namespace orangutan

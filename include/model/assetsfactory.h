@@ -1,42 +1,36 @@
-#ifndef ASSETSFACTORY_H
-#define ASSETSFACTORY_H
+#ifndef ORANGUTAN_MODEL_ASSETS_FACTORY_H
+#define ORANGUTAN_MODEL_ASSETS_FACTORY_H
 
 #include <memory>
 #include <vector>
 
-#include "core/texture/texture.h"
-#include "shader/shaderstrategy.h"
-#include "util/parseur.h"
+#include "assimp/Importer.hpp"
+#include "assimp/scene.h"
+#include "material/shaderstrategy.h"
+#include "mesh/mesh.h"
 #include "util/util.h"
+
+namespace orangutan {
 
 class AssetsFactory {
  public:
-  AssetsFactory(const AssetsFactory&) = delete;
-  AssetsFactory(AssetsFactory&&) = delete;
-
-  AssetsFactory& operator=(const AssetsFactory&) = delete;
-  AssetsFactory& operator=(AssetsFactory&&) = delete;
-
-  static AssetsFactory& instance();
-
-  std::vector<std::shared_ptr<Mesh>> importMeshs(
-      const std::string& filename, const std::string& name = "Mesh X");
-  std::shared_ptr<DDTexture> importTexture(
-      const std::string& filename, const std::string& name = "2DTexture X");
-  std::shared_ptr<CubeTexture> importCubeMapTexture(
-      const std::string& filename, const std::string& name = "CubeTexture X");
-  std::shared_ptr<ShaderWrapper> importShader(
-      const std::string& vertexFilename, const std::string& fragmentFilename,
-      const std::string& geometryFilename = "");
-
-  std::shared_ptr<ShaderStrategy> createShaderStrategy(
-      std::shared_ptr<ShaderWrapper> shaderWrapper, const std::string& name);
+  static std::vector<std::unique_ptr<Mesh>> ImportMeshs(
+      const std::string& filename);
+  static std::unique_ptr<ShaderWrapper> CreateShaderWrapper(
+      const std::string& name, const std::string& vertex_filename,
+      const std::string& fragment_filename,
+      const std::string& geometry_filename = "");
+  static std::unique_ptr<ShaderStrategy> CreateShaderStrategy(
+      ShaderWrapper* shader_wrapper, const std::string& name);
 
  private:
-  AssetsFactory() = default;
-  ~AssetsFactory() = default;
+  static std::unique_ptr<Assimp::Importer> mesh_importer_;
 
-  static AssetsFactory _instance;
+  static std::vector<std::unique_ptr<Mesh>> ExtractMeshesFromScene(
+      const aiNode& node, const aiScene& scene);
+  static std::unique_ptr<Mesh> ExtractMesh(const aiMesh& mesh);
 };
 
-#endif  // ASSETSFACTORY_H
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_MODEL_ASSETS_FACTORY_H

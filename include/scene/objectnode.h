@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ORANGUTAN_SCENE_OBJECT_NODE_H
+#define ORANGUTAN_SCENE_OBJECT_NODE_H
 
 #include <list>
 #include <memory>
@@ -12,6 +13,9 @@
 #include "object/light.h"
 #include "object/object.h"
 #include "physics/transformable.h"
+#include "texture/ibl.h"
+
+namespace orangutan {
 
 class LightNode;
 
@@ -19,21 +23,22 @@ class ObjectNode : public Transformable, public Asset {
  public:
   ObjectNode(const std::string& name);
 
-  void set_object(std::shared_ptr<Object> object);
-  void AddChild(std::shared_ptr<ObjectNode> node);
-  void RemoveChild(std::shared_ptr<ObjectNode> node);
-  void RemoveNode(std::shared_ptr<ObjectNode> node);
+  void set_object(Object* object);
+  void AddChild(ObjectNode* node);
 
-  void Draw(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix,
-            const std::vector<std::shared_ptr<Light>>& lights) const;
-  void DrawScene(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix,
-                 const std::vector<std::shared_ptr<Light>>& lights) const;
-  void UpdateScene(const glm::mat4& mat);
-  void AnimateScene();
+  void Draw(const glm::mat4& viewMatrix, const glm::vec3& camera_position,
+            const glm::mat4& projectionMatrix,
+            const std::vector<Light*>& lights, const Ibl& ibl,
+            const Texture& brdf) const;
+  void DrawRecursively(const glm::mat4& viewMatrix,
+                       const glm::vec3& camera_position,
+                       const glm::mat4& projectionMatrix,
+                       const std::vector<Light*>& lights, const Ibl& ibl,
+                       const Texture& brdf) const;
+  void UpdateRecursively(const glm::mat4& mat);
+  void AnimateRecursively();
 
-  [[nodiscard]] std::vector<std::shared_ptr<ObjectNode>> get_childs() const {
-    return childs_;
-  }
+  [[nodiscard]] std::vector<ObjectNode*> get_childs() const { return childs_; }
 
   [[nodiscard]] const Transform& get_transform() const { return transform_; }
 
@@ -60,7 +65,11 @@ class ObjectNode : public Transformable, public Asset {
   void Update() override;
 
  private:
-  std::shared_ptr<Object> object_;
-  std::vector<std::shared_ptr<ObjectNode>> childs_;
+  Object* object_;
+  std::vector<ObjectNode*> childs_;
   Transform transform_;
 };
+
+}  // namespace orangutan
+
+#endif  // ORANGUTAN_SCENE_OBJECT_NODE_H

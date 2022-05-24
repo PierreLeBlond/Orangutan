@@ -3,7 +3,9 @@
 #include <iostream>
 #include <memory>
 
-const unsigned int kNumberOfKeys = 348;
+namespace orangutan {
+
+const int kNumberOfKeys = 348;
 
 // Initialize static member
 Keyboard Keyboard::_instance;
@@ -28,3 +30,5 @@ KeyState Keyboard::getState(int key) const {
   else
     return kUnknow;
 }
+
+}  // namespace orangutan
