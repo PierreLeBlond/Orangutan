@@ -116,17 +116,6 @@ void Camera::UpdateYawPitchRoll() {
                    glm::vec4(kDefaultYaw, 0.0f));
 
   pitch_ = glm::cross(yaw_, roll_);
-
-  // std::cout << "roll_angle: " << roll_angle_ << std::endl;
-  // std::cout << "yaw_angle: " << yaw_angle_ << std::endl;
-  // std::cout << "pitch_angle: " << pitch_angle_ << std::endl;
-
-  // std::cout << "roll: " << roll_.x << " " << roll_.y << " " << roll_.z
-  // << std::endl;
-  // std::cout << "yaw: " << yaw_.x << " " << yaw_.y << " " << yaw_.z <<
-  // std::endl; std::cout << "pitch: " << pitch_.x << " " << pitch_.y << " " <<
-  // pitch_.z
-  // << std::endl;
 }
 
 const glm::vec3& Camera::get_pitch() const { return pitch_; }

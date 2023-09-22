@@ -16,7 +16,7 @@ class Library {
 
   T* GetItemByName(const std::string& name) const;
 
-  void AddItem(const std::string& name, std::unique_ptr<T> item);
+  T* AddItem(const std::string& name, std::unique_ptr<T> item);
 
  private:
   std::unordered_map<std::string, std::unique_ptr<T>> items_;
@@ -44,20 +44,19 @@ template <class T>
 T* Library<T>::GetItemByName(const std::string& name) const {
   auto iterator = items_.find(name);
   if (iterator == items_.end()) {
-    std::cerr << "Library::GetItemByName : Item with name " << name
-              << " does not exists" << std::endl;
-    exit(0);
+    return NULL;
   }
   return iterator->second.get();
 }
 
 template <class T>
-void Library<T>::AddItem(const std::string& name, std::unique_ptr<T> item) {
+T* Library<T>::AddItem(const std::string& name, std::unique_ptr<T> item) {
   if (items_.count(name) > 0) {
     std::cerr << "Library::AddItem : Item with name " << name
               << " already exists" << std::endl;
   }
   items_.insert(std::make_pair(name, std::move(item)));
+  return items_.at(name).get();
 }
 
 }  // namespace orangutan

@@ -3,6 +3,7 @@
 #include <nanogui/opengl.h>
 
 #include <algorithm>
+#include <iostream>
 
 namespace orangutan {
 

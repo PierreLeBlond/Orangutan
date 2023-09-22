@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "core/shader/shaderwrapper.h"
 #include "core/texture/cubetexture.h"
 #include "core/texture/texture.h"
 #include "glm/glm.hpp"
@@ -16,12 +17,38 @@
 #include "glm/gtx/transform2.hpp"
 #include "material/uniform.h"
 #include "object/asset.h"
+#include "object/light.h"
 
 namespace orangutan {
 
 class Material : public Asset {
  public:
   Material(const std::string& name);
+
+  void set_shader_wrapper(ShaderWrapper* shader_wrapper);
+  [[nodiscard]] ShaderWrapper& get_shader_wrapper() const;
+
+  template <class T>
+  void BindUniform(const Uniform<T>& uniform) const {
+    std::vector<std::string> names = shader_wrapper_->GetUniformsName();
+    shader_wrapper_->BindUniform(uniform.getName(), uniform.getValue());
+  }
+
+  void BindUniforms(const Material& material, const glm::mat4& model_matrix,
+                    const glm::mat4& view_matrix,
+                    const glm::vec3& camera_position,
+                    const glm::mat4& projection_matrix,
+                    const std::vector<Light*>& lights, const Ibl& ibl,
+                    const Texture& brdf) const;
+
+  void BindLightUniforms(const std::vector<Light*>& lights,
+                         const glm::mat4& view_matrix, const Ibl& ibl,
+                         const Texture& brdf) const;
+  void BindSceneUniforms(const glm::mat4& model_matrix,
+                         const glm::mat4& view_matrix,
+                         const glm::vec3& camera_position,
+                         const glm::mat4& projection_matrix) const;
+  void BindMaterialUniforms() const;
 
   template <class T>
   void CreateUniform(const std::string& name, const T& value = T(),
@@ -123,6 +150,8 @@ class Material : public Asset {
   get_cube_textures() const;
 
  private:
+  ShaderWrapper* shader_wrapper_;
+
   std::unordered_map<std::string, Uniform<float>> uniforms_1f_;
   std::unordered_map<std::string, Uniform<int>> uniforms_1i_;
   std::unordered_map<std::string, Uniform<unsigned int>> uniforms_1ui_;

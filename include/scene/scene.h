@@ -16,7 +16,6 @@ class Scene : public Asset {
   Scene(const std::string& name);
   void SetSkybox(int index);
 
-  void Build(const Universe& universe);
   void Update();
   void Animate();
   void Draw(const glm::mat4& view, const glm::vec3 camera_position,
@@ -25,7 +24,7 @@ class Scene : public Asset {
   void set_is_ready(bool isReady);
   [[nodiscard]] bool get_is_ready() const;
 
-  [[nodiscard]] const ObjectNode& get_scene_tree() const;
+  [[nodiscard]] ObjectNode& get_scene_tree();
 
   void SetIbl(Ibl* ibl);
   void SetBrdf(Texture* brdf);

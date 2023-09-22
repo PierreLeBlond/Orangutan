@@ -10,17 +10,12 @@ ObjectNode::ObjectNode(const std::string& name)
 
 void ObjectNode::set_object(Object* object) { object_ = object; }
 
-void ObjectNode::AddChild(ObjectNode* node) { childs_.push_back(node); }
-
-void ObjectNode::Draw(const glm::mat4& viewMatrix,
-                      const glm::vec3& camera_position,
-                      const glm::mat4& projectionMatrix,
-                      const std::vector<Light*>& lights, const Ibl& ibl,
-                      const Texture& brdf) const {
-  if (object_) {
-    object_->draw(viewMatrix, camera_position, projectionMatrix, lights, ibl,
-                  brdf);
+void ObjectNode::AddChild(ObjectNode* node) {
+  if (node == nullptr) {
+    std::cerr << "node is nullptr" << std::endl;
+    exit(0);
   }
+  childs_.push_back(node);
 }
 
 void ObjectNode::DrawRecursively(const glm::mat4& viewMatrix,
@@ -28,7 +23,10 @@ void ObjectNode::DrawRecursively(const glm::mat4& viewMatrix,
                                  const glm::mat4& projectionMatrix,
                                  const std::vector<Light*>& lights,
                                  const Ibl& ibl, const Texture& brdf) const {
-  Draw(viewMatrix, camera_position, projectionMatrix, lights, ibl, brdf);
+  if (object_ != nullptr) {
+    object_->Draw(viewMatrix, camera_position, projectionMatrix, lights, ibl,
+                  brdf);
+  }
   for (auto& _child : childs_) {
     _child->DrawRecursively(viewMatrix, camera_position, projectionMatrix,
                             lights, ibl, brdf);
@@ -37,7 +35,9 @@ void ObjectNode::DrawRecursively(const glm::mat4& viewMatrix,
 
 void ObjectNode::AnimateRecursively() {
   transform_.Animate();
-  if (object_) object_->Animate();
+  if (object_ != nullptr) {
+    object_->Animate();
+  }
   for (auto& child : childs_) {
     child->AnimateRecursively();
   }
@@ -48,7 +48,9 @@ void ObjectNode::UpdateRecursively(const glm::mat4& mat) {
       _object->update();
   _transform.update();*/
   SetParentMatrix(mat);
-  if (object_) object_->SetParentMatrix(mat * transform_.get_model_matrix());
+  if (object_ != nullptr) {
+    object_->SetParentMatrix(mat * transform_.get_model_matrix());
+  }
   for (auto& child : childs_) {
     child->UpdateRecursively(mat * transform_.get_model_matrix());
   }

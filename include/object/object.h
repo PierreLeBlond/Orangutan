@@ -20,7 +20,7 @@ class Object : public Asset, public Transformable {
   [[nodiscard]] const Transform& getTransform() const;
   void setTransform(const Transform& transform);
 
-  virtual void draw(const glm::mat4& viewMatrix,
+  virtual void Draw(const glm::mat4& viewMatrix,
                     const glm::vec3& camera_position,
                     const glm::mat4& projectionMatrix,
                     const std::vector<Light*>& lights, const Ibl& ibl,

@@ -4,6 +4,106 @@ namespace orangutan {
 
 Material::Material(const std::string& name) : Asset(name) {}
 
+void Material::set_shader_wrapper(ShaderWrapper* shaderWrapper) {
+  shader_wrapper_ = shaderWrapper;
+}
+
+ShaderWrapper& Material::get_shader_wrapper() const { return *shader_wrapper_; }
+
+void Material::BindUniforms(const Material& material,
+                            const glm::mat4& model_matrix,
+                            const glm::mat4& view_matrix,
+                            const glm::vec3& camera_position,
+                            const glm::mat4& projection_matrix,
+                            const std::vector<Light*>& lights, const Ibl& ibl,
+                            const Texture& brdf) const {
+  shader_wrapper_->Start();
+  BindSceneUniforms(model_matrix, view_matrix, camera_position,
+                    projection_matrix);
+  BindMaterialUniforms();
+  BindLightUniforms(lights, view_matrix, ibl, brdf);
+  shader_wrapper_->Stop();
+}
+
+void Material::BindLightUniforms(const std::vector<Light*>& lights,
+                                 const glm::mat4& view_matrix, const Ibl& ibl,
+                                 const Texture& brdf) const {
+  unsigned int number_of_lights = lights.size();
+
+  for (unsigned int i = 0; i < number_of_lights; i++) {
+    const Light& light = *lights[i];
+    shader_wrapper_->BindUniform("lights", i, "position",
+                                 light.getTransform().GetGlobalPos());
+    shader_wrapper_->BindUniform("lights", i, "color", light.get_color());
+    shader_wrapper_->BindUniform("lights", i, "intensity",
+                                 light.get_intensity());
+    shader_wrapper_->BindUniform("lights", i, "falloffRadius",
+                                 light.get_falloff_radius());
+  }
+
+  shader_wrapper_->BindUniform("numberOfLights", number_of_lights);
+
+  shader_wrapper_->BindCubeTexture("ibl.radiance", ibl.radiance->getId());
+  shader_wrapper_->BindCubeTexture("ibl.irradiance", ibl.irradiance->getId());
+  shader_wrapper_->BindTexture("brdf", brdf.getId());
+}
+
+void Material::BindSceneUniforms(const glm::mat4& model_matrix,
+                                 const glm::mat4& view_matrix,
+                                 const glm::vec3& camera_position,
+                                 const glm::mat4& projection_matrix) const {
+  shader_wrapper_->BindUniform("projectionMatrix", projection_matrix);
+  shader_wrapper_->BindUniform("viewMatrix", view_matrix);
+  shader_wrapper_->BindUniform("modelMatrix", model_matrix);
+  shader_wrapper_->BindUniform("cameraPosition", camera_position);
+}
+
+void Material::BindMaterialUniforms() const {
+  for (const auto& uniform : uniforms_1f_) {
+    BindUniform(uniform.second);
+  }
+
+  for (const auto& uniform : uniforms_1i_) {
+    BindUniform(uniform.second);
+  }
+
+  for (const auto& uniform : uniforms_1ui_) {
+    BindUniform(uniform.second);
+  }
+
+  for (const auto& uniform : uniforms_1b_) {
+    BindUniform(uniform.second);
+  }
+
+  for (const auto& uniform : uniforms_3f_) {
+    BindUniform(uniform.second);
+  }
+
+  for (const auto& uniform : uniforms_4f_) {
+    BindUniform(uniform.second);
+  }
+
+  for (const auto& uniform : uniforms_3x3_) {
+    BindUniform(uniform.second);
+  }
+
+  for (const auto& uniform : uniforms_4x4_) {
+    BindUniform(uniform.second);
+  }
+
+  for (const auto& pair : textures_) {
+    if (nullptr != pair.second) {
+      shader_wrapper_->BindTexture(pair.first, pair.second->getId());
+    }
+  }
+
+  for (const auto& pair : cube_textures_) {
+    if (nullptr != pair.second) {
+      shader_wrapper_->BindCubeTexture(pair.first, pair.second->getId());
+    }
+  }
+}
+
 void Material::AddUniform(const Uniform<float>& u) {
   AddUniform(u, uniforms_1f_);
 }

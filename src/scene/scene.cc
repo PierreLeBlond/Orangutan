@@ -13,37 +13,6 @@ namespace orangutan {
 Scene::Scene(const std::string& name)
     : Asset(name), scene_tree_(name), ibl_(nullptr), is_ready_(false) {}
 
-void Scene::Build(const Universe& universe) {
-  // Cameras
-  scene_tree_.AddChild(
-      universe.get_camera_library().GetItemByName("free_camera"));
-
-  for (int i = 0; i < 10; i++) {
-    for (int j = 0; j < 2; j++) {
-      const std::string node_name =
-          "sphere_" + std::to_string(i) + "_" + std::to_string(j) + "_node";
-      scene_tree_.AddChild(
-          universe.get_object_node_library().GetItemByName(node_name));
-    }
-  }
-
-  // Sky
-  scene_tree_.AddChild(
-      universe.get_object_node_library().GetItemByName("sky_node"));
-
-  // Lights
-  for (int i = 0; i < 2; i++) {
-    for (int j = 0; j < 2; j++) {
-      const std::string light_node_name =
-          "light_" + std::to_string(i) + "_" + std::to_string(j) + "_node";
-      scene_tree_.AddChild(
-          universe.get_object_node_library().GetItemByName(light_node_name));
-    }
-  }
-
-  set_is_ready(true);
-}
-
 void Scene::Update() {
   // TODO: Search for all lights within tree
 
@@ -63,7 +32,7 @@ void Scene::set_is_ready(bool isReady) { is_ready_ = isReady; }
 
 bool Scene::get_is_ready() const { return is_ready_; }
 
-const ObjectNode& Scene::get_scene_tree() const { return scene_tree_; }
+ObjectNode& Scene::get_scene_tree() { return scene_tree_; }
 
 void Scene::SetIbl(Ibl* ibl) { ibl_ = ibl; }
 

@@ -1,5 +1,3 @@
-#version 450 core
-
 in vec3 vertex_in;
 
 uniform mat4 projection_matrix;

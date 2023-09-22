@@ -17,26 +17,27 @@ class ShaderProgram {
  public:
   ShaderProgram();
 
-  bool build();
-  bool build(const std::string &vertexShaderPath,
-             const std::string &fragmentShaderPath,
-             const std::string &geometryShaderPath = "");
+  bool Build(const std::vector<std::string> &defines);
+  bool Build(const std::vector<std::string> &defines,
+             const std::string &vertex_shader_path,
+             const std::string &fragment_shader_path,
+             const std::string &geometry_shader_path = "");
 
-  bool attach(unsigned int id);
-  bool link();
-  bool detach(unsigned int id);
+  bool Attach(unsigned int id);
+  bool Link();
+  bool Detach(unsigned int id);
 
-  void start() const;
-  void stop() const;
+  void Start() const;
+  void Stop() const;
 
-  [[nodiscard]] unsigned int getId() const;
+  [[nodiscard]] unsigned int GetId() const;
 
  private:
-  ShaderProgramHandle _handle;
+  ShaderProgramHandle handle_;
 
-  Shader _vertexShader;
-  Shader _fragmentShader;
-  Shader _geometryShader;
+  Shader vertex_shader_;
+  Shader fragment_shader_;
+  Shader geometry_shader_;
 };
 
 }  // namespace orangutan

@@ -1,5 +1,6 @@
 #include "mesh/meshfactory.h"
 
+#include <iostream>
 #include <memory>
 #include <type_traits>
 
@@ -10,6 +11,7 @@ std::unique_ptr<Mesh> MeshFactory::CreateSquare(const std::string& name) {
 
   std::vector<glm::vec3> positions;
   std::vector<glm::vec3> normals;
+  std::vector<glm::vec3> tangents;
   std::vector<glm::vec2> uvs;
 
   positions.push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
@@ -21,6 +23,11 @@ std::unique_ptr<Mesh> MeshFactory::CreateSquare(const std::string& name) {
   normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
   normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
   normals.push_back(glm::vec3(0.0f, 0.0f, -1.0f));
+
+  tangents.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+  tangents.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+  tangents.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+  tangents.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
 
   uvs.push_back(glm::vec2(0.0f, 0.0f));
   uvs.push_back(glm::vec2(1.0f, 0.0f));
@@ -36,10 +43,11 @@ std::unique_ptr<Mesh> MeshFactory::CreateSquare(const std::string& name) {
   faces.push_back(2);
   faces.push_back(3);
 
-  mesh->setPositions(positions);
-  mesh->setNormals(normals);
-  mesh->setUvs(uvs);
-  mesh->setFaces(faces);
+  mesh->SetPositions(positions);
+  mesh->SetNormals(normals);
+  mesh->SetTangents(tangents);
+  mesh->SetUvs(uvs);
+  mesh->SetFaces(faces);
 
   return mesh;
 }
@@ -294,12 +302,67 @@ std::unique_ptr<Mesh> MeshFactory::CreateCube(const std::string& name,
     delete[] mat;
   }
 
-  mesh->setPositions(positions);
-  mesh->setNormals(normals);
-  mesh->setUvs(uvs);
-  mesh->setFaces(faces);
+  mesh->SetPositions(positions);
+  mesh->SetNormals(normals);
+  mesh->SetUvs(uvs);
+  mesh->SetFaces(faces);
 
   return mesh;
+}
+
+std::unique_ptr<Mesh> MeshFactory::ExtractMesh(const aiMesh& mesh) {
+  auto extracted_mesh = std::make_unique<Mesh>(mesh.mName.C_Str());
+
+  std::vector<glm::vec3> vertices;
+  std::vector<glm::vec3> normals;
+  std::vector<glm::vec3> tangents;
+  std::vector<glm::vec2> uvs;
+  std::vector<glm::vec2> uvs_2;
+
+  std::vector<unsigned int> indices;
+
+  for (unsigned int i = 0; i < mesh.mNumVertices; i++) {
+    glm::vec3 vertex = glm::vec3(mesh.mVertices[i].x, mesh.mVertices[i].y,
+                                 mesh.mVertices[i].z);
+    vertices.push_back(vertex);
+
+    glm::vec3 normal =
+        glm::vec3(mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z);
+    normals.push_back(normal);
+
+    glm::vec3 tangent = glm::vec3(mesh.mTangents[i].x, mesh.mTangents[i].y,
+                                  mesh.mTangents[i].z);
+    tangents.push_back(tangent);
+
+    glm::vec2 uv;
+    if (mesh.mTextureCoords[0]) {
+      uv = glm::vec2(mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y);
+    }
+    uvs.push_back(uv);
+
+    glm::vec2 uv_2;
+    if (mesh.mTextureCoords[1]) {
+      uv_2 =
+          glm::vec2(mesh.mTextureCoords[1][i].x, mesh.mTextureCoords[1][i].y);
+    }
+    uvs_2.push_back(uv_2);
+  }
+
+  for (unsigned int i = 0; i < mesh.mNumFaces; i++) {
+    aiFace face = mesh.mFaces[i];
+    for (unsigned int j = 0; j < face.mNumIndices; j++) {
+      indices.push_back(face.mIndices[j]);
+    }
+  }
+
+  extracted_mesh->SetPositions(vertices);
+  extracted_mesh->SetNormals(normals);
+  extracted_mesh->SetTangents(tangents);
+  extracted_mesh->SetUvs(uvs);
+  extracted_mesh->SetUvs2(uvs_2);
+  extracted_mesh->SetFaces(indices);
+
+  return extracted_mesh;
 }
 
 }  // namespace orangutan

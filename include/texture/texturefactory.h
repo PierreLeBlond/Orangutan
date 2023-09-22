@@ -38,6 +38,9 @@ class TextureFactory {
   static std::unique_ptr<Ibl> ImportIBLFromDds(
       const std::string& name, const std::string& irradiance_filename,
       const std::string& radiance_filename);
+  static std::unique_ptr<Ibl> ImportIBLFromRgbdDds(
+      const std::string& name, const std::string& irradiance_filename,
+      const std::string& radiance_filename);
   static void ExportIbl(const std::string& name,
                         const std::string& irradiance_filename,
                         const std::string& radiance_filename, const Ibl& ibl,
@@ -52,6 +55,8 @@ class TextureFactory {
   static std::unique_ptr<CubeTexture> CreateRadianceMap(
       const CubeTexture& cube_texture);
   static std::unique_ptr<CubeTexture> ImportCubeTextureFromDds(
+      const std::string& name, const std::string& filename);
+  static std::unique_ptr<CubeTexture> ImportCubeTextureFromRgbdDds(
       const std::string& name, const std::string& filename);
 };
 

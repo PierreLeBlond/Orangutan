@@ -16,11 +16,11 @@ class VisualDebugger {
 
  private:
   std::unique_ptr<ShaderWrapper> texture_displayer_shader_wrapper_;
-  std::unique_ptr<ShaderStrategy> texture_displayer_shader_strategy_;
+  std::unique_ptr<Material> texture_displayer_material_;
   std::unique_ptr<Mesh> texture_displayer_mesh_;
   std::unique_ptr<RenderableObject> texture_displayer_;
   std::unique_ptr<ShaderWrapper> cube_texture_displayer_shader_wrapper_;
-  std::unique_ptr<ShaderStrategy> cube_texture_displayer_shader_strategy_;
+  std::unique_ptr<Material> cube_texture_displayer_material_;
   std::unique_ptr<Mesh> cube_texture_displayer_mesh_;
   std::unique_ptr<RenderableObject> cube_texture_displayer_;
 };

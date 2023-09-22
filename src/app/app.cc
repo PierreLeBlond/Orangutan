@@ -4,17 +4,19 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "GLFW/glfw3.h"
 #include "camera/freecamera.h"
 #include "camera/trackballcamera.h"
 #include "material/materialfactory.h"
+#include "material/shaderfactory.h"
 #include "mesh/meshfactory.h"
-#include "model/assetsfactory.h"
 #include "nanogui/formhelper.h"
 #include "nanogui/vector.h"
 #include "object/renderableobject.h"
 #include "object/renderableobjectfactory.h"
+#include "scene/scenefactory.h"
 #include "texture/texturefactory.h"
 #include "ui/screen.h"
 
@@ -174,74 +176,47 @@ void App::BindEvents(GLFWwindow *window, Screen *screen) {
 void App::InitUniverse() {
   universe_ = std::make_unique<Universe>();
 
-  auto skybox_shader_wrapper = AssetsFactory::CreateShaderWrapper(
-      "skybox", "../resources/shaders/skybox.vert",
-      "../resources/shaders/skybox.frag");
-  auto skybox_shader_strategy = AssetsFactory::CreateShaderStrategy(
-      skybox_shader_wrapper.get(), "Skybox");
-  universe_->AddShaderWrapper(std::move(skybox_shader_wrapper));
-  universe_->AddShaderStrategy(std::move(skybox_shader_strategy));
+  scene_ = std::make_unique<Scene>("scene");
+  auto &scene_tree = scene_->get_scene_tree();
 
-  auto pbr_shader_wrapper = AssetsFactory::CreateShaderWrapper(
-      "pbr", "../resources/shaders/pbr.vert", "../resources/shaders/pbr.frag");
-  auto pbr_shader_strategy =
-      AssetsFactory::CreateShaderStrategy(pbr_shader_wrapper.get(), "pbr");
+  const std::vector<std::string> no_defines;
+  const std::vector<std::string> albedo_texture_defines{"ALBEDO_TEXTURE"};
+
+  auto skybox_shader_wrapper = ShaderFactory::CreateShaderWrapper(
+      "skybox_wrapper", no_defines, "../resources/shaders/skybox.vert",
+      "../resources/shaders/skybox.frag");
+  universe_->AddShaderWrapper(std::move(skybox_shader_wrapper));
+
+  auto pbr_shader_wrapper = ShaderFactory::CreateShaderWrapper(
+      "pbr", no_defines, "../resources/shaders/pbr.vert",
+      "../resources/shaders/pbr.frag");
   universe_->AddShaderWrapper(std::move(pbr_shader_wrapper));
-  universe_->AddShaderStrategy(std::move(pbr_shader_strategy));
 
   auto brdf = TextureFactory::CreateBrdfMap();
   universe_->AddTexture(std::move(brdf));
 
-  auto subway_ibl = TextureFactory::ImportIBLFromDds(
-      "subway", "../resources/images/ibl/subway/subway_irradiance.dds",
-      "../resources/images/ibl/subway/subway_radiance.dds");
-  universe_->AddIbl(std::move(subway_ibl));
+  auto room_ibl = TextureFactory::ImportIBLFromDds(
+      "room", "../resources/images/ibl/room/room_irradiance.dds",
+      "../resources/images/ibl/room/room_radiance.dds");
+  universe_->AddIbl(std::move(room_ibl));
 
-  auto bridge_ibl = TextureFactory::ImportIBLFromDds(
-      "bridge", "../resources/images/ibl/bridge/bridge_irradiance.dds",
-      "../resources/images/ibl/bridge/bridge_radiance.dds");
-  universe_->AddIbl(std::move(bridge_ibl));
+  Assimp::Importer importer;
 
-  auto studio_ibl = TextureFactory::ImportIBLFromDds(
-      "studio", "../resources/images/ibl/studio_3/studio_3_irradiance.dds",
-      "../resources/images/ibl/studio_3/studio_3_radiance.dds");
-  universe_->AddIbl(std::move(studio_ibl));
+  universe_->AddMesh(MeshFactory::CreateCube("cube_mesh"));
 
-  universe_->AddMesh(MeshFactory::CreateCube("Cube"));
-  universe_->AddMesh(std::move(
-      AssetsFactory::ImportMeshs("../resources/meshes/sphere.obj")[0]));
+  // Chess
+  auto chess_node = universe_->AddObjectNode(SceneFactory::ImportSceneTree(
+      importer, *universe_, "chess", "../resources/meshes/chess.gltf"));
+  scene_tree.AddChild(chess_node);
 
-  for (int i = 0; i < 10; i++) {
-    for (int j = 0; j < 2; j++) {
-      const std::string material_name =
-          "pbr_material_" + std::to_string(i) + "_" + std::to_string(j);
-      auto material = MaterialFactory::CreatePbrMaterial(material_name);
-      material->SetUniform("albedo", glm::vec3(1.0f, 1.0f, 1.0f));
-      material->SetUniform("roughness", float(i) * 0.1f);
-      material->SetUniform("metalness", float(j) * 1.0f);
-
-      universe_->AddMaterial(std::move(material));
-
-      const std::string renderable_object_name =
-          "sphere_" + std::to_string(i) + "_" + std::to_string(j);
-
-      auto sphere = RenderableObjectFactory::CreateRenderableObject(
-          *universe_, renderable_object_name, "sphere", material_name, "pbr");
-      sphere->UpdateVertexArrayObject();
-
-      auto sphere_node =
-          std::make_unique<ObjectNode>(renderable_object_name + "_node");
-      sphere_node->set_object(sphere.get());
-
-      sphere_node->SetXPos((float)i * 3.0f - 13.5f);
-      sphere_node->SetYPos((float)j * 3.0f);
-
-      universe_->AddRenderableObject(std::move(sphere));
-      universe_->AddObjectNode(std::move(sphere_node));
-    }
-  }
+  // Spheres
+  // auto sphere_node = universe_->AddObjectNode(SceneFactory::ImportSceneTree(
+  // importer, *universe_, "sphere", "../resources/meshes/spheres.gltf"));
+  // scene_tree.AddChild(sphere_node);
 
   auto sky_material = MaterialFactory::CreateSkyboxMaterial();
+  sky_material->set_shader_wrapper(
+      universe_->get_shader_wrapper_library().GetItemByName("skybox_wrapper"));
   universe_->AddMaterial(std::move(sky_material));
 
   // Cameras
@@ -252,10 +227,9 @@ void App::InitUniverse() {
 
   // Sky
   auto sky = RenderableObjectFactory::CreateRenderableObject(
-      *universe_, "sky", "Cube", "Skybox", "Skybox");
-  sky->UpdateVertexArrayObject();
+      *universe_, "skybox_renderable_object", "cube_mesh", "skybox_material");
 
-  auto sky_node = std::make_unique<ObjectNode>("sky_node");
+  auto sky_node = std::make_unique<ObjectNode>("skybox_node");
   sky_node->set_object(sky.get());
 
   universe_->AddRenderableObject(std::move(sky));
@@ -270,20 +244,28 @@ void App::InitUniverse() {
 
       light->set_intensity(1.0f);
 
-      auto lightNode = std::make_unique<ObjectNode>(light_name + "_node");
-      lightNode->set_object(light.get());
-      lightNode->set_position(
+      auto light_node = std::make_unique<ObjectNode>(light_name + "_node");
+      light_node->set_object(light.get());
+      light_node->set_position(
           glm::vec3(5.0f * (i * 2.0f - 1.0f), 5.0f * (j * 2.0f - 1.0f), 5.0f));
 
+      scene_tree.AddChild(light_node.get());
       universe_->AddLight(std::move(light));
-      universe_->AddObjectNode(std::move(lightNode));
+      universe_->AddObjectNode(std::move(light_node));
     }
   }
 
-  scene_ = std::make_unique<Scene>("scene");
-  scene_->Build(*universe_);
+  // Cameras
+  scene_tree.AddChild(
+      universe_->get_camera_library().GetItemByName("free_camera"));
 
-  scene_->SetIbl(universe_->get_ibl_library().GetItemByName("studio"));
+  // Sky
+  scene_tree.AddChild(
+      universe_->get_object_node_library().GetItemByName("skybox_node"));
+
+  scene_->set_is_ready(true);
+
+  scene_->SetIbl(universe_->get_ibl_library().GetItemByName("room"));
   scene_->SetBrdf(universe_->get_texture_library().GetItemByName("brdf"));
 }
 

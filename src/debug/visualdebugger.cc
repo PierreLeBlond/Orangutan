@@ -10,17 +10,17 @@ void VisualDebugger::DisplayTexture(const Texture& texture) {
     texture_displayer_shader_wrapper_ =
         std::make_unique<ShaderWrapper>("texture_debug_shader_wrapper");
 
-    texture_displayer_shader_wrapper_->build(
-        "../resources/shaders/texture_debug.vert",
+    const std::vector<std::string> no_defines;
+    texture_displayer_shader_wrapper_->Build(
+        no_defines, "../resources/shaders/texture_debug.vert",
         "../resources/shaders/texture_debug.frag", "");
 
-    // shader strategy
-    texture_displayer_shader_strategy_ =
-        std::make_unique<ShaderStrategy>("texture_debug_shader_strategy");
+    // material
+    texture_displayer_material_ =
+        std::make_unique<Material>("texture_debug_material");
 
-    texture_displayer_shader_strategy_->set_shader_wrapper(
+    texture_displayer_material_->set_shader_wrapper(
         texture_displayer_shader_wrapper_.get());
-    texture_displayer_shader_strategy_->InitAttribute();
 
     // mesh
     texture_displayer_mesh_ =
@@ -29,13 +29,12 @@ void VisualDebugger::DisplayTexture(const Texture& texture) {
     // renderable object
     texture_displayer_ =
         std::make_unique<RenderableObject>("texture_debug_renderable_object");
-    texture_displayer_->set_shader_strategy(
-        texture_displayer_shader_strategy_.get());
+    texture_displayer_->set_material(texture_displayer_material_.get());
     texture_displayer_->set_mesh(texture_displayer_mesh_.get());
     texture_displayer_->UpdateVertexArrayObject();
   }
 
-  texture_displayer_->get_shader_strategy().get_shader_wrapper().bindTexture(
+  texture_displayer_->get_material().get_shader_wrapper().BindTexture(
       "source_map", texture.getId());
   texture_displayer_->Draw();
 }
@@ -47,17 +46,17 @@ void VisualDebugger::DisplayCubeTexture(const CubeTexture& cube_texture,
     cube_texture_displayer_shader_wrapper_ =
         std::make_unique<ShaderWrapper>("cube_texture_debug_shader_wrapper");
 
-    cube_texture_displayer_shader_wrapper_->build(
-        "../resources/shaders/cube_texture_debug.vert",
+    const std::vector<std::string> no_defines;
+    cube_texture_displayer_shader_wrapper_->Build(
+        no_defines, "../resources/shaders/cube_texture_debug.vert",
         "../resources/shaders/cube_texture_debug.frag", "");
 
     // shader strategy
-    cube_texture_displayer_shader_strategy_ =
-        std::make_unique<ShaderStrategy>("cube_texture_debug_shader_strategy");
+    cube_texture_displayer_material_ =
+        std::make_unique<Material>("cube_texture_debug_shader_strategy");
 
-    cube_texture_displayer_shader_strategy_->set_shader_wrapper(
+    cube_texture_displayer_material_->set_shader_wrapper(
         cube_texture_displayer_shader_wrapper_.get());
-    cube_texture_displayer_shader_strategy_->InitAttribute();
 
     // mesh
     cube_texture_displayer_mesh_ =
@@ -66,8 +65,8 @@ void VisualDebugger::DisplayCubeTexture(const CubeTexture& cube_texture,
     // renderable object
     cube_texture_displayer_ = std::make_unique<RenderableObject>(
         "cube_texture_debug_renderable_object");
-    cube_texture_displayer_->set_shader_strategy(
-        cube_texture_displayer_shader_strategy_.get());
+    cube_texture_displayer_->set_material(
+        cube_texture_displayer_material_.get());
     cube_texture_displayer_->set_mesh(cube_texture_displayer_mesh_.get());
     cube_texture_displayer_->UpdateVertexArrayObject();
   }
@@ -80,26 +79,21 @@ void VisualDebugger::DisplayCubeTexture(const CubeTexture& cube_texture,
   float top = ((float)height - 3.0f * tile_size) / 2.0f;
   float left = ((float)width - 4.0f * tile_size) / 2.0f;
 
-  cube_texture_displayer_->get_shader_strategy().get_shader_wrapper().start();
+  cube_texture_displayer_->get_material().get_shader_wrapper().Start();
 
-  cube_texture_displayer_->get_shader_strategy()
-      .get_shader_wrapper()
-      .setUniform("tile_width", tile_size / (float)width);
-  cube_texture_displayer_->get_shader_strategy()
-      .get_shader_wrapper()
-      .setUniform("tile_height", tile_size / (float)height);
-  cube_texture_displayer_->get_shader_strategy()
-      .get_shader_wrapper()
-      .setUniform("top", top / (float)height);
-  cube_texture_displayer_->get_shader_strategy()
-      .get_shader_wrapper()
-      .setUniform("left", left / (float)width);
+  cube_texture_displayer_->get_material().get_shader_wrapper().BindUniform(
+      "tile_width", tile_size / (float)width);
+  cube_texture_displayer_->get_material().get_shader_wrapper().BindUniform(
+      "tile_height", tile_size / (float)height);
+  cube_texture_displayer_->get_material().get_shader_wrapper().BindUniform(
+      "top", top / (float)height);
+  cube_texture_displayer_->get_material().get_shader_wrapper().BindUniform(
+      "left", left / (float)width);
 
-  cube_texture_displayer_->get_shader_strategy()
-      .get_shader_wrapper()
-      .bindCubeTexture("source_map", cube_texture.getId());
+  cube_texture_displayer_->get_material().get_shader_wrapper().BindCubeTexture(
+      "source_map", cube_texture.getId());
 
-  cube_texture_displayer_->get_shader_strategy().get_shader_wrapper().stop();
+  cube_texture_displayer_->get_material().get_shader_wrapper().Stop();
 
   cube_texture_displayer_->Draw();
 }

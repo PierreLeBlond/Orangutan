@@ -23,63 +23,64 @@ class ShaderWrapper : public Asset {
  public:
   ShaderWrapper(const std::string &name);
 
-  void build(const std::string &vertexShaderPath,
-             const std::string &fragmentShaderPath,
-             const std::string &geometryShaderPath);
+  void Build(const std::vector<std::string> &defines,
+             const std::string &vertex_shader_path,
+             const std::string &fragment_shader_path,
+             const std::string &geometry_shader_path);
 
-  void start() const;
-  void stop() const;
+  void Start() const;
+  void Stop() const;
 
-  void storeUniformLocation();
-  void storeAttributeLocation();
+  void StoreUniformLocation();
+  void StoreAttributeLocation();
 
-  [[nodiscard]] int getUniformLocation(const std::string &name) const;
-  [[nodiscard]] std::vector<std::string> getUniformsName() const;
-  [[nodiscard]] int getAttributeLocation(const std::string &name) const;
+  [[nodiscard]] int GetUniformLocation(const std::string &name) const;
+  [[nodiscard]] std::vector<std::string> GetUniformsName() const;
+  [[nodiscard]] int GetAttributeLocation(const std::string &name) const;
 
   template <typename T>
-  void setUniform(const std::string &structName, const std::string &name,
-                  const T &val) {
+  void BindUniform(const std::string &structName, const std::string &name,
+                   const T &val) {
     std::ostringstream ost;
     ost << structName << "." << name;
-    setUniform(ost.str(), val);
+    BindUniform(ost.str(), val);
   }
 
   template <typename T>
-  void setUniform(const std::string &structName, int index,
-                  const std::string &name, const T &val) {
+  void BindUniform(const std::string &structName, int index,
+                   const std::string &name, const T &val) {
     std::ostringstream ost;
     ost << structName << "[" << index << "]." << name;
-    setUniform(ost.str(), val);
+    BindUniform(ost.str(), val);
   }
 
   template <typename T>
-  void setUniform(const std::string &name, int index, const T &val) {
+  void BindUniform(const std::string &name, int index, const T &val) {
     std::ostringstream ost;
     ost << name << "[" << index << "]";
-    setUniform(ost.str(), val);
+    BindUniform(ost.str(), val);
   }
 
-  void setUniform(const std::string &name, const glm::vec3 &v);
-  void setUniform(const std::string &name, const glm::vec4 &v);
-  void setUniform(const std::string &name, const glm::mat3 &m);
-  void setUniform(const std::string &name, const glm::mat4 &m);
-  void setUniform(const std::string &name, float val);
-  void setUniform(const std::string &name, int val);
-  void setUniform(const std::string &name, unsigned int val);
-  void setUniform(const std::string &name, bool val);
+  void BindUniform(const std::string &name, const glm::vec3 &v);
+  void BindUniform(const std::string &name, const glm::vec4 &v);
+  void BindUniform(const std::string &name, const glm::mat3 &m);
+  void BindUniform(const std::string &name, const glm::mat4 &m);
+  void BindUniform(const std::string &name, float val);
+  void BindUniform(const std::string &name, int val);
+  void BindUniform(const std::string &name, unsigned int val);
+  void BindUniform(const std::string &name, bool val);
 
-  void bindTexture(const std::string &name, unsigned int id);
-  void bindCubeTexture(const std::string &name, unsigned int id);
-  void unbindTexture();
+  void BindTexture(const std::string &name, unsigned int id);
+  void BindCubeTexture(const std::string &name, unsigned int id);
+  void UnbindTexture();
 
-  [[nodiscard]] unsigned int getProgramId() const;
+  [[nodiscard]] unsigned int GetProgramId() const;
 
  private:
-  ShaderProgram _shaderProgram;
+  ShaderProgram shader_program_;
 
-  std::unordered_map<std::string, int> _uniformLocations;
-  std::unordered_map<std::string, int> _attributeLocations;
+  std::unordered_map<std::string, int> uniform_locations_;
+  std::unordered_map<std::string, int> attribute_locations_;
 
   std::unordered_map<std::string, int> texture_bindings_;
 

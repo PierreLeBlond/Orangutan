@@ -26,10 +26,10 @@ class ShaderHandle : public Handle {
   ShaderHandle& operator=(const ShaderHandle& handle);
   ShaderHandle& operator=(ShaderHandle&& handle);
 
-  [[nodiscard]] ShaderType getType() const;
+  [[nodiscard]] ShaderType GetType() const;
 
  private:
-  ShaderType _type;
+  ShaderType type_;
 };
 
 }  // namespace orangutan

@@ -12,7 +12,7 @@ void Object::setTransform(const Transform& transform) {
   _transform = transform;
 }
 
-void Object::draw(const glm::mat4& viewMatrix, const glm::vec3& camera_position,
+void Object::Draw(const glm::mat4& viewMatrix, const glm::vec3& camera_position,
                   const glm::mat4& projectionMatrix,
                   const std::vector<Light*>& lights, const Ibl& ibl,
                   const Texture& brdf) {

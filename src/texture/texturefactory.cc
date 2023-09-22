@@ -1,5 +1,7 @@
 #include "texture/texturefactory.h"
 
+#include <glm/ext/scalar_constants.hpp>
+
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <gli/gli.hpp>
 #include <iostream>
@@ -8,7 +10,6 @@
 #include "core/shader/shaderwrapper.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include "material/shaderstrategy.h"
 #include "mesh/mesh.h"
 #include "mesh/meshfactory.h"
 #include "nanogui/opengl.h"
@@ -51,9 +52,9 @@
 namespace orangutan {
 
 const unsigned int kIrradianceSize = 128;
-const unsigned int kRadianceSize = 512;
+const unsigned int kRadianceSize = 256;
 const unsigned int kBrdfSize = 256;
-const unsigned int kRadianceMipMapCount = 10;
+const unsigned int kRadianceMipMapCount = 9;
 
 const glm::mat4 kProjectionMatrix =
     glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
@@ -80,7 +81,7 @@ std::unique_ptr<Texture> TextureFactory::ImportTexture(
   glBindTexture(GL_TEXTURE_2D, id);
   texture->setPath(filename);
 
-  stbi_set_flip_vertically_on_load(true);
+  // stbi_set_flip_vertically_on_load(true);
 
   int width = 0;
   int height = 0;
@@ -102,8 +103,10 @@ std::unique_ptr<Texture> TextureFactory::ImportTexture(
                GL_UNSIGNED_BYTE, data);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                  GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8.0);
 
   glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -393,21 +396,6 @@ void TextureFactory::ExportRgbdCubeTexture(const std::string& filename,
   const uint32_t reserved_2 = 0;
   fwrite(&reserved_2, 1, 4, fp);
 
-  // const uint32_t dxt_10_dxgi_format = DXGI_FORMAT_R32G32B32_FLOAT;
-  // fwrite(&dxt_10_dxgi_format, 1, 4, fp);
-
-  // const uint32_t dxt_10_resource_dimension = DDS_DIMENSION_TEXTURE2D;
-  // fwrite(&dxt_10_resource_dimension, 1, 4, fp);
-
-  // const uint32_t dxt_10_misc_flag = DDS_RESOURCE_MISC_TEXTURECUBE;
-  // fwrite(&dxt_10_misc_flag, 1, 4, fp);
-
-  // const uint32_t dxt_10_array_size = 1;
-  // fwrite(&dxt_10_array_size, 1, 4, fp);
-
-  // const uint32_t dxt_10_misc_flag_2 = DDS_ALPHA_MODE_UNKNOWN;
-  // fwrite(&dxt_10_misc_flag_2, 1, 4, fp);
-
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_CUBE_MAP, cube_texture.getId());
 
@@ -506,16 +494,16 @@ std::unique_ptr<CubeTexture> TextureFactory::TransformEquirectangularToCube(
   auto shader_wrapper = std::make_unique<ShaderWrapper>(
       "equirectangular_to_cubemap_shader_wrapper");
 
-  shader_wrapper->build("../resources/shaders/equirectangular_to_cubemap.vert",
-                        "../resources/shaders/equirectangular_to_cubemap.frag",
-                        "");
+  const std::vector<std::string> no_defines;
+  shader_wrapper->Build(
+      no_defines, "../resources/shaders/equirectangular_to_cubemap.vert",
+      "../resources/shaders/equirectangular_to_cubemap.frag", "");
 
   // shader strategy
-  auto shader_strategy = std::make_unique<ShaderStrategy>(
-      "equirectangular_to_cubemap_shader_strategy");
+  auto material =
+      std::make_unique<Material>("equirectangular_to_cubemap_material");
 
-  shader_strategy->set_shader_wrapper(shader_wrapper.get());
-  shader_strategy->InitAttribute();
+  material->set_shader_wrapper(shader_wrapper.get());
 
   // mesh
   auto mesh =
@@ -524,14 +512,19 @@ std::unique_ptr<CubeTexture> TextureFactory::TransformEquirectangularToCube(
   // renderable object
   RenderableObject renderable_object(
       "equirectangular_to_cubemap_renderable_object");
-  renderable_object.set_shader_strategy(shader_strategy.get());
+  renderable_object.set_material(material.get());
   renderable_object.set_mesh(mesh.get());
   renderable_object.UpdateVertexArrayObject();
 
-  shader_wrapper->start();
+  renderable_object.SetYRotation(glm::pi<float>() / 2.0);
+  renderable_object.Update();
 
-  shader_wrapper->setUniform("equirectangular_map", 0);
-  shader_wrapper->setUniform("projection_matrix", kProjectionMatrix);
+  shader_wrapper->Start();
+
+  shader_wrapper->BindUniform("equirectangular_map", 0);
+  shader_wrapper->BindUniform("projection_matrix", kProjectionMatrix);
+  shader_wrapper->BindUniform(
+      "model_matrix", renderable_object.getTransform().get_model_matrix());
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, equirectangular_handle);
@@ -540,13 +533,13 @@ std::unique_ptr<CubeTexture> TextureFactory::TransformEquirectangularToCube(
   renderable_object.get_vao().bindIndexBuffer();
 
   cube_render_target.get_drawing_signal().Connect([&](unsigned int i) {
-    shader_wrapper->setUniform("view_matrix", kViewMatrices[i]);
+    shader_wrapper->BindUniform("view_matrix", kViewMatrices[i]);
     renderable_object.get_vao().drawElements();
   });
 
   cube_render_target.Draw();
 
-  shader_wrapper->stop();
+  shader_wrapper->Stop();
 
   glBindTexture(GL_TEXTURE_CUBE_MAP, cube_render_target.getId());
   glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
@@ -563,29 +556,28 @@ std::unique_ptr<CubeTexture> TextureFactory::CreateIrradianceMap(
   auto shader_wrapper =
       std::make_unique<ShaderWrapper>("irradiance_shader_wrapper");
 
-  shader_wrapper->build("../resources/shaders/irradiance.vert",
+  const std::vector<std::string> no_defines;
+  shader_wrapper->Build(no_defines, "../resources/shaders/irradiance.vert",
                         "../resources/shaders/irradiance.frag", "");
 
   // shader strategy
-  auto shader_strategy =
-      std::make_unique<ShaderStrategy>("irradiance_shader_strategy");
+  auto material = std::make_unique<Material>("irradiance_material");
 
-  shader_strategy->set_shader_wrapper(shader_wrapper.get());
-  shader_strategy->InitAttribute();
+  material->set_shader_wrapper(shader_wrapper.get());
 
   // mesh
   auto mesh = orangutan::MeshFactory::CreateCube("irradiance_mesh");
 
   // renderable object
   RenderableObject renderable_object("irradiance_renderable_object");
-  renderable_object.set_shader_strategy(shader_strategy.get());
+  renderable_object.set_material(material.get());
   renderable_object.set_mesh(mesh.get());
   renderable_object.UpdateVertexArrayObject();
 
-  shader_wrapper->start();
+  shader_wrapper->Start();
 
-  shader_wrapper->setUniform("environment_map", 0);
-  shader_wrapper->setUniform("projection_matrix", kProjectionMatrix);
+  shader_wrapper->BindUniform("environment_map", 0);
+  shader_wrapper->BindUniform("projection_matrix", kProjectionMatrix);
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_CUBE_MAP, cube_texture.getId());
@@ -594,13 +586,13 @@ std::unique_ptr<CubeTexture> TextureFactory::CreateIrradianceMap(
   renderable_object.get_vao().bindIndexBuffer();
 
   cube_render_target.get_drawing_signal().Connect([&](unsigned int i) {
-    shader_wrapper->setUniform("view_matrix", kViewMatrices[i]);
+    shader_wrapper->BindUniform("view_matrix", kViewMatrices[i]);
     renderable_object.get_vao().drawElements();
   });
 
   cube_render_target.Draw();
 
-  shader_wrapper->stop();
+  shader_wrapper->Stop();
   return std::make_unique<CubeTexture>(std::move(cube_render_target));
 }
 
@@ -617,30 +609,29 @@ std::unique_ptr<CubeTexture> TextureFactory::CreateRadianceMap(
   auto shader_wrapper =
       std::make_unique<ShaderWrapper>("radiance_shader_wrapper");
 
-  shader_wrapper->build("../resources/shaders/radiance.vert",
+  const std::vector<std::string> no_defines;
+  shader_wrapper->Build(no_defines, "../resources/shaders/radiance.vert",
                         "../resources/shaders/radiance.frag", "");
 
   // shader strategy
-  auto shader_strategy =
-      std::make_unique<ShaderStrategy>("radiance_shader_strategy");
+  auto material = std::make_unique<Material>("radiance_material");
 
-  shader_strategy->set_shader_wrapper(shader_wrapper.get());
-  shader_strategy->InitAttribute();
+  material->set_shader_wrapper(shader_wrapper.get());
 
   // mesh
   auto mesh = orangutan::MeshFactory::CreateCube("radiance_mesh");
 
   // renderable object
   RenderableObject renderable_object("radiance_renderable_object");
-  renderable_object.set_shader_strategy(shader_strategy.get());
+  renderable_object.set_material(material.get());
   renderable_object.set_mesh(mesh.get());
   renderable_object.UpdateVertexArrayObject();
 
-  shader_wrapper->start();
+  shader_wrapper->Start();
 
-  shader_wrapper->setUniform("size", cube_texture.get_size());
-  shader_wrapper->setUniform("environment_map", 0);
-  shader_wrapper->setUniform("projection_matrix", kProjectionMatrix);
+  shader_wrapper->BindUniform("size", cube_texture.get_size());
+  shader_wrapper->BindUniform("environment_map", 0);
+  shader_wrapper->BindUniform("projection_matrix", kProjectionMatrix);
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_CUBE_MAP, cube_texture.getId());
@@ -649,17 +640,17 @@ std::unique_ptr<CubeTexture> TextureFactory::CreateRadianceMap(
   renderable_object.get_vao().bindIndexBuffer();
 
   cube_render_target.get_drawing_signal().Connect([&](unsigned int i) {
-    shader_wrapper->setUniform("view_matrix", kViewMatrices[i]);
+    shader_wrapper->BindUniform("view_matrix", kViewMatrices[i]);
     renderable_object.get_vao().drawElements();
   });
 
   for (unsigned int i = 0; i < kRadianceMipMapCount; i++) {
     float roughness = (float)i / (float)(kRadianceMipMapCount - 1);
-    shader_wrapper->setUniform("roughness", roughness);
+    shader_wrapper->BindUniform("roughness", roughness);
     cube_render_target.DrawMip(i);
   }
 
-  shader_wrapper->stop();
+  shader_wrapper->Stop();
   return std::make_unique<CubeTexture>(std::move(cube_render_target));
 }
 
@@ -669,26 +660,25 @@ std::unique_ptr<Texture> TextureFactory::CreateBrdfMap() {
   // shader wrapper
   auto shader_wrapper = std::make_unique<ShaderWrapper>("brdf_shader_wrapper");
 
-  shader_wrapper->build("../resources/shaders/brdf.vert",
+  const std::vector<std::string> no_defines;
+  shader_wrapper->Build(no_defines, "../resources/shaders/brdf.vert",
                         "../resources/shaders/brdf.frag", "");
 
   // shader strategy
-  auto shader_strategy =
-      std::make_unique<ShaderStrategy>("brdf_shader_strategy");
+  auto material = std::make_unique<Material>("brdf_shader_strategy");
 
-  shader_strategy->set_shader_wrapper(shader_wrapper.get());
-  shader_strategy->InitAttribute();
+  material->set_shader_wrapper(shader_wrapper.get());
 
   // mesh
   auto mesh = orangutan::MeshFactory::CreateSquare("brdf_mesh");
 
   // renderable object
   RenderableObject renderable_object("brdf_renderable_object");
-  renderable_object.set_shader_strategy(shader_strategy.get());
+  renderable_object.set_material(material.get());
   renderable_object.set_mesh(mesh.get());
   renderable_object.UpdateVertexArrayObject();
 
-  shader_wrapper->start();
+  shader_wrapper->Start();
 
   renderable_object.get_vao().bind();
   renderable_object.get_vao().bindIndexBuffer();
@@ -698,7 +688,7 @@ std::unique_ptr<Texture> TextureFactory::CreateBrdfMap() {
 
   render_target.Draw();
 
-  shader_wrapper->stop();
+  shader_wrapper->Stop();
   return std::make_unique<Texture>(std::move(render_target));
 }
 
@@ -724,12 +714,7 @@ std::unique_ptr<CubeTexture> TextureFactory::ImportCubeTextureFromDds(
   }
 
   gli::gl GL(gli::gl::PROFILE_GL33);
-  gli::gl::format const gli_format =
-      GL.translate(gli_texture.format(), gli_texture.swizzles());
   GLenum target = GL.translate(gli_texture.target());
-
-  assert(target == GL_TEXTURE_CUBE_MAP && gli_format.Internal == GL_RGB32F &&
-         gli_format.External == GL_RGB && gli_format.Type == GL_FLOAT);
 
   const unsigned int size = gli_texture.extent().x;
   const unsigned int mip_levels = gli_texture.levels();
@@ -754,16 +739,65 @@ std::unique_ptr<CubeTexture> TextureFactory::ImportCubeTextureFromDds(
     for (unsigned int mip_level = 0; mip_level < mip_levels; ++mip_level) {
       unsigned int mip_map_size = (size / (unsigned int)(pow(2, mip_level)));
 
-      unsigned int data_size = 3 * mip_map_size * mip_map_size;
-
       target = static_cast<GLenum>(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face);
-
-      GLfloat* data = (GLfloat*)gli_texture.data<GLfloat>(0, face, mip_level);
 
       glTexSubImage2D(target, static_cast<GLint>(mip_level), 0, 0,
                       static_cast<GLsizei>(mip_map_size),
                       static_cast<GLsizei>(mip_map_size), GL_RGB, GL_FLOAT,
                       (GLfloat*)gli_texture.data<GLfloat>(0, face, mip_level));
+    }
+  }
+
+  auto cube_texture = std::make_unique<CubeTexture>(name);
+  cube_texture->getHandle().setId(texture_handle);
+  cube_texture->set_size(size);
+
+  return cube_texture;
+}
+
+std::unique_ptr<CubeTexture> TextureFactory::ImportCubeTextureFromRgbdDds(
+    const std::string& name, const std::string& filename) {
+  // Extracted and adapted from
+  // https://github.com/g-truc/gli/blob/master/manual.md#section2_2
+  gli::texture gli_texture = gli::load(filename);
+  if (gli_texture.empty()) {
+    std::cerr << "dds file " << filename << " is empty." << std::endl;
+    exit(0);
+  }
+
+  gli::gl GL(gli::gl::PROFILE_GL33);
+  GLenum target = GL.translate(gli_texture.target());
+
+  const unsigned int size = gli_texture.extent().x;
+  const unsigned int mip_levels = gli_texture.levels();
+
+  GLuint texture_handle = 0;
+  glGenTextures(1, &texture_handle);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, texture_handle);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL,
+                  static_cast<GLint>(mip_levels - 1));
+  glTexStorage2D(GL_TEXTURE_CUBE_MAP, static_cast<GLint>(mip_levels), GL_RGBA8,
+                 static_cast<GLsizei>(size), static_cast<GLsizei>(size));
+
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER,
+                  GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+  for (unsigned int face = 0; face < 6; ++face) {
+    for (unsigned int mip_level = 0; mip_level < mip_levels; ++mip_level) {
+      unsigned int mip_map_size = (size / (unsigned int)(pow(2, mip_level)));
+
+      target = static_cast<GLenum>(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face);
+
+      glTexSubImage2D(target, static_cast<GLint>(mip_level), 0, 0,
+                      static_cast<GLsizei>(mip_map_size),
+                      static_cast<GLsizei>(mip_map_size), GL_RGBA,
+                      GL_UNSIGNED_BYTE,
+                      (GLubyte*)gli_texture.data<GLubyte>(0, face, mip_level));
     }
   }
 
@@ -781,6 +815,18 @@ std::unique_ptr<Ibl> TextureFactory::ImportIBLFromDds(
       ImportCubeTextureFromDds(name + "_irradiance", irradiance_filename);
   auto radiance =
       ImportCubeTextureFromDds(name + "_radiance", radiance_filename);
+
+  return std::make_unique<Ibl>(
+      Ibl({name, std::move(irradiance), std::move(radiance)}));
+}
+
+std::unique_ptr<Ibl> TextureFactory::ImportIBLFromRgbdDds(
+    const std::string& name, const std::string& irradiance_filename,
+    const std::string& radiance_filename) {
+  auto irradiance =
+      ImportCubeTextureFromRgbdDds(name + "_irradiance", irradiance_filename);
+  auto radiance =
+      ImportCubeTextureFromRgbdDds(name + "_radiance", radiance_filename);
 
   return std::make_unique<Ibl>(
       Ibl({name, std::move(irradiance), std::move(radiance)}));

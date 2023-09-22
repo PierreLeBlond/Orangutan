@@ -6,56 +6,87 @@ namespace orangutan {
 
 Mesh::Mesh(const std::string& name) : Asset(name) {}
 
-void Mesh::setPositions(const std::vector<glm::vec3>& positions) {
-  _positions.clear();
+void Mesh::SetPositions(const std::vector<glm::vec3>& positions) {
+  positions_.clear();
   for (const auto& triple : positions) {
-    _positions.push_back(triple.x);
-    _positions.push_back(triple.y);
-    _positions.push_back(triple.z);
+    positions_.push_back(triple.x);
+    positions_.push_back(triple.y);
+    positions_.push_back(triple.z);
   }
 }
 
-void Mesh::setPositions(const std::vector<float>& positions) {
-  _positions = positions;
+void Mesh::SetPositions(const std::vector<float>& positions) {
+  positions_ = positions;
 }
 
-void Mesh::setNormals(const std::vector<glm::vec3>& normals) {
-  _normals.clear();
+void Mesh::SetNormals(const std::vector<glm::vec3>& normals) {
+  normals_.clear();
   for (const auto& triple : normals) {
-    _normals.push_back(triple.x);
-    _normals.push_back(triple.y);
-    _normals.push_back(triple.z);
+    normals_.push_back(triple.x);
+    normals_.push_back(triple.y);
+    normals_.push_back(triple.z);
   }
 }
 
-void Mesh::setNormals(const std::vector<float>& normals) { _normals = normals; }
+void Mesh::SetNormals(const std::vector<float>& normals) { normals_ = normals; }
 
-void Mesh::setUvs(const std::vector<glm::vec2>& uvs) {
-  _uvs.clear();
+void Mesh::SetTangents(const std::vector<glm::vec3>& tangents) {
+  tangents_.clear();
+  for (const auto& triple : tangents) {
+    tangents_.push_back(triple.x);
+    tangents_.push_back(triple.y);
+    tangents_.push_back(triple.z);
+  }
+}
+
+void Mesh::SetTangents(const std::vector<float>& tangents) {
+  tangents_ = tangents;
+}
+
+void Mesh::SetUvs(const std::vector<glm::vec2>& uvs) {
+  uvs_.clear();
   for (const auto& tupple : uvs) {
-    _uvs.push_back(tupple.x);
-    _uvs.push_back(tupple.y);
+    uvs_.push_back(tupple.x);
+    uvs_.push_back(tupple.y);
   }
 }
 
-void Mesh::setUvs(const std::vector<float>& uvs) { _uvs = uvs; }
+void Mesh::SetUvs(const std::vector<float>& uvs) { uvs_ = uvs; }
 
-void Mesh::setFaces(const std::vector<unsigned int>& faces) { _faces = faces; }
+void Mesh::SetUvs2(const std::vector<glm::vec2>& uvs_2) {
+  uvs_2_.clear();
+  for (const auto& tupple : uvs_2) {
+    uvs_2_.push_back(tupple.x);
+    uvs_2_.push_back(tupple.y);
+  }
+}
 
-unsigned int Mesh::getNumberOfPositions() const { return _positions.size(); }
+void Mesh::SetUvs2(const std::vector<float>& uvs_2) { uvs_2_ = uvs_2; }
 
-unsigned int Mesh::getNumberOfNormals() const { return _normals.size(); }
+void Mesh::SetFaces(const std::vector<unsigned int>& faces) { faces_ = faces; }
 
-unsigned int Mesh::getNumberOfUvs() const { return _uvs.size(); }
+unsigned int Mesh::GetNumberOfPositions() const { return positions_.size(); }
 
-unsigned int Mesh::getNumberOfFaces() const { return _faces.size(); }
+unsigned int Mesh::GetNumberOfNormals() const { return normals_.size(); }
 
-const std::vector<float>& Mesh::getPositions() const { return _positions; }
+unsigned int Mesh::GetNumberOfTangents() const { return tangents_.size(); }
 
-const std::vector<float>& Mesh::getNormals() const { return _normals; }
+unsigned int Mesh::GetNumberOfUvs() const { return uvs_.size(); }
 
-const std::vector<float>& Mesh::getUvs() const { return _uvs; }
+unsigned int Mesh::GetNumberOfUvs2() const { return uvs_2_.size(); }
 
-const std::vector<unsigned int>& Mesh::getFaces() const { return _faces; }
+unsigned int Mesh::GetNumberOfFaces() const { return faces_.size(); }
+
+const std::vector<float>& Mesh::GetPositions() const { return positions_; }
+
+const std::vector<float>& Mesh::GetNormals() const { return normals_; }
+
+const std::vector<float>& Mesh::GetTangents() const { return tangents_; }
+
+const std::vector<float>& Mesh::GetUvs() const { return uvs_; }
+
+const std::vector<float>& Mesh::GetUvs2() const { return uvs_2_; }
+
+const std::vector<unsigned int>& Mesh::GetFaces() const { return faces_; }
 
 }  // namespace orangutan

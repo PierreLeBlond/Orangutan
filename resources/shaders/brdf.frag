@@ -1,5 +1,3 @@
-#version 450 core
-
 const float kPi = 3.14159265359;
 
 in vec2 uv_out;

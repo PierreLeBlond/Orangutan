@@ -11,18 +11,19 @@ class Shader {
  public:
   Shader(ShaderType type = ShaderType::VERTEX, const std::string& path = "");
 
-  bool compile();
-  bool compile(const std::string& path);
+  bool Compile(const std::vector<std::string>& defines);
+  bool Compile(const std::vector<std::string>& defines,
+               const std::string& path);
 
-  [[nodiscard]] unsigned int getId() const;
-  [[nodiscard]] const std::string& getPath() const;
+  [[nodiscard]] unsigned int GetId() const;
+  [[nodiscard]] const std::string& GetPath() const;
 
  private:
-  ShaderHandle _handle;
-  std::string _path;
+  ShaderHandle handle_;
+  std::string path_;
 
-  std::string fileToString(const std::string& filename);
-  bool printShaderInfo(const std::string& msg);
+  std::string FileToString(const std::string& filename);
+  bool PrintShaderInfo(const std::string& msg);
 };
 
 }  // namespace orangutan

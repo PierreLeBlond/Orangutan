@@ -3,47 +3,61 @@
 #include <nanogui/opengl.h>
 
 #include <iostream>
+#include <sstream>
 
 namespace orangutan {
 
 Shader::Shader(ShaderType type, const std::string& path)
-    : _handle(type), _path(path) {}
+    : handle_(type), path_(path) {}
 
-unsigned int Shader::getId() const { return _handle.getId(); }
+unsigned int Shader::GetId() const { return handle_.getId(); }
 
-const std::string& Shader::getPath() const { return _path; }
+const std::string& Shader::GetPath() const { return path_; }
 
-bool Shader::compile() { return compile(_path); }
+bool Shader::Compile(const std::vector<std::string>& defines) {
+  return Compile(defines, path_);
+}
 
-bool Shader::compile(const std::string& path) {
-  _path = path;
+bool Shader::Compile(const std::vector<std::string>& defines,
+                     const std::string& path) {
+  path_ = path;
 
-  unsigned int id = _handle.getId();
+  unsigned int id = handle_.getId();
 
   if (id == 0) {
     std::cerr << "Shader id is not valid !" << std::endl;
     return false;
   }
 
-  std::string src = fileToString(_path);
+  std::string src = FileToString(path_);
 
   if (src.length() == 0) {
     std::cerr << "Unable to read shader source file" << path << std::endl;
     return false;
   }
 
-  const char* shaderSource = src.c_str();
+  std::ostringstream ost;
+  ost << "#version 450 core\n";
+  for (const std::string& define : defines) {
+    ost << "#define " << define << "\n";
+  }
+
+  ost << src;
+
+  std::string final_str = ost.str();
+
+  const char* shaderSource = final_str.c_str();
 
   glShaderSource(id, 1, &shaderSource, nullptr);
 
   glCompileShader(id);
 
-  printShaderInfo("Shader " + path + " compilation result: ");
+  PrintShaderInfo("Shader " + path + " compilation result: ");
 
   return true;
 }
 
-std::string Shader::fileToString(const std::string& filename) {
+std::string Shader::FileToString(const std::string& filename) {
   FILE* fp;
   char* content = nullptr;
 
@@ -76,16 +90,16 @@ std::string Shader::fileToString(const std::string& filename) {
   return str;
 }
 
-bool Shader::printShaderInfo(const std::string& msg) {
+bool Shader::PrintShaderInfo(const std::string& msg) {
   int infologLength = 0;
   int charsWritten = 0;
   char* infoLog;
 
-  glGetShaderiv(_handle.getId(), GL_INFO_LOG_LENGTH, &infologLength);
+  glGetShaderiv(handle_.getId(), GL_INFO_LOG_LENGTH, &infologLength);
 
   if (infologLength > 1) {
     infoLog = (char*)malloc(infologLength);
-    glGetShaderInfoLog(_handle.getId(), infologLength, &charsWritten, infoLog);
+    glGetShaderInfoLog(handle_.getId(), infologLength, &charsWritten, infoLog);
 
     std::cerr << msg << " : " << infoLog << std::endl;
     free(infoLog);

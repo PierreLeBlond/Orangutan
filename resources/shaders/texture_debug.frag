@@ -1,5 +1,3 @@
-#version 450 core
-
 in vec2 uv_out;
 
 uniform sampler2D source_map;

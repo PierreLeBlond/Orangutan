@@ -1,5 +1,3 @@
-#version 450 core
-
 #define MAX_LIGHT 8
 
 in vec3 vertex_in;

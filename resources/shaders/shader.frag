@@ -1,5 +1,3 @@
-#version 450 core
-
 in vec2 uv_out;
 in vec3 spec_out;
 in vec3 diffuseAndAmbient_out;

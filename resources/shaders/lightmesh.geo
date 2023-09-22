@@ -1,5 +1,3 @@
-#version 450 core
-
 layout(points) in;
 layout(line_strip, max_vertices = 224) out;
 

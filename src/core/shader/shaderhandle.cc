@@ -2,12 +2,12 @@
 
 namespace orangutan {
 
-ShaderHandle::ShaderHandle(ShaderType type) : _type(type) {
+ShaderHandle::ShaderHandle(ShaderType type) : type_(type) {
   setId(glCreateShader((GLenum)type));
 }
 
-ShaderHandle::ShaderHandle(const ShaderHandle& handle) : _type(handle._type) {
-  setId(glCreateShader((GLenum)_type));
+ShaderHandle::ShaderHandle(const ShaderHandle& handle) : type_(handle.type_) {
+  setId(glCreateShader((GLenum)type_));
 
   int bufSize = 0;
   glGetShaderiv(handle.getId(), GL_SHADER_SOURCE_LENGTH, &bufSize);
@@ -27,7 +27,7 @@ ShaderHandle::ShaderHandle(const ShaderHandle& handle) : _type(handle._type) {
 }
 
 ShaderHandle::ShaderHandle(ShaderHandle&& handle) noexcept
-    : _type(handle._type) {
+    : type_(handle.type_) {
   setId(handle.getId());
   handle.setId(0);
 }
@@ -48,6 +48,6 @@ ShaderHandle& ShaderHandle::operator=(ShaderHandle&& handle) {
   return *this;
 }
 
-ShaderType ShaderHandle::getType() const { return _type; }
+ShaderType ShaderHandle::GetType() const { return type_; }
 
 }  // namespace orangutan

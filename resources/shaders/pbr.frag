@@ -1,13 +1,18 @@
-#version 450 core
-
 #define MAX_LIGHT 8
 
 const float kPi = 3.14159265359;
-const float kMaxRadianceLod = 10.0;
+const float kMaxRadianceLod = 9.0;
 
 in vec3 world_position_out;
-in vec3 normal_out;
 in vec2 uv_out;
+#if defined(NORMAL_TEXTURE)
+  in mat3 tbn_out;
+#else
+  in vec3 normal_out;
+#endif
+#if defined(OCCLUSION_TEXTURE)
+  in vec2 uv_2_out;
+#endif
 
 struct Lighting {
   vec3 position;
@@ -31,8 +36,23 @@ uniform sampler2D brdf;
 uniform vec3 cameraPosition;
 
 uniform vec3 albedo;
+#if defined(ALBEDO_TEXTURE)
+  uniform sampler2D albedo_texture;
+#endif
+
+#if defined(NORMAL_TEXTURE)
+  uniform sampler2D normal_texture;
+#endif
+
 uniform float roughness;
 uniform float metalness;
+#if defined(PBR_TEXTURE)
+  uniform sampler2D pbr_texture;
+#endif
+
+#if defined(OCCLUSION_TEXTURE)
+  uniform sampler2D occlusion_texture;
+#endif
 
 out vec4 color_out;
 
@@ -123,30 +143,56 @@ vec3 GetDielectricMultipleScattering(float n_dot_v, float roughness, vec3 color,
 }
 
 void main() {
-  vec3 normal = normalize(normal_out);
+  #if defined(NORMAL_TEXTURE)
+    vec3 normal = texture(normal_texture, uv_out).xyz;
+    normal = normal*2.0 - 1.0;
+    normal = normalize(tbn_out * normal);
+  #else
+    vec3 normal = normalize(normal_out);
+  #endif
+
   vec3 view_vector = normalize(cameraPosition - world_position_out);
 
   float n_dot_v = max(dot(normal, view_vector), 0.0f);
 
   vec3 color = pow(albedo, vec3(2.2));
 
+  #if defined(ALBEDO_TEXTURE)
+    vec4 albedo_sample = texture(albedo_texture, uv_out);
+    color *= pow(albedo_sample.rgb, vec3(2.2));
+  #endif
+
+  float metalness_factor = metalness;
+  float roughness_factor = roughness;
+  #if defined(PBR_TEXTURE)
+    vec4 pbr_sample = texture(pbr_texture, uv_out);
+    metalness_factor *= pbr_sample.b;
+    roughness_factor *= pbr_sample.g;
+  #endif
+
+  vec4 irradiance_sample = texture(ibl.irradiance, normal);
   vec3 irradiance = texture(ibl.irradiance, normal).rgb;
 
   vec3 reflection_vector = reflect(-view_vector, normal);
-  float lod_level = roughness * kMaxRadianceLod;
+  float lod_level = roughness_factor * kMaxRadianceLod;
+
   vec3 radiance = textureLod(ibl.radiance, reflection_vector, lod_level).rgb;
 
-  vec3 ambient = mix(GetDielectricMultipleScattering(n_dot_v, roughness, color, irradiance, radiance),
-                     GetConductorMultipleScattering(n_dot_v, roughness, color, irradiance, radiance),
-                     metalness);
+  vec3 ambient = mix(GetDielectricMultipleScattering(n_dot_v, roughness_factor, color, irradiance, radiance),
+                     GetConductorMultipleScattering(n_dot_v, roughness_factor, color, irradiance, radiance),
+                     metalness_factor);
+  #if defined(OCCLUSION_TEXTURE)
+    vec3 occlusion = texture(occlusion_texture, uv_2_out).rgb;
+    ambient *= occlusion;
+  #endif
 
   vec3 l_o = vec3(0.0);
 
   // Gives point light a minimum size
-  float analytical_roughness = max(roughness, 0.01f);
+  float analytical_roughness = max(roughness_factor, 0.01f);
 
   vec3 f_0 = vec3(0.04);
-  f_0 = mix(f_0, color, metalness);
+  f_0 = mix(f_0, color, metalness_factor);
 
   for(int i = 0; i < numberOfLights; i++) {
     vec3 light_vector = normalize(lights[i].position - world_position_out);
@@ -170,16 +216,14 @@ void main() {
     vec3 k_s = fresnel_term;
     vec3 k_d = 1.0f - k_s;
 
-    k_d *= 1.0 - metalness;
+    k_d *= 1.0 - metalness_factor;
 
     l_o += (k_d * color / kPi + specular) * radiance * n_dot_l;
   }
 
   vec3 final_color = ambient + l_o;
-  // vec3 final_color = vec3(ambient);
 
   final_color = final_color / (final_color + vec3(1.0));
   final_color = pow(final_color, vec3(1.0/2.2));
-
-  color_out = vec4(final_color, 1.0f);
+  color_out = vec4(final_color, 1.0);
 }

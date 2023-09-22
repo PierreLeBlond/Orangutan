@@ -1,7 +1,3 @@
-#version 450 core
-
-#define MAX_LIGHT 8
-
 in vec3 vertex_in;
 
 out vec2 uv_out;

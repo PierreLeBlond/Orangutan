@@ -7,7 +7,6 @@
 #include "camera/camera.h"
 #include "core/texture/cubetexture.h"
 #include "core/texture/texture.h"
-#include "material/shaderstrategy.h"
 #include "mesh/mesh.h"
 #include "model/library.h"
 #include "object/renderableobject.h"
@@ -31,25 +30,24 @@ class Universe {
   [[nodiscard]] const Library<Ibl>& get_ibl_library() const;
   [[nodiscard]] const Library<ShaderWrapper>& get_shader_wrapper_library()
       const;
-  [[nodiscard]] const Library<ShaderStrategy>& get_shader_strategy_library()
-      const;
 
   [[nodiscard]] const Library<Scene>& get_scene_library() const;
 
-  void AddLight(std::unique_ptr<Light> light);
-  void AddCamera(std::unique_ptr<Camera> camera);
-  void AddRenderableObject(std::unique_ptr<RenderableObject> renderable_object);
-  void AddObjectNode(std::unique_ptr<ObjectNode> object_node);
+  Light* AddLight(std::unique_ptr<Light> light);
+  Camera* AddCamera(std::unique_ptr<Camera> camera);
+  RenderableObject* AddRenderableObject(
+      std::unique_ptr<RenderableObject> renderable_object);
+  ObjectNode* AddObjectNode(std::unique_ptr<ObjectNode> object_node);
 
-  void AddMesh(std::unique_ptr<Mesh> mesh);
-  void AddMaterial(std::unique_ptr<Material> material);
-  void AddTexture(std::unique_ptr<Texture> texture);
-  void AddCubeTexture(std::unique_ptr<CubeTexture> cube_texture);
-  void AddIbl(std::unique_ptr<Ibl> ibl);
-  void AddShaderWrapper(std::unique_ptr<ShaderWrapper> shader_wrapper);
-  void AddShaderStrategy(std::unique_ptr<ShaderStrategy> shader_strategy);
+  Mesh* AddMesh(std::unique_ptr<Mesh> mesh);
+  Material* AddMaterial(std::unique_ptr<Material> material);
+  Texture* AddTexture(std::unique_ptr<Texture> texture);
+  CubeTexture* AddCubeTexture(std::unique_ptr<CubeTexture> cube_texture);
+  Ibl* AddIbl(std::unique_ptr<Ibl> ibl);
+  ShaderWrapper* AddShaderWrapper(
+      std::unique_ptr<ShaderWrapper> shader_wrapper);
 
-  void AddScene(std::unique_ptr<Scene> scene);
+  Scene* AddScene(std::unique_ptr<Scene> scene);
 
  private:
   Library<Light> light_library_;
@@ -63,7 +61,6 @@ class Universe {
   Library<CubeTexture> cube_texture_library_;
   Library<Ibl> ibl_library_;
   Library<ShaderWrapper> shader_wrapper_library_;
-  Library<ShaderStrategy> shader_strategy_library_;
 
   Library<Scene> _scenes;
 };

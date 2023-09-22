@@ -13,8 +13,9 @@ Canvas::Canvas(nanogui::Widget *parent)
       _mouseIsPressed(false),
       _drawCall([]() {}),
       mouse_move_signal_() {
-  nanogui::Color color(kRedBackgroundComponent, 0.0f, kBlueBackgroundComponent,
-                       1.0f);
+  // nanogui::Color color(kRedBackgroundComponent, 0.0f,
+  // kBlueBackgroundComponent,
+  nanogui::Color color(1.0f, 1.0f, 1.0f, 1.0f);
 
   set_background_color(color);
   set_draw_border(true);
