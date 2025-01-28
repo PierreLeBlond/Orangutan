@@ -95,7 +95,6 @@ int ShaderWrapper::GetAttributeLocation(const std::string &name) const {
   if (it != attribute_locations_.end())
     return it->second;
   else {
-    std::cerr << "Could not find attribute location of : " << name << std::endl;
     return -1;
   }
 }
@@ -159,8 +158,9 @@ void ShaderWrapper::BindUniform(const std::string &name, bool val) {
 }
 
 void ShaderWrapper::BindTexture(const std::string &name, unsigned int id) {
-  // Looks like we can't introspectively get samplers names before we want to
-  // bind them
+  if (!AssertUniformExists(name)) {
+    return;
+  }
   if (texture_bindings_.find(name) == texture_bindings_.end()) {
     texture_bindings_[name] = texture_bindings_.size();
     GL_CHECK_ERROR(
@@ -171,6 +171,9 @@ void ShaderWrapper::BindTexture(const std::string &name, unsigned int id) {
 }
 
 void ShaderWrapper::BindCubeTexture(const std::string &name, unsigned int id) {
+  if (!AssertUniformExists(name)) {
+    return;
+  }
   if (texture_bindings_.find(name) == texture_bindings_.end()) {
     texture_bindings_[name] = texture_bindings_.size();
     GL_CHECK_ERROR(

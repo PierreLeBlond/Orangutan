@@ -183,8 +183,6 @@ void App::InitUniverse() {
   auto brdf = TextureFactory::CreateBrdfMap();
   universe_->AddTexture(std::move(brdf));
 
-  // auto room_ibl = TextureFactory::ImportIBLFromHdr(
-  //"room", "./resources/images/ibl/portfolio/portfolio.hdr");
   auto room_ibl = TextureFactory::ImportIBLFromRgbdDds(
       "room", "./resources/images/ibl/portfolio/portfolio_rgbd_irradiance.dds",
       "./resources/images/ibl/portfolio/portfolio_rgbd_radiance.dds");

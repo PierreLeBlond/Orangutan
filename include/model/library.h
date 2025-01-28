@@ -13,18 +13,20 @@ public:
   std::vector<T *> get_items() const;
   std::vector<std::string> GetNames() const;
 
-  T *GetItemByName(const std::string &name) const;
+  T *GetItemByName(const std::string &name, int index = 0) const;
 
   T *AddItem(const std::string &name, std::unique_ptr<T> item);
 
 private:
-  std::unordered_map<std::string, std::unique_ptr<T>> items_;
+  std::unordered_map<std::string, std::vector<std::unique_ptr<T>>> items_;
 };
 
 template <class T> std::vector<T *> Library<T>::get_items() const {
   std::vector<T *> items;
-  for (auto &item : items_) {
-    items.push_back(item.second.get());
+  for (auto &group : items_) {
+    for (auto &item : group.second) {
+      items.push_back(item.get());
+    }
   }
   return items;
 }
@@ -37,22 +39,22 @@ template <class T> std::vector<std::string> Library<T>::GetNames() const {
   return items;
 }
 
-template <class T> T *Library<T>::GetItemByName(const std::string &name) const {
+template <class T>
+T *Library<T>::GetItemByName(const std::string &name, int index) const {
   auto iterator = items_.find(name);
   if (iterator == items_.end()) {
-    return NULL;
+    return nullptr;
   }
-  return iterator->second.get();
+  return iterator->second.at(index).get();
 }
 
 template <class T>
 T *Library<T>::AddItem(const std::string &name, std::unique_ptr<T> item) {
-  if (items_.count(name) > 0) {
-    std::cerr << "Library::AddItem : Item with name " << name
-              << " already exists" << std::endl;
+  if (items_.find(name) == items_.end()) {
+    items_.insert(std::make_pair(name, std::vector<std::unique_ptr<T>>{}));
   }
-  items_.insert(std::make_pair(name, std::move(item)));
-  return items_.at(name).get();
+  items_.at(name).push_back(std::move(item));
+  return items_.at(name).back().get();
 }
 
 } // namespace orangutan
