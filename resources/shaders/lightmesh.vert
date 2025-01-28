@@ -1,3 +1,5 @@
+#version 450
+
 in vec3 vertex_in;
 in vec3 direction_in;
 in int type_in;

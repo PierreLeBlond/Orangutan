@@ -1,3 +1,5 @@
+#version 450
+
 in vec3 world_position_out;
 
 uniform sampler2D equirectangular_map;

@@ -1,3 +1,5 @@
+#version 450
+
 in vec2 uv_out;
 
 uniform samplerCube source_map;

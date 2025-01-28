@@ -1,4 +1,5 @@
 #include "ui/canvas.h"
+#include "core/debug.h"
 
 #include <cmath>
 #include <iostream>
@@ -19,10 +20,7 @@ const float kBlueBackgroundComponent = 0.56f;
 Canvas::Canvas(nanogui::Widget *parent)
     : nanogui::Canvas(parent), _draw(false), _mouseIsPressed(false),
       _drawCall([]() {}), mouse_move_signal_() {
-  // nanogui::Color color(kRedBackgroundComponent, 0.0f,
-  // kBlueBackgroundComponent,
-  nanogui::Color color(0.1f, 0.1f, 0.9f, 1.0f);
-
+  nanogui::Color color(0.2f, 0.2f, 0.2f, 1.0f);
   set_background_color(color);
   set_draw_border(true);
 }
@@ -47,14 +45,14 @@ Signal<> &Canvas::get_after_draw_signal() { return after_draw_signal_; }
 
 void Canvas::draw_contents() {
   if (_draw) {
-    glEnable(GL_DEPTH_TEST);
+    GL_CHECK_ERROR(glEnable(GL_DEPTH_TEST));
 
-    glDisable(GL_BLEND);
+    GL_CHECK_ERROR(glDisable(GL_BLEND));
 
-    glDisable(GL_CULL_FACE);
+    GL_CHECK_ERROR(glDisable(GL_CULL_FACE));
 
     // For sky box to render properly
-    glDepthFunc(GL_LEQUAL);
+    GL_CHECK_ERROR(glDepthFunc(GL_LEQUAL));
 
     _drawCall();
 

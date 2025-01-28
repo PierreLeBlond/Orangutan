@@ -8,22 +8,27 @@
 
 namespace orangutan {
 
-void Vao::bind() const { glBindVertexArray(_vaoHandle.getId()); }
+void Vao::bind() const {
+  GL_CHECK_ERROR(glBindVertexArray(_vaoHandle.getId()));
+}
 
-void Vao::unbind() const { glBindVertexArray(0); }
+void Vao::unbind() const { GL_CHECK_ERROR(glBindVertexArray(0)); }
 
 void Vao::bindIndexBuffer() const {
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBufferHandle.getId());
+  GL_CHECK_ERROR(
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBufferHandle.getId()));
 }
 
 void Vao::fillIndexBuffer(size_t size, const void *data) {
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBufferHandle.getId());
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  GL_CHECK_ERROR(
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBufferHandle.getId()));
+  GL_CHECK_ERROR(
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));
+  GL_CHECK_ERROR(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 }
 
 void Vao::unbindIndexBuffer() const {
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  GL_CHECK_ERROR(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 }
 
 void Vao::setNumberOfElements(int nbElements) { _nbElements = nbElements; }
@@ -39,12 +44,12 @@ void Vao::removeBuffer(unsigned int id) {
 }
 
 void Vao::bindBuffer(unsigned int id) const {
-  glBindBuffer(GL_ARRAY_BUFFER, _bufferHandles.at(id).getId());
+  GL_CHECK_ERROR(glBindBuffer(GL_ARRAY_BUFFER, _bufferHandles.at(id).getId()));
 }
 
 void Vao::fillBuffer(unsigned int id, size_t size, const void *data) {
   bindBuffer(id);
-  glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+  GL_CHECK_ERROR(glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));
   unbindBuffer();
 }
 
@@ -63,7 +68,7 @@ void Vao::attribBuffer(unsigned int id, int attributeLocation, int size,
     t = GL_FLOAT;
     break;
   }
-  glEnableVertexAttribArray(attributeLocation);
+  GL_CHECK_ERROR(glEnableVertexAttribArray(attributeLocation));
   bindBuffer(id);
   glVertexAttribPointer(attributeLocation, size, t, GL_FALSE, 0,
                         BUFFER_OFFSET(0));
@@ -71,7 +76,9 @@ void Vao::attribBuffer(unsigned int id, int attributeLocation, int size,
   unbind();
 }
 
-void Vao::unbindBuffer() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
+void Vao::unbindBuffer() const {
+  GL_CHECK_ERROR(glBindBuffer(GL_ARRAY_BUFFER, 0));
+}
 
 void Vao::drawElements() const {
   bind();

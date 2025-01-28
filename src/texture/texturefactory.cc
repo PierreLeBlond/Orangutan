@@ -1,4 +1,5 @@
 #include "texture/texturefactory.h"
+#include "core/debug.h"
 
 #include <glm/ext/scalar_constants.hpp>
 
@@ -79,7 +80,7 @@ TextureFactory::ImportTexture(const std::string &name,
 
   unsigned int id = texture->getId();
 
-  glBindTexture(GL_TEXTURE_2D, id);
+  GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, id));
   texture->setPath(filename);
 
   // stbi_set_flip_vertically_on_load(true);
@@ -100,16 +101,20 @@ TextureFactory::ImportTexture(const std::string &name,
 
   auto format = channels == 3 ? GL_RGB : GL_RGBA;
 
-  glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
-               GL_UNSIGNED_BYTE, data);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                  GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8.0);
+  GL_CHECK_ERROR(glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0,
+                              format, GL_UNSIGNED_BYTE, data));
+  GL_CHECK_ERROR(
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+  GL_CHECK_ERROR(
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+  GL_CHECK_ERROR(
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+  GL_CHECK_ERROR(
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+  GL_CHECK_ERROR(
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8.0));
 
-  glBindTexture(GL_TEXTURE_2D, 0);
+  GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, 0));
 
   stbi_image_free(data);
 
@@ -121,10 +126,11 @@ void TextureFactory::ExportTexture(const std::string &filename,
   stbi_flip_vertically_on_write(true);
   GLubyte data[texture.get_width() * texture.get_height() * 3];
 
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, texture.getId());
+  GL_CHECK_ERROR(glActiveTexture(GL_TEXTURE0));
+  GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, texture.getId()));
 
-  glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, &data);
+  GL_CHECK_ERROR(
+      glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, &data));
   stbi_write_png(filename.c_str(), texture.get_width(), texture.get_height(), 3,
                  &data, 3 * texture.get_width());
 }
@@ -142,7 +148,7 @@ TextureFactory::ImportCubeTexture(const std::string &name,
 
   unsigned int id = cube_texture->getId();
 
-  glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+  GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_CUBE_MAP, id));
 
   GLuint targets[] = {
       GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
@@ -167,21 +173,26 @@ TextureFactory::ImportCubeTexture(const std::string &name,
                 << std::endl;
     }
 
-    glTexImage2D(targets[i], 0, GL_RGBA, width, height, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, data);
+    GL_CHECK_ERROR(glTexImage2D(targets[i], 0, GL_RGBA, width, height, 0,
+                                GL_RGBA, GL_UNSIGNED_BYTE, data));
 
     stbi_image_free(data);
   }
 
   cube_texture->set_size(width);
 
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+  GL_CHECK_ERROR(
+      glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+  GL_CHECK_ERROR(
+      glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+  GL_CHECK_ERROR(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
+                                 GL_CLAMP_TO_EDGE));
+  GL_CHECK_ERROR(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
+                                 GL_CLAMP_TO_EDGE));
+  GL_CHECK_ERROR(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
+                                 GL_CLAMP_TO_EDGE));
 
-  glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+  GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
 
   return cube_texture;
 }
@@ -285,8 +296,8 @@ void TextureFactory::ExportCubeTexture(const std::string &filename,
   const uint32_t dxt_10_misc_flag_2 = DDS_ALPHA_MODE_UNKNOWN;
   fwrite(&dxt_10_misc_flag_2, 1, 4, fp);
 
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, cube_texture.getId());
+  GL_CHECK_ERROR(glActiveTexture(GL_TEXTURE0));
+  GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_CUBE_MAP, cube_texture.getId()));
 
   for (unsigned int i = 0; i < 6; i++) {
     for (unsigned int j = 0; j < mip_levels; j++) {
@@ -398,8 +409,8 @@ void TextureFactory::ExportRgbdCubeTexture(const std::string &filename,
   const uint32_t reserved_2 = 0;
   fwrite(&reserved_2, 1, 4, fp);
 
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, cube_texture.getId());
+  GL_CHECK_ERROR(glActiveTexture(GL_TEXTURE0));
+  GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_CUBE_MAP, cube_texture.getId()));
 
   for (unsigned int i = 0; i < 6; i++) {
     for (unsigned int j = 0; j < mip_levels; j++) {
@@ -471,15 +482,19 @@ TextureFactory::ImportEquirectangularHDR(const std::string &filename) {
     std::cerr << "Failed to load HDR image." << std::endl;
   }
   unsigned int hdr_texture_handle;
-  glGenTextures(1, &hdr_texture_handle);
-  glBindTexture(GL_TEXTURE_2D, hdr_texture_handle);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT,
-               data);
+  GL_CHECK_ERROR(glGenTextures(1, &hdr_texture_handle));
+  GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, hdr_texture_handle));
+  GL_CHECK_ERROR(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0,
+                              GL_RGB, GL_FLOAT, data));
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  GL_CHECK_ERROR(
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+  GL_CHECK_ERROR(
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+  GL_CHECK_ERROR(
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+  GL_CHECK_ERROR(
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 
   stbi_image_free(data);
 
@@ -528,8 +543,8 @@ std::unique_ptr<CubeTexture> TextureFactory::TransformEquirectangularToCube(
   shader_wrapper->BindUniform(
       "model_matrix", renderable_object.getTransform().get_model_matrix());
 
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, equirectangular_handle);
+  GL_CHECK_ERROR(glActiveTexture(GL_TEXTURE0));
+  GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, equirectangular_handle));
 
   renderable_object.get_vao().bind();
   renderable_object.get_vao().bindIndexBuffer();
@@ -543,8 +558,9 @@ std::unique_ptr<CubeTexture> TextureFactory::TransformEquirectangularToCube(
 
   shader_wrapper->Stop();
 
-  glBindTexture(GL_TEXTURE_CUBE_MAP, cube_render_target.getId());
-  glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+  GL_CHECK_ERROR(
+      glBindTexture(GL_TEXTURE_CUBE_MAP, cube_render_target.getId()));
+  GL_CHECK_ERROR(glGenerateMipmap(GL_TEXTURE_CUBE_MAP));
 
   return std::make_unique<CubeTexture>(std::move(cube_render_target));
 }
@@ -581,8 +597,8 @@ TextureFactory::CreateIrradianceMap(const CubeTexture &cube_texture) {
   shader_wrapper->BindUniform("environment_map", 0);
   shader_wrapper->BindUniform("projection_matrix", kProjectionMatrix);
 
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, cube_texture.getId());
+  GL_CHECK_ERROR(glActiveTexture(GL_TEXTURE0));
+  GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_CUBE_MAP, cube_texture.getId()));
 
   renderable_object.get_vao().bind();
   renderable_object.get_vao().bindIndexBuffer();
@@ -635,8 +651,8 @@ TextureFactory::CreateRadianceMap(const CubeTexture &cube_texture) {
   shader_wrapper->BindUniform("environment_map", 0);
   shader_wrapper->BindUniform("projection_matrix", kProjectionMatrix);
 
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, cube_texture.getId());
+  GL_CHECK_ERROR(glActiveTexture(GL_TEXTURE0));
+  GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_CUBE_MAP, cube_texture.getId()));
 
   renderable_object.get_vao().bind();
   renderable_object.get_vao().bindIndexBuffer();
@@ -724,20 +740,26 @@ TextureFactory::ImportCubeTextureFromDds(const std::string &name,
   const unsigned int mip_levels = gli_texture.levels();
 
   GLuint texture_handle = 0;
-  glGenTextures(1, &texture_handle);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, texture_handle);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
+  GL_CHECK_ERROR(glGenTextures(1, &texture_handle));
+  GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_CUBE_MAP, texture_handle));
+  GL_CHECK_ERROR(
+      glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0));
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL,
                   static_cast<GLint>(mip_levels - 1));
-  glTexStorage2D(GL_TEXTURE_CUBE_MAP, static_cast<GLint>(mip_levels), GL_RGB32F,
-                 static_cast<GLsizei>(size), static_cast<GLsizei>(size));
+  GL_CHECK_ERROR(glTexStorage2D(
+      GL_TEXTURE_CUBE_MAP, static_cast<GLint>(mip_levels), GL_RGB32F,
+      static_cast<GLsizei>(size), static_cast<GLsizei>(size)));
 
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  GL_CHECK_ERROR(
+      glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER,
                   GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+  GL_CHECK_ERROR(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
+                                 GL_CLAMP_TO_EDGE));
+  GL_CHECK_ERROR(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
+                                 GL_CLAMP_TO_EDGE));
+  GL_CHECK_ERROR(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
+                                 GL_CLAMP_TO_EDGE));
 
   for (unsigned int face = 0; face < 6; ++face) {
     for (unsigned int mip_level = 0; mip_level < mip_levels; ++mip_level) {
@@ -745,10 +767,11 @@ TextureFactory::ImportCubeTextureFromDds(const std::string &name,
 
       target = static_cast<GLenum>(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face);
 
-      glTexSubImage2D(target, static_cast<GLint>(mip_level), 0, 0,
-                      static_cast<GLsizei>(mip_map_size),
-                      static_cast<GLsizei>(mip_map_size), GL_RGB, GL_FLOAT,
-                      (GLfloat *)gli_texture.data<GLfloat>(0, face, mip_level));
+      GL_CHECK_ERROR(glTexSubImage2D(
+          target, static_cast<GLint>(mip_level), 0, 0,
+          static_cast<GLsizei>(mip_map_size),
+          static_cast<GLsizei>(mip_map_size), GL_RGB, GL_FLOAT,
+          (GLfloat *)gli_texture.data<GLfloat>(0, face, mip_level)));
     }
   }
 
@@ -777,20 +800,26 @@ TextureFactory::ImportCubeTextureFromRgbdDds(const std::string &name,
   const unsigned int mip_levels = gli_texture.levels();
 
   GLuint texture_handle = 0;
-  glGenTextures(1, &texture_handle);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, texture_handle);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
+  GL_CHECK_ERROR(glGenTextures(1, &texture_handle));
+  GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_CUBE_MAP, texture_handle));
+  GL_CHECK_ERROR(
+      glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0));
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL,
                   static_cast<GLint>(mip_levels - 1));
-  glTexStorage2D(GL_TEXTURE_CUBE_MAP, static_cast<GLint>(mip_levels), GL_RGBA8,
-                 static_cast<GLsizei>(size), static_cast<GLsizei>(size));
+  GL_CHECK_ERROR(glTexStorage2D(
+      GL_TEXTURE_CUBE_MAP, static_cast<GLint>(mip_levels), GL_RGBA8,
+      static_cast<GLsizei>(size), static_cast<GLsizei>(size)));
 
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  GL_CHECK_ERROR(
+      glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
   glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER,
                   GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+  GL_CHECK_ERROR(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
+                                 GL_CLAMP_TO_EDGE));
+  GL_CHECK_ERROR(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
+                                 GL_CLAMP_TO_EDGE));
+  GL_CHECK_ERROR(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
+                                 GL_CLAMP_TO_EDGE));
 
   for (unsigned int face = 0; face < 6; ++face) {
     for (unsigned int mip_level = 0; mip_level < mip_levels; ++mip_level) {
@@ -798,11 +827,11 @@ TextureFactory::ImportCubeTextureFromRgbdDds(const std::string &name,
 
       target = static_cast<GLenum>(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face);
 
-      glTexSubImage2D(target, static_cast<GLint>(mip_level), 0, 0,
-                      static_cast<GLsizei>(mip_map_size),
-                      static_cast<GLsizei>(mip_map_size), GL_RGBA,
-                      GL_UNSIGNED_BYTE,
-                      (GLubyte *)gli_texture.data<GLubyte>(0, face, mip_level));
+      GL_CHECK_ERROR(glTexSubImage2D(
+          target, static_cast<GLint>(mip_level), 0, 0,
+          static_cast<GLsizei>(mip_map_size),
+          static_cast<GLsizei>(mip_map_size), GL_RGBA, GL_UNSIGNED_BYTE,
+          (GLubyte *)gli_texture.data<GLubyte>(0, face, mip_level)));
     }
   }
 

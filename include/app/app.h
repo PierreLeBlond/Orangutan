@@ -7,7 +7,6 @@
 #include "manager/texturemanager.h"
 #include "model/universe.h"
 #include "presenter/screenpresenter.h"
-#include "presenter/universepresenter.h"
 #include "scene/scene.h"
 #include "ui/screen.h"
 #include "ui/texturewindow.h"
@@ -29,8 +28,6 @@ private:
 
   std::unique_ptr<TextureManager> texture_manager_;
   TextureWindow *texture_window_;
-
-  std::unique_ptr<UniversePresenter> universe_presenter_;
 
   std::unique_ptr<Universe> universe_;
   std::unique_ptr<Scene> scene_;

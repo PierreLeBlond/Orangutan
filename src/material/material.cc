@@ -43,8 +43,8 @@ void Material::BindLightUniforms(const std::vector<Light *> &lights,
 
   shader_wrapper_->BindUniform("numberOfLights", number_of_lights);
 
-  shader_wrapper_->BindCubeTexture("ibl.radiance", ibl.radiance->getId());
-  shader_wrapper_->BindCubeTexture("ibl.irradiance", ibl.irradiance->getId());
+  shader_wrapper_->BindCubeTexture("radiance", ibl.radiance->getId());
+  shader_wrapper_->BindCubeTexture("irradiance", ibl.irradiance->getId());
   shader_wrapper_->BindTexture("brdf", brdf.getId());
 }
 

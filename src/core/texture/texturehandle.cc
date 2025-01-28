@@ -1,4 +1,5 @@
 #include "core/texture/texturehandle.h"
+#include "core/debug.h"
 
 #include <nanogui/opengl.h>
 
@@ -6,7 +7,7 @@ namespace orangutan {
 
 TextureHandle::TextureHandle() : Handle() {
   unsigned int id = 0;
-  glGenTextures(1, &id);
+  GL_CHECK_ERROR(glGenTextures(1, &id));
   setId(id);
 }
 
@@ -17,12 +18,12 @@ TextureHandle::TextureHandle(TextureHandle &&handle) noexcept : Handle() {
 
 TextureHandle::~TextureHandle() noexcept {
   unsigned int id = getId();
-  glDeleteTextures(1, &id);
+  GL_CHECK_ERROR(glDeleteTextures(1, &id));
 }
 
 TextureHandle &TextureHandle::operator=(TextureHandle &&handle) {
   unsigned int id = getId();
-  glDeleteTextures(1, &id);
+  GL_CHECK_ERROR(glDeleteTextures(1, &id));
   setId(handle.getId());
   handle.setId(0);
   return *this;

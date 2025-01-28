@@ -1,4 +1,5 @@
 #include "core/shader/shaderprogram.h"
+#include "core/debug.h"
 
 #include <nanogui/opengl.h>
 
@@ -13,29 +14,32 @@ ShaderProgram::ShaderProgram()
 
 bool ShaderProgram::Attach(unsigned int id) {
   int numberOfAttachedShader = 0;
-  glGetProgramiv(handle_.getId(), GL_ATTACHED_SHADERS, &numberOfAttachedShader);
+  GL_CHECK_ERROR(glGetProgramiv(handle_.getId(), GL_ATTACHED_SHADERS,
+                                &numberOfAttachedShader));
 
   if (numberOfAttachedShader >= MAX_ATTACHED_SHADER) {
     return false;
   }
 
-  glAttachShader(handle_.getId(), id);
+  GL_CHECK_ERROR(glAttachShader(handle_.getId(), id));
 
   return true;
 }
 
 bool ShaderProgram::Link() {
-  glLinkProgram(handle_.getId());
+  GL_CHECK_ERROR(glLinkProgram(handle_.getId()));
 
   int infologLength = 0;
   int charsWritten = 0;
   char *infoLog;
 
-  glGetProgramiv(handle_.getId(), GL_INFO_LOG_LENGTH, &infologLength);
+  GL_CHECK_ERROR(
+      glGetProgramiv(handle_.getId(), GL_INFO_LOG_LENGTH, &infologLength));
 
   if (infologLength > 1) {
     infoLog = (char *)malloc(infologLength);
-    glGetProgramInfoLog(handle_.getId(), infologLength, &charsWritten, infoLog);
+    GL_CHECK_ERROR(glGetProgramInfoLog(handle_.getId(), infologLength,
+                                       &charsWritten, infoLog));
 
     std::cerr << "Link message :" << infoLog;
     free(infoLog);
@@ -45,7 +49,7 @@ bool ShaderProgram::Link() {
 }
 
 bool ShaderProgram::Detach(unsigned int id) {
-  glDetachShader(handle_.getId(), id);
+  GL_CHECK_ERROR(glDetachShader(handle_.getId(), id));
   return true;
 }
 
@@ -61,8 +65,8 @@ bool ShaderProgram::Build(const std::vector<std::string> &defines,
   // Check if shader are already attached, and if so detach them first
   int numberOfAttachedShader = 0;
   unsigned int shaders[MAX_ATTACHED_SHADER];
-  glGetAttachedShaders(handle_.getId(), MAX_ATTACHED_SHADER,
-                       &numberOfAttachedShader, shaders);
+  GL_CHECK_ERROR(glGetAttachedShaders(handle_.getId(), MAX_ATTACHED_SHADER,
+                                      &numberOfAttachedShader, shaders));
   for (int i = 0; i < numberOfAttachedShader; ++i) {
     Detach(shaders[i]);
   }
@@ -91,9 +95,11 @@ bool ShaderProgram::Build(const std::vector<std::string> &defines,
   return true;
 }
 
-void ShaderProgram::Start() const { glUseProgram(handle_.getId()); }
+void ShaderProgram::Start() const {
+  GL_CHECK_ERROR(glUseProgram(handle_.getId()));
+}
 
-void ShaderProgram::Stop() const { glUseProgram(0); }
+void ShaderProgram::Stop() const { GL_CHECK_ERROR(glUseProgram(0)); }
 
 unsigned int ShaderProgram::GetId() const { return handle_.getId(); }
 

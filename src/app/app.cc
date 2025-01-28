@@ -60,18 +60,6 @@ void App::Init(GLFWwindow *window) {
         texture_window_->Resize(width, height);
       });
 
-  // Init Universe presenter
-  // nanogui will take ownership via its own reference counter
-  // auto *universe_view = new Window(screen, "Universe");
-  // universe_view->set_top(20);
-  // universe_view->set_left(20);
-
-  // universe_presenter_ = std::make_shared<UniversePresenter>(
-  // universe_, screen_presenter_->get_context(), universe_view);
-  // screen_presenter_->AddChildPresenter(universe_presenter_);
-
-  // universe_presenter_->Init();
-
   screen_presenter_->Init();
 }
 
@@ -195,9 +183,11 @@ void App::InitUniverse() {
   auto brdf = TextureFactory::CreateBrdfMap();
   universe_->AddTexture(std::move(brdf));
 
-  auto room_ibl = TextureFactory::ImportIBLFromDds(
-      "room", "./resources/images/ibl/room/room_irradiance.dds",
-      "./resources/images/ibl/room/room_radiance.dds");
+  // auto room_ibl = TextureFactory::ImportIBLFromHdr(
+  //"room", "./resources/images/ibl/portfolio/portfolio.hdr");
+  auto room_ibl = TextureFactory::ImportIBLFromRgbdDds(
+      "room", "./resources/images/ibl/portfolio/portfolio_rgbd_irradiance.dds",
+      "./resources/images/ibl/portfolio/portfolio_rgbd_radiance.dds");
   universe_->AddIbl(std::move(room_ibl));
 
   Assimp::Importer importer;
@@ -208,11 +198,6 @@ void App::InitUniverse() {
   auto chess_node = universe_->AddObjectNode(SceneFactory::ImportSceneTree(
       importer, *universe_, "chess", "./resources/meshes/chess.gltf"));
   scene_tree.AddChild(chess_node);
-
-  // Spheres
-  // auto sphere_node = universe_->AddObjectNode(SceneFactory::ImportSceneTree(
-  //    importer, *universe_, "sphere", "./resources/meshes/spheres.gltf"));
-  // scene_tree.AddChild(sphere_node);
 
   auto sky_material = MaterialFactory::CreateSkyboxMaterial();
   sky_material->set_shader_wrapper(

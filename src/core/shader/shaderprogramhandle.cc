@@ -1,28 +1,29 @@
 #include "core/shader/shaderprogramhandle.h"
+#include "core/debug.h"
 
 #include <nanogui/opengl.h>
 
 namespace orangutan {
 
 ShaderProgramHandle::ShaderProgramHandle() : Handle() {
-  setId(glCreateProgram());
+  GL_CHECK_ERROR(setId(glCreateProgram()));
 }
 
 ShaderProgramHandle::ShaderProgramHandle(const ShaderProgramHandle &handle)
     : Handle() {
-  setId(glCreateProgram());
+  GL_CHECK_ERROR(setId(glCreateProgram()));
 
   int numberOfAttachedShader = 0;
   unsigned int shaders[MAX_ATTACHED_SHADER];
-  glGetAttachedShaders(handle.getId(), MAX_ATTACHED_SHADER,
-                       &numberOfAttachedShader, shaders);
+  GL_CHECK_ERROR(glGetAttachedShaders(handle.getId(), MAX_ATTACHED_SHADER,
+                                      &numberOfAttachedShader, shaders));
   for (int i = 0; i < numberOfAttachedShader; ++i)
-    glAttachShader(getId(), shaders[i]);
+    GL_CHECK_ERROR(glAttachShader(getId(), shaders[i]));
 
   int isLinked;
-  glGetProgramiv(handle.getId(), GL_LINK_STATUS, &isLinked);
+  GL_CHECK_ERROR(glGetProgramiv(handle.getId(), GL_LINK_STATUS, &isLinked));
   if (isLinked)
-    glLinkProgram(getId());
+    GL_CHECK_ERROR(glLinkProgram(getId()));
 }
 
 ShaderProgramHandle::ShaderProgramHandle(ShaderProgramHandle &&handle) noexcept
@@ -32,12 +33,12 @@ ShaderProgramHandle::ShaderProgramHandle(ShaderProgramHandle &&handle) noexcept
 }
 
 ShaderProgramHandle::~ShaderProgramHandle() noexcept {
-  glDeleteProgram(getId());
+  GL_CHECK_ERROR(glDeleteProgram(getId()));
 }
 
 ShaderProgramHandle &
 ShaderProgramHandle::operator=(const ShaderProgramHandle &handle) {
-  glDeleteProgram(getId());
+  GL_CHECK_ERROR(glDeleteProgram(getId()));
   ShaderProgramHandle tmp(handle);
   *this = std::move(tmp);
   return *this;
@@ -45,7 +46,7 @@ ShaderProgramHandle::operator=(const ShaderProgramHandle &handle) {
 
 ShaderProgramHandle &
 ShaderProgramHandle::operator=(ShaderProgramHandle &&handle) {
-  glDeleteProgram(getId());
+  GL_CHECK_ERROR(glDeleteProgram(getId()));
   setId(handle.getId());
   handle.setId(0);
   return *this;

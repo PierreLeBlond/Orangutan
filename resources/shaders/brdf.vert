@@ -1,3 +1,5 @@
+#version 450 core
+
 in vec3 vertex_in;
 
 out vec2 uv_out;

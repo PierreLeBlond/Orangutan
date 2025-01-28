@@ -1,4 +1,5 @@
 #include "core/shader/shader.h"
+#include "core/debug.h"
 
 #include <nanogui/opengl.h>
 
@@ -37,20 +38,26 @@ bool Shader::Compile(const std::vector<std::string> &defines,
   }
 
   std::ostringstream ost;
-  ost << "#version 450 core\n";
+
+  std::string version_string = src.substr(0, src.find("\n"));
+
+  ost << version_string << "\n";
+
   for (const std::string &define : defines) {
     ost << "#define " << define << "\n";
   }
 
-  ost << src;
+  std::string shader_string = src.substr(src.find("\n") + 1);
+
+  ost << shader_string;
 
   std::string final_str = ost.str();
 
   const char *shaderSource = final_str.c_str();
 
-  glShaderSource(id, 1, &shaderSource, nullptr);
+  GL_CHECK_ERROR(glShaderSource(id, 1, &shaderSource, nullptr));
 
-  glCompileShader(id);
+  GL_CHECK_ERROR(glCompileShader(id));
 
   PrintShaderInfo("Shader " + path + " compilation result: ");
 
@@ -95,11 +102,13 @@ bool Shader::PrintShaderInfo(const std::string &msg) {
   int charsWritten = 0;
   char *infoLog;
 
-  glGetShaderiv(handle_.getId(), GL_INFO_LOG_LENGTH, &infologLength);
+  GL_CHECK_ERROR(
+      glGetShaderiv(handle_.getId(), GL_INFO_LOG_LENGTH, &infologLength));
 
   if (infologLength > 1) {
     infoLog = (char *)malloc(infologLength);
-    glGetShaderInfoLog(handle_.getId(), infologLength, &charsWritten, infoLog);
+    GL_CHECK_ERROR(glGetShaderInfoLog(handle_.getId(), infologLength,
+                                      &charsWritten, infoLog));
 
     std::cerr << msg << " : " << infoLog << std::endl;
     free(infoLog);

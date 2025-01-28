@@ -1,3 +1,5 @@
+#version 450
+
 const float kPi = 3.14159265359;
 
 in vec3 world_position_out;

@@ -1,3 +1,5 @@
+#version 450
+
 in vec3 vertex_in;
 
 uniform mat4 projectionMatrix;

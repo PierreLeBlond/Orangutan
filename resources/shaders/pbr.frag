@@ -1,3 +1,5 @@
+#version 450
+
 #define MAX_LIGHT 8
 
 const float kPi = 3.14159265359;
@@ -25,12 +27,8 @@ uniform Lighting lights[MAX_LIGHT];
 
 uniform uint numberOfLights;
 
-struct Ibl {
-  samplerCube irradiance;
-  samplerCube radiance;
-};
-
-uniform Ibl ibl;
+uniform samplerCube irradiance;
+uniform samplerCube radiance;
 uniform sampler2D brdf;
 
 uniform vec3 cameraPosition;
@@ -170,13 +168,13 @@ void main() {
     roughness_factor *= pbr_sample.g;
   #endif
 
-  vec4 irradiance_sample = texture(ibl.irradiance, normal);
-  vec3 irradiance = texture(ibl.irradiance, normal).rgb;
+  vec4 irradiance_sample = texture(irradiance, normal);
+  vec3 irradiance = irradiance_sample.rgb;
 
   vec3 reflection_vector = reflect(-view_vector, normal);
   float lod_level = roughness_factor * kMaxRadianceLod;
 
-  vec3 radiance = textureLod(ibl.radiance, reflection_vector, lod_level).rgb;
+  vec3 radiance = textureLod(radiance, reflection_vector, lod_level).rgb;
 
   vec3 ambient = mix(GetDielectricMultipleScattering(n_dot_v, roughness_factor, color, irradiance, radiance),
                      GetConductorMultipleScattering(n_dot_v, roughness_factor, color, irradiance, radiance),
@@ -194,7 +192,7 @@ void main() {
   vec3 f_0 = vec3(0.04);
   f_0 = mix(f_0, color, metalness_factor);
 
-  for(int i = 0; i < numberOfLights; i++) {
+  for(uint i = 0u; i < numberOfLights; i++) {
     vec3 light_vector = normalize(lights[i].position - world_position_out);
     vec3 half_vector = normalize(view_vector + light_vector);
 

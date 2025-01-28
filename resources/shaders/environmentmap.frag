@@ -1,3 +1,5 @@
+#version 450
+
 #define MAX_LIGHT 8
 
 in vec4 position_out;

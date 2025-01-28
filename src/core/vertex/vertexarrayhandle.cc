@@ -1,4 +1,5 @@
 #include "core/vertex/vertexarrayhandle.h"
+#include "core/debug.h"
 
 #include <nanogui/opengl.h>
 
@@ -6,7 +7,7 @@ namespace orangutan {
 
 VertexArrayHandle::VertexArrayHandle() : Handle() {
   unsigned int id = 0;
-  glGenVertexArrays(1, &id);
+  GL_CHECK_ERROR(glGenVertexArrays(1, &id));
   setId(id);
 }
 
@@ -18,12 +19,12 @@ VertexArrayHandle::VertexArrayHandle(VertexArrayHandle &&handle) noexcept
 
 VertexArrayHandle::~VertexArrayHandle() noexcept {
   unsigned int id = getId();
-  glDeleteVertexArrays(1, &id);
+  GL_CHECK_ERROR(glDeleteVertexArrays(1, &id));
 }
 
 VertexArrayHandle &VertexArrayHandle::operator=(VertexArrayHandle &&handle) {
   unsigned int id = getId();
-  glDeleteVertexArrays(1, &id);
+  GL_CHECK_ERROR(glDeleteVertexArrays(1, &id));
   setId(handle.getId());
   handle.setId(0);
   return *this;

@@ -1,3 +1,5 @@
+#version 450
+
 layout(points) in;
 layout(line_strip, max_vertices = 224) out;
 
