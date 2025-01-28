@@ -15,20 +15,20 @@
 namespace orangutan {
 
 class App {
- public:
-  void Init(GLFWwindow* window);
+public:
+  void Init(GLFWwindow *window);
 
   void Draw();
 
-  void BindEvents(GLFWwindow* window, Screen* screen);
+  void BindEvents(GLFWwindow *window, Screen *screen);
   void InitUniverse();
 
- private:
+private:
   std::unique_ptr<ScreenPresenter> screen_presenter_;
   std::unique_ptr<CanvasManager> canvas_manager_;
 
   std::unique_ptr<TextureManager> texture_manager_;
-  TextureWindow* texture_window_;
+  TextureWindow *texture_window_;
 
   std::unique_ptr<UniversePresenter> universe_presenter_;
 
@@ -36,6 +36,6 @@ class App {
   std::unique_ptr<Scene> scene_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_APP_APP_H
+#endif // ORANGUTAN_APP_APP_H

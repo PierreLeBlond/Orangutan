@@ -6,12 +6,12 @@ ShaderHandle::ShaderHandle(ShaderType type) : type_(type) {
   setId(glCreateShader((GLenum)type));
 }
 
-ShaderHandle::ShaderHandle(const ShaderHandle& handle) : type_(handle.type_) {
+ShaderHandle::ShaderHandle(const ShaderHandle &handle) : type_(handle.type_) {
   setId(glCreateShader((GLenum)type_));
 
   int bufSize = 0;
   glGetShaderiv(handle.getId(), GL_SHADER_SOURCE_LENGTH, &bufSize);
-  char* source = new char[bufSize];
+  char *source = new char[bufSize];
   int length = 0;
   glGetShaderSource(handle.getId(), bufSize, &length, source);
 
@@ -20,13 +20,14 @@ ShaderHandle::ShaderHandle(const ShaderHandle& handle) : type_(handle.type_) {
 
     int isCompiled = false;
     glGetShaderiv(handle.getId(), GL_COMPILE_STATUS, &isCompiled);
-    if (isCompiled) glCompileShader(getId());
+    if (isCompiled)
+      glCompileShader(getId());
   }
 
   delete[] source;
 }
 
-ShaderHandle::ShaderHandle(ShaderHandle&& handle) noexcept
+ShaderHandle::ShaderHandle(ShaderHandle &&handle) noexcept
     : type_(handle.type_) {
   setId(handle.getId());
   handle.setId(0);
@@ -34,14 +35,14 @@ ShaderHandle::ShaderHandle(ShaderHandle&& handle) noexcept
 
 ShaderHandle::~ShaderHandle() noexcept { glDeleteShader(getId()); }
 
-ShaderHandle& ShaderHandle::operator=(const ShaderHandle& handle) {
+ShaderHandle &ShaderHandle::operator=(const ShaderHandle &handle) {
   glDeleteShader(getId());
   ShaderHandle tmp(handle);
   *this = std::move(tmp);
   return *this;
 }
 
-ShaderHandle& ShaderHandle::operator=(ShaderHandle&& handle) {
+ShaderHandle &ShaderHandle::operator=(ShaderHandle &&handle) {
   glDeleteShader(getId());
   setId(handle.getId());
   handle.setId(0);
@@ -50,4 +51,4 @@ ShaderHandle& ShaderHandle::operator=(ShaderHandle&& handle) {
 
 ShaderType ShaderHandle::GetType() const { return type_; }
 
-}  // namespace orangutan
+} // namespace orangutan

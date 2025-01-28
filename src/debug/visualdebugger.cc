@@ -4,7 +4,7 @@
 
 namespace orangutan {
 
-void VisualDebugger::DisplayTexture(const Texture& texture) {
+void VisualDebugger::DisplayTexture(const Texture &texture) {
   if (!texture_displayer_) {
     // shader wrapper
     texture_displayer_shader_wrapper_ =
@@ -12,8 +12,8 @@ void VisualDebugger::DisplayTexture(const Texture& texture) {
 
     const std::vector<std::string> no_defines;
     texture_displayer_shader_wrapper_->Build(
-        no_defines, "../resources/shaders/texture_debug.vert",
-        "../resources/shaders/texture_debug.frag", "");
+        no_defines, "./resources/shaders/texture_debug.vert",
+        "./resources/shaders/texture_debug.frag", "");
 
     // material
     texture_displayer_material_ =
@@ -39,7 +39,7 @@ void VisualDebugger::DisplayTexture(const Texture& texture) {
   texture_displayer_->Draw();
 }
 
-void VisualDebugger::DisplayCubeTexture(const CubeTexture& cube_texture,
+void VisualDebugger::DisplayCubeTexture(const CubeTexture &cube_texture,
                                         int width, int height) {
   if (!cube_texture_displayer_) {
     // shader wrapper
@@ -48,8 +48,8 @@ void VisualDebugger::DisplayCubeTexture(const CubeTexture& cube_texture,
 
     const std::vector<std::string> no_defines;
     cube_texture_displayer_shader_wrapper_->Build(
-        no_defines, "../resources/shaders/cube_texture_debug.vert",
-        "../resources/shaders/cube_texture_debug.frag", "");
+        no_defines, "./resources/shaders/cube_texture_debug.vert",
+        "./resources/shaders/cube_texture_debug.frag", "");
 
     // shader strategy
     cube_texture_displayer_material_ =
@@ -98,4 +98,4 @@ void VisualDebugger::DisplayCubeTexture(const CubeTexture& cube_texture,
   cube_texture_displayer_->Draw();
 }
 
-}  // namespace orangutan
+} // namespace orangutan

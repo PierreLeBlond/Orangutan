@@ -11,22 +11,24 @@
 namespace orangutan {
 
 class RenderableObjectFactory {
- public:
-  static std::unique_ptr<RenderableObject> CreateRenderableObject(
-      const Universe& universe, const std::string& name,
-      const std::string& mesh_name, const std::string& material_name);
+public:
+  static std::unique_ptr<RenderableObject>
+  CreateRenderableObject(const Universe &universe, const std::string &name,
+                         const std::string &mesh_name,
+                         const std::string &material_name);
 
-  static std::unique_ptr<RenderableObject> CreateRenderableObject(
-      const std::string& name, Mesh* mesh, Material* material);
+  static std::unique_ptr<RenderableObject>
+  CreateRenderableObject(const std::string &name, Mesh *mesh,
+                         Material *material);
 
-  static std::vector<std::unique_ptr<Mesh>> ImportMeshs(
-      Assimp::Importer& importer, const std::string& filename);
+  static std::vector<std::unique_ptr<Mesh>>
+  ImportMeshs(Assimp::Importer &importer, const std::string &filename);
 
- private:
-  static std::vector<std::unique_ptr<Mesh>> ExtractMeshesFromScene(
-      const aiNode& node, const aiScene& scene);
+private:
+  static std::vector<std::unique_ptr<Mesh>>
+  ExtractMeshesFromScene(const aiNode &node, const aiScene &scene);
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_OBJECT_RENDERABLE_OBJECT_FACTORY_H
+#endif // ORANGUTAN_OBJECT_RENDERABLE_OBJECT_FACTORY_H

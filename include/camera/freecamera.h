@@ -6,13 +6,13 @@
 namespace orangutan {
 
 class FreeCamera : public Camera {
- public:
+public:
   FreeCamera(const std::string &name);
 
   void Update() override;
   void Move(glm::vec3 &direction) override;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_CAMERA_FREE_CAMERA_H
+#endif // ORANGUTAN_CAMERA_FREE_CAMERA_H

@@ -7,16 +7,16 @@
 namespace orangutan {
 
 class TrackBallCamera : public Camera {
- public:
+public:
   TrackBallCamera(const std::string &name);
 
   void Update() override;
   void Move(glm::vec3 &direction) override;
 
- private:
+private:
   float _radius;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_CAMERA_TRACK_BALL_CAMERA_H
+#endif // ORANGUTAN_CAMERA_TRACK_BALL_CAMERA_H

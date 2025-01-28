@@ -15,23 +15,23 @@ enum class ShaderType {
 };
 
 class ShaderHandle : public Handle {
- public:
+public:
   ShaderHandle(ShaderType type = ShaderType::VERTEX);
 
-  ShaderHandle(const ShaderHandle& handle);
-  ShaderHandle(ShaderHandle&& handle) noexcept;
+  ShaderHandle(const ShaderHandle &handle);
+  ShaderHandle(ShaderHandle &&handle) noexcept;
 
   ~ShaderHandle() noexcept;
 
-  ShaderHandle& operator=(const ShaderHandle& handle);
-  ShaderHandle& operator=(ShaderHandle&& handle);
+  ShaderHandle &operator=(const ShaderHandle &handle);
+  ShaderHandle &operator=(ShaderHandle &&handle);
 
   [[nodiscard]] ShaderType GetType() const;
 
- private:
+private:
   ShaderType type_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_CORE_SHADER_SHADER_HANDLE_H
+#endif // ORANGUTAN_CORE_SHADER_SHADER_HANDLE_H

@@ -4,8 +4,8 @@
 
 namespace orangutan {
 
-std::unique_ptr<ObjectNode> ObjectNodeFactory::ExtractObjectNode(
-    const aiNode& assimp_node) {
+std::unique_ptr<ObjectNode>
+ObjectNodeFactory::ExtractObjectNode(const aiNode &assimp_node) {
   auto node = std::make_unique<ObjectNode>(assimp_node.mName.C_Str());
   auto assimp_matrix = assimp_node.mTransformation;
   // TODO: Extract all transformations
@@ -14,4 +14,4 @@ std::unique_ptr<ObjectNode> ObjectNodeFactory::ExtractObjectNode(
   return node;
 }
 
-}  // namespace orangutan
+} // namespace orangutan

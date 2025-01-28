@@ -9,20 +9,20 @@
 namespace orangutan {
 
 std::unique_ptr<ShaderWrapper> ShaderFactory::CreateShaderWrapper(
-    const std::string& name, const std::vector<std::string>& defines,
-    const std::string& vertexFilename, const std::string& fragmentFilename,
-    const std::string& geometryFilename) {
+    const std::string &name, const std::vector<std::string> &defines,
+    const std::string &vertexFilename, const std::string &fragmentFilename,
+    const std::string &geometryFilename) {
   auto shader_wrapper = std::make_unique<ShaderWrapper>(name);
   shader_wrapper->Build(defines, vertexFilename, fragmentFilename,
                         geometryFilename);
   return shader_wrapper;
 }
 
-ShaderWrapper* ShaderFactory::CreateOrGetShaderWrapperFromMaterial(
-    Universe& universe, const Material& material,
-    const std::vector<std::string>& defines, const std::string& vertex_filename,
-    const std::string& fragment_filename,
-    const std::string& geometry_filename) {
+ShaderWrapper *ShaderFactory::CreateOrGetShaderWrapperFromMaterial(
+    Universe &universe, const Material &material,
+    const std::vector<std::string> &defines, const std::string &vertex_filename,
+    const std::string &fragment_filename,
+    const std::string &geometry_filename) {
   std::ostringstream name;
 
   name << vertex_filename << fragment_filename << geometry_filename;
@@ -39,4 +39,4 @@ ShaderWrapper* ShaderFactory::CreateOrGetShaderWrapperFromMaterial(
   return shader_wrapper;
 }
 
-}  // namespace orangutan
+} // namespace orangutan

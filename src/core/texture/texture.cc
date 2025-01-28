@@ -23,5 +23,4 @@ void Texture::set_width(unsigned int width) { width_ = width; }
 unsigned int Texture::get_height() const { return height_; }
 void Texture::set_height(unsigned int height) { height_ = height; }
 
-}  // namespace orangutan
-
+} // namespace orangutan

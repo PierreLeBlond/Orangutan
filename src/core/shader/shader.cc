@@ -7,19 +7,19 @@
 
 namespace orangutan {
 
-Shader::Shader(ShaderType type, const std::string& path)
+Shader::Shader(ShaderType type, const std::string &path)
     : handle_(type), path_(path) {}
 
 unsigned int Shader::GetId() const { return handle_.getId(); }
 
-const std::string& Shader::GetPath() const { return path_; }
+const std::string &Shader::GetPath() const { return path_; }
 
-bool Shader::Compile(const std::vector<std::string>& defines) {
+bool Shader::Compile(const std::vector<std::string> &defines) {
   return Compile(defines, path_);
 }
 
-bool Shader::Compile(const std::vector<std::string>& defines,
-                     const std::string& path) {
+bool Shader::Compile(const std::vector<std::string> &defines,
+                     const std::string &path) {
   path_ = path;
 
   unsigned int id = handle_.getId();
@@ -38,7 +38,7 @@ bool Shader::Compile(const std::vector<std::string>& defines,
 
   std::ostringstream ost;
   ost << "#version 450 core\n";
-  for (const std::string& define : defines) {
+  for (const std::string &define : defines) {
     ost << "#define " << define << "\n";
   }
 
@@ -46,7 +46,7 @@ bool Shader::Compile(const std::vector<std::string>& defines,
 
   std::string final_str = ost.str();
 
-  const char* shaderSource = final_str.c_str();
+  const char *shaderSource = final_str.c_str();
 
   glShaderSource(id, 1, &shaderSource, nullptr);
 
@@ -57,9 +57,9 @@ bool Shader::Compile(const std::vector<std::string>& defines,
   return true;
 }
 
-std::string Shader::FileToString(const std::string& filename) {
-  FILE* fp;
-  char* content = nullptr;
+std::string Shader::FileToString(const std::string &filename) {
+  FILE *fp;
+  char *content = nullptr;
 
   int count = 0;
 
@@ -90,15 +90,15 @@ std::string Shader::FileToString(const std::string& filename) {
   return str;
 }
 
-bool Shader::PrintShaderInfo(const std::string& msg) {
+bool Shader::PrintShaderInfo(const std::string &msg) {
   int infologLength = 0;
   int charsWritten = 0;
-  char* infoLog;
+  char *infoLog;
 
   glGetShaderiv(handle_.getId(), GL_INFO_LOG_LENGTH, &infologLength);
 
   if (infologLength > 1) {
-    infoLog = (char*)malloc(infologLength);
+    infoLog = (char *)malloc(infologLength);
     glGetShaderInfoLog(handle_.getId(), infologLength, &charsWritten, infoLog);
 
     std::cerr << msg << " : " << infoLog << std::endl;
@@ -108,4 +108,4 @@ bool Shader::PrintShaderInfo(const std::string& msg) {
   return (infologLength == 1);
 }
 
-}  // namespace orangutan
+} // namespace orangutan

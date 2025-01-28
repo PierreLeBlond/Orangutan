@@ -8,12 +8,12 @@
 namespace orangutan {
 
 class TextureWindow : public Window {
- public:
+public:
   TextureWindow(nanogui::Widget *parent, const std::string &label,
                 TextureManager *texture_manager);
   void Update();
 
- private:
+private:
   TextureManager *texture_manager_;
 
   std::string state_change_signal_uuid_;
@@ -36,6 +36,6 @@ class TextureWindow : public Window {
   nanogui::Button *export_rgbd_button_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_UI_TEXTURE_WINDOW_H
+#endif // ORANGUTAN_UI_TEXTURE_WINDOW_H

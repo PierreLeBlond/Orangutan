@@ -13,46 +13,44 @@
 namespace orangutan {
 
 class RenderableObject : public Object {
- public:
-  RenderableObject(const std::string& name);
+public:
+  RenderableObject(const std::string &name);
 
   void UpdateVertexArrayObject();
 
-  void Draw(const glm::mat4& viewMatrix, const glm::vec3& camera_position,
-            const glm::mat4& projectionMatrix,
-            const std::vector<Light*>& lights, const Ibl& ibl,
-            const Texture& brdf) override;
+  void Draw(const glm::mat4 &viewMatrix, const glm::vec3 &camera_position,
+            const glm::mat4 &projectionMatrix,
+            const std::vector<Light *> &lights, const Ibl &ibl,
+            const Texture &brdf) override;
   void Draw();
 
-  [[nodiscard]] const Mesh& get_mesh() const;
-  void set_mesh(const Mesh* mesh);
+  [[nodiscard]] const Mesh &get_mesh() const;
+  void set_mesh(const Mesh *mesh);
 
-  [[nodiscard]] Material& get_material() const;
-  void set_material(Material* material);
+  [[nodiscard]] Material &get_material() const;
+  void set_material(Material *material);
 
   [[nodiscard]] unsigned int get_position_array_id() const;
   [[nodiscard]] unsigned int get_index_array_id() const;
   [[nodiscard]] unsigned int get_normal_array_id() const;
   [[nodiscard]] unsigned int get_uv_array_id() const;
 
-  [[nodiscard]] const Vao& get_vao() const;
+  [[nodiscard]] const Vao &get_vao() const;
 
-  void SetTexture(const std::string& name, const Texture* texture);
-  void SetCubeTexture(const std::string& name, const CubeTexture* texture);
+  void SetTexture(const std::string &name, const Texture *texture);
+  void SetCubeTexture(const std::string &name, const CubeTexture *texture);
 
-  template <class T>
-  void SetUniform(const std::string& name, const T& value) {
+  template <class T> void SetUniform(const std::string &name, const T &value) {
     material_->SetUniform(name, value);
   }
 
-  template <class T>
-  void GetUniform(const std::string& name, T& value) const {
+  template <class T> void GetUniform(const std::string &name, T &value) const {
     material_->GetUniform(name, value);
   }
 
- private:
-  const Mesh* mesh_;
-  Material* material_;
+private:
+  const Mesh *mesh_;
+  Material *material_;
 
   unsigned int position_array_id_;
   unsigned int index_array_id_;
@@ -64,6 +62,6 @@ class RenderableObject : public Object {
   Vao vao_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_OBJECT_RENDERABLE_OBJECT_H
+#endif // ORANGUTAN_OBJECT_RENDERABLE_OBJECT_H

@@ -7,17 +7,17 @@
 namespace orangutan {
 
 class Camera : public ObjectNode {
- public:
-  Camera(const std::string& name);
+public:
+  Camera(const std::string &name);
 
-  [[nodiscard]] const glm::mat4& get_view_matrix() const;
-  void set_view_matrix(const glm::mat4& view_matrix);
+  [[nodiscard]] const glm::mat4 &get_view_matrix() const;
+  void set_view_matrix(const glm::mat4 &view_matrix);
 
-  [[nodiscard]] const glm::mat4& get_projection_matrix() const;
-  void set_projection_matrix(const glm::mat4& projection_matrix);
+  [[nodiscard]] const glm::mat4 &get_projection_matrix() const;
+  void set_projection_matrix(const glm::mat4 &projection_matrix);
 
-  [[nodiscard]] const glm::vec3& get_focus_point() const;
-  void set_focus_point(const glm::vec3& focus_point);
+  [[nodiscard]] const glm::vec3 &get_focus_point() const;
+  void set_focus_point(const glm::vec3 &focus_point);
   void set_focus_object(std::shared_ptr<Object> focus_object);
   void UpdateFocus();
 
@@ -32,19 +32,19 @@ class Camera : public ObjectNode {
 
   void UpdateYawPitchRoll();
 
-  [[nodiscard]] const glm::vec3& get_pitch() const;
+  [[nodiscard]] const glm::vec3 &get_pitch() const;
   void Pitch(float pitchAngle);
-  [[nodiscard]] const glm::vec3& get_yaw() const;
+  [[nodiscard]] const glm::vec3 &get_yaw() const;
   void Yaw(float yawAngle);
-  [[nodiscard]] const glm::vec3& get_roll() const;
+  [[nodiscard]] const glm::vec3 &get_roll() const;
   void Roll(float rollAngle);
 
   void Update() override = 0;
-  void Move(glm::vec3& direction) override = 0;
+  void Move(glm::vec3 &direction) override = 0;
 
   void Focus();
 
- private:
+private:
   float fovy_;
   float aspect_ratio_;
 
@@ -65,6 +65,6 @@ class Camera : public ObjectNode {
   float speed_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_CAMERA_CAMERA_H
+#endif // ORANGUTAN_CAMERA_CAMERA_H

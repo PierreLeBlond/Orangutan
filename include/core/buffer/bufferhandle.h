@@ -8,18 +8,18 @@
 namespace orangutan {
 
 class BufferHandle : public Handle {
- public:
+public:
   BufferHandle();
 
-  BufferHandle(const BufferHandle& handle) = delete;
-  BufferHandle(BufferHandle&& handle) noexcept;
+  BufferHandle(const BufferHandle &handle) = delete;
+  BufferHandle(BufferHandle &&handle) noexcept;
 
   ~BufferHandle() noexcept;
 
-  BufferHandle& operator=(const BufferHandle& handle) = delete;
-  BufferHandle& operator=(BufferHandle&& handle);
+  BufferHandle &operator=(const BufferHandle &handle) = delete;
+  BufferHandle &operator=(BufferHandle &&handle);
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_CORE_BUFFER_BUFFER_HANDLE_H
+#endif // ORANGUTAN_CORE_BUFFER_BUFFER_HANDLE_H

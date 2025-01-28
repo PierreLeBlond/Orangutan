@@ -19,8 +19,8 @@
 #include "texture/cuberendertarget.h"
 #include "texture/rendertarget.h"
 
-#define MAKEFOURCC(_a, _b, _c, _d)                              \
-  (((uint32_t)(uint8_t)(_a)) | ((uint32_t)(uint8_t)(_b) << 8) | \
+#define MAKEFOURCC(_a, _b, _c, _d)                                             \
+  (((uint32_t)(uint8_t)(_a)) | ((uint32_t)(uint8_t)(_b) << 8) |                \
    ((uint32_t)(uint8_t)(_c) << 16) | ((uint32_t)(uint8_t)(_d) << 24))
 
 #define DDS_MAGIC 0x20534444
@@ -72,8 +72,9 @@ const glm::mat4 kViewMatrices[] = {
     glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f),
                 glm::vec3(0.0f, -1.0f, 0.0f))};
 
-std::unique_ptr<Texture> TextureFactory::ImportTexture(
-    const std::string& name, const std::string& filename) {
+std::unique_ptr<Texture>
+TextureFactory::ImportTexture(const std::string &name,
+                              const std::string &filename) {
   auto texture = std::make_unique<Texture>(name);
 
   unsigned int id = texture->getId();
@@ -86,7 +87,7 @@ std::unique_ptr<Texture> TextureFactory::ImportTexture(
   int width = 0;
   int height = 0;
   int channels = 0;
-  unsigned char* data =
+  unsigned char *data =
       stbi_load(texture->getPath().c_str(), &width, &height, &channels, 0);
 
   if (data == nullptr) {
@@ -115,8 +116,8 @@ std::unique_ptr<Texture> TextureFactory::ImportTexture(
   return texture;
 }
 
-void TextureFactory::ExportTexture(const std::string& filename,
-                                   const Texture& texture) {
+void TextureFactory::ExportTexture(const std::string &filename,
+                                   const Texture &texture) {
   stbi_flip_vertically_on_write(true);
   GLubyte data[texture.get_width() * texture.get_height() * 3];
 
@@ -128,8 +129,9 @@ void TextureFactory::ExportTexture(const std::string& filename,
                  &data, 3 * texture.get_width());
 }
 
-std::unique_ptr<CubeTexture> TextureFactory::ImportCubeTexture(
-    const std::string& name, const std::string& filename) {
+std::unique_ptr<CubeTexture>
+TextureFactory::ImportCubeTexture(const std::string &name,
+                                  const std::string &filename) {
   auto cube_texture = std::make_unique<CubeTexture>(name);
 
   std::string suffixes[] = {"posx", "negx", "posy", "negy", "negz", "posz"};
@@ -157,7 +159,7 @@ std::unique_ptr<CubeTexture> TextureFactory::ImportCubeTexture(
   for (int i = 0; i < 6; i++) {
     std::string texName = baseFileName + suffixes[i] + extension;
 
-    unsigned char* data =
+    unsigned char *data =
         stbi_load(texName.c_str(), &width, &height, &channels, 0);
 
     if (data == nullptr) {
@@ -184,12 +186,12 @@ std::unique_ptr<CubeTexture> TextureFactory::ImportCubeTexture(
   return cube_texture;
 }
 
-void TextureFactory::ExportCubeTexture(const std::string& filename,
-                                       const CubeTexture& cube_texture,
+void TextureFactory::ExportCubeTexture(const std::string &filename,
+                                       const CubeTexture &cube_texture,
                                        unsigned int face_size,
                                        unsigned int mip_levels) {
   // From https://github.com/dariomanesku/cmft/blob/master/src/cmft/image.cpp
-  FILE* fp = fopen(filename.c_str(), "wb");
+  FILE *fp = fopen(filename.c_str(), "wb");
   if (fp == nullptr) {
     std::cerr << "Could not open file " << filename << std::endl;
     exit(0);
@@ -292,7 +294,7 @@ void TextureFactory::ExportCubeTexture(const std::string& filename,
 
       unsigned int data_size = 3 * mip_map_size * mip_map_size;
 
-      GLfloat* data = (GLfloat*)calloc(data_size, sizeof(GLfloat));
+      GLfloat *data = (GLfloat *)calloc(data_size, sizeof(GLfloat));
 
       // for (unsigned int k = 0; k < data_size / 3; k++) {
       // data[3 * k] = static_cast<GLfloat>(i < 3 ? 25.7 : 0.0);
@@ -312,12 +314,12 @@ void TextureFactory::ExportCubeTexture(const std::string& filename,
   fclose(fp);
 }
 
-void TextureFactory::ExportRgbdCubeTexture(const std::string& filename,
-                                           const CubeTexture& cube_texture,
+void TextureFactory::ExportRgbdCubeTexture(const std::string &filename,
+                                           const CubeTexture &cube_texture,
                                            unsigned int face_size,
                                            unsigned int mip_levels) {
   // From https://github.com/dariomanesku/cmft/blob/master/src/cmft/image.cpp
-  FILE* fp = fopen(filename.c_str(), "wb");
+  FILE *fp = fopen(filename.c_str(), "wb");
   if (fp == nullptr) {
     std::cerr << "Could not open file " << filename << std::endl;
     exit(0);
@@ -405,13 +407,13 @@ void TextureFactory::ExportRgbdCubeTexture(const std::string& filename,
 
       unsigned int data_size = 3 * mip_map_size * mip_map_size;
 
-      GLfloat* data = (GLfloat*)calloc(data_size, sizeof(GLfloat));
+      GLfloat *data = (GLfloat *)calloc(data_size, sizeof(GLfloat));
 
       glGetTexImage(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, j, GL_RGB, GL_FLOAT,
                     data);
 
       unsigned int rgbd_data_size = 4 * mip_map_size * mip_map_size;
-      GLubyte* rgbd_data = (GLubyte*)calloc(rgbd_data_size, sizeof(GLubyte));
+      GLubyte *rgbd_data = (GLubyte *)calloc(rgbd_data_size, sizeof(GLubyte));
 
       for (unsigned int k = 0; k < rgbd_data_size / 4; k++) {
         const float red = data[3 * k];
@@ -436,8 +438,8 @@ void TextureFactory::ExportRgbdCubeTexture(const std::string& filename,
   fclose(fp);
 }
 
-void TextureFactory::ExportIrradiance(const std::string& filename,
-                                      const CubeTexture& irradiance,
+void TextureFactory::ExportIrradiance(const std::string &filename,
+                                      const CubeTexture &irradiance,
                                       bool convert_to_rgbd) {
   if (convert_to_rgbd) {
     ExportRgbdCubeTexture(filename, irradiance, kIrradianceSize, 1);
@@ -446,8 +448,8 @@ void TextureFactory::ExportIrradiance(const std::string& filename,
   }
 }
 
-void TextureFactory::ExportRadiance(const std::string& filename,
-                                    const CubeTexture& radiance,
+void TextureFactory::ExportRadiance(const std::string &filename,
+                                    const CubeTexture &radiance,
                                     bool convert_to_rgbd) {
   if (convert_to_rgbd) {
     ExportRgbdCubeTexture(filename, radiance, kRadianceSize,
@@ -457,13 +459,13 @@ void TextureFactory::ExportRadiance(const std::string& filename,
   }
 }
 
-unsigned int TextureFactory::ImportEquirectangularHDR(
-    const std::string& filename) {
+unsigned int
+TextureFactory::ImportEquirectangularHDR(const std::string &filename) {
   stbi_set_flip_vertically_on_load(true);
   int width = 0;
   int height = 0;
   int number_of_components = 0;
-  float* data =
+  float *data =
       stbi_loadf(filename.c_str(), &width, &height, &number_of_components, 0);
   if (!data) {
     std::cerr << "Failed to load HDR image." << std::endl;
@@ -485,7 +487,7 @@ unsigned int TextureFactory::ImportEquirectangularHDR(
 }
 
 std::unique_ptr<CubeTexture> TextureFactory::TransformEquirectangularToCube(
-    const std::string& name, unsigned int equirectangular_handle) {
+    const std::string &name, unsigned int equirectangular_handle) {
   CubeRenderTargetOptions options = {};
   options.min_filter = GL_LINEAR_MIPMAP_LINEAR;
   CubeRenderTarget cube_render_target(name, kRadianceSize, options);
@@ -496,8 +498,8 @@ std::unique_ptr<CubeTexture> TextureFactory::TransformEquirectangularToCube(
 
   const std::vector<std::string> no_defines;
   shader_wrapper->Build(
-      no_defines, "../resources/shaders/equirectangular_to_cubemap.vert",
-      "../resources/shaders/equirectangular_to_cubemap.frag", "");
+      no_defines, "./resources/shaders/equirectangular_to_cubemap.vert",
+      "./resources/shaders/equirectangular_to_cubemap.frag", "");
 
   // shader strategy
   auto material =
@@ -547,8 +549,8 @@ std::unique_ptr<CubeTexture> TextureFactory::TransformEquirectangularToCube(
   return std::make_unique<CubeTexture>(std::move(cube_render_target));
 }
 
-std::unique_ptr<CubeTexture> TextureFactory::CreateIrradianceMap(
-    const CubeTexture& cube_texture) {
+std::unique_ptr<CubeTexture>
+TextureFactory::CreateIrradianceMap(const CubeTexture &cube_texture) {
   CubeRenderTarget cube_render_target(cube_texture.getName() + "_irradiance",
                                       kIrradianceSize);
 
@@ -557,8 +559,8 @@ std::unique_ptr<CubeTexture> TextureFactory::CreateIrradianceMap(
       std::make_unique<ShaderWrapper>("irradiance_shader_wrapper");
 
   const std::vector<std::string> no_defines;
-  shader_wrapper->Build(no_defines, "../resources/shaders/irradiance.vert",
-                        "../resources/shaders/irradiance.frag", "");
+  shader_wrapper->Build(no_defines, "./resources/shaders/irradiance.vert",
+                        "./resources/shaders/irradiance.frag", "");
 
   // shader strategy
   auto material = std::make_unique<Material>("irradiance_material");
@@ -596,8 +598,8 @@ std::unique_ptr<CubeTexture> TextureFactory::CreateIrradianceMap(
   return std::make_unique<CubeTexture>(std::move(cube_render_target));
 }
 
-std::unique_ptr<CubeTexture> TextureFactory::CreateRadianceMap(
-    const CubeTexture& cube_texture) {
+std::unique_ptr<CubeTexture>
+TextureFactory::CreateRadianceMap(const CubeTexture &cube_texture) {
   CubeRenderTargetOptions options = {};
   options.min_filter = GL_LINEAR_MIPMAP_LINEAR;
   options.generate_mip_maps = true;
@@ -610,8 +612,8 @@ std::unique_ptr<CubeTexture> TextureFactory::CreateRadianceMap(
       std::make_unique<ShaderWrapper>("radiance_shader_wrapper");
 
   const std::vector<std::string> no_defines;
-  shader_wrapper->Build(no_defines, "../resources/shaders/radiance.vert",
-                        "../resources/shaders/radiance.frag", "");
+  shader_wrapper->Build(no_defines, "./resources/shaders/radiance.vert",
+                        "./resources/shaders/radiance.frag", "");
 
   // shader strategy
   auto material = std::make_unique<Material>("radiance_material");
@@ -661,8 +663,8 @@ std::unique_ptr<Texture> TextureFactory::CreateBrdfMap() {
   auto shader_wrapper = std::make_unique<ShaderWrapper>("brdf_shader_wrapper");
 
   const std::vector<std::string> no_defines;
-  shader_wrapper->Build(no_defines, "../resources/shaders/brdf.vert",
-                        "../resources/shaders/brdf.frag", "");
+  shader_wrapper->Build(no_defines, "./resources/shaders/brdf.vert",
+                        "./resources/shaders/brdf.frag", "");
 
   // shader strategy
   auto material = std::make_unique<Material>("brdf_shader_strategy");
@@ -692,8 +694,9 @@ std::unique_ptr<Texture> TextureFactory::CreateBrdfMap() {
   return std::make_unique<Texture>(std::move(render_target));
 }
 
-std::unique_ptr<Ibl> TextureFactory::ImportIBLFromHdr(
-    const std::string& name, const std::string& filename) {
+std::unique_ptr<Ibl>
+TextureFactory::ImportIBLFromHdr(const std::string &name,
+                                 const std::string &filename) {
   unsigned int hdr_texture_handle = ImportEquirectangularHDR(filename);
   auto cube_render_target =
       TransformEquirectangularToCube(name, hdr_texture_handle);
@@ -703,8 +706,9 @@ std::unique_ptr<Ibl> TextureFactory::ImportIBLFromHdr(
       Ibl({name, std::move(irradiance), std::move(radiance)}));
 }
 
-std::unique_ptr<CubeTexture> TextureFactory::ImportCubeTextureFromDds(
-    const std::string& name, const std::string& filename) {
+std::unique_ptr<CubeTexture>
+TextureFactory::ImportCubeTextureFromDds(const std::string &name,
+                                         const std::string &filename) {
   // Extracted and adapted from
   // https://github.com/g-truc/gli/blob/master/manual.md#section2_2
   gli::texture gli_texture = gli::load(filename);
@@ -744,7 +748,7 @@ std::unique_ptr<CubeTexture> TextureFactory::ImportCubeTextureFromDds(
       glTexSubImage2D(target, static_cast<GLint>(mip_level), 0, 0,
                       static_cast<GLsizei>(mip_map_size),
                       static_cast<GLsizei>(mip_map_size), GL_RGB, GL_FLOAT,
-                      (GLfloat*)gli_texture.data<GLfloat>(0, face, mip_level));
+                      (GLfloat *)gli_texture.data<GLfloat>(0, face, mip_level));
     }
   }
 
@@ -755,8 +759,9 @@ std::unique_ptr<CubeTexture> TextureFactory::ImportCubeTextureFromDds(
   return cube_texture;
 }
 
-std::unique_ptr<CubeTexture> TextureFactory::ImportCubeTextureFromRgbdDds(
-    const std::string& name, const std::string& filename) {
+std::unique_ptr<CubeTexture>
+TextureFactory::ImportCubeTextureFromRgbdDds(const std::string &name,
+                                             const std::string &filename) {
   // Extracted and adapted from
   // https://github.com/g-truc/gli/blob/master/manual.md#section2_2
   gli::texture gli_texture = gli::load(filename);
@@ -797,7 +802,7 @@ std::unique_ptr<CubeTexture> TextureFactory::ImportCubeTextureFromRgbdDds(
                       static_cast<GLsizei>(mip_map_size),
                       static_cast<GLsizei>(mip_map_size), GL_RGBA,
                       GL_UNSIGNED_BYTE,
-                      (GLubyte*)gli_texture.data<GLubyte>(0, face, mip_level));
+                      (GLubyte *)gli_texture.data<GLubyte>(0, face, mip_level));
     }
   }
 
@@ -808,9 +813,10 @@ std::unique_ptr<CubeTexture> TextureFactory::ImportCubeTextureFromRgbdDds(
   return cube_texture;
 }
 
-std::unique_ptr<Ibl> TextureFactory::ImportIBLFromDds(
-    const std::string& name, const std::string& irradiance_filename,
-    const std::string& radiance_filename) {
+std::unique_ptr<Ibl>
+TextureFactory::ImportIBLFromDds(const std::string &name,
+                                 const std::string &irradiance_filename,
+                                 const std::string &radiance_filename) {
   auto irradiance =
       ImportCubeTextureFromDds(name + "_irradiance", irradiance_filename);
   auto radiance =
@@ -820,9 +826,10 @@ std::unique_ptr<Ibl> TextureFactory::ImportIBLFromDds(
       Ibl({name, std::move(irradiance), std::move(radiance)}));
 }
 
-std::unique_ptr<Ibl> TextureFactory::ImportIBLFromRgbdDds(
-    const std::string& name, const std::string& irradiance_filename,
-    const std::string& radiance_filename) {
+std::unique_ptr<Ibl>
+TextureFactory::ImportIBLFromRgbdDds(const std::string &name,
+                                     const std::string &irradiance_filename,
+                                     const std::string &radiance_filename) {
   auto irradiance =
       ImportCubeTextureFromRgbdDds(name + "_irradiance", irradiance_filename);
   auto radiance =
@@ -832,12 +839,12 @@ std::unique_ptr<Ibl> TextureFactory::ImportIBLFromRgbdDds(
       Ibl({name, std::move(irradiance), std::move(radiance)}));
 }
 
-void TextureFactory::ExportIbl(const std::string& name,
-                               const std::string& irradiance_filename,
-                               const std::string& radiance_filename,
-                               const Ibl& ibl, bool convert_to_rgbd) {
+void TextureFactory::ExportIbl(const std::string &name,
+                               const std::string &irradiance_filename,
+                               const std::string &radiance_filename,
+                               const Ibl &ibl, bool convert_to_rgbd) {
   ExportIrradiance(irradiance_filename, *ibl.irradiance.get(), convert_to_rgbd);
   ExportRadiance(radiance_filename, *ibl.radiance.get(), convert_to_rgbd);
 }
 
-}  // namespace orangutan
+} // namespace orangutan

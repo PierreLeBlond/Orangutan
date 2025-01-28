@@ -6,7 +6,7 @@
 
 namespace orangutan {
 
-std::unique_ptr<Mesh> MeshFactory::CreateSquare(const std::string& name) {
+std::unique_ptr<Mesh> MeshFactory::CreateSquare(const std::string &name) {
   auto mesh = std::make_unique<Mesh>(name);
 
   std::vector<glm::vec3> positions;
@@ -52,7 +52,7 @@ std::unique_ptr<Mesh> MeshFactory::CreateSquare(const std::string& name) {
   return mesh;
 }
 
-std::unique_ptr<Mesh> MeshFactory::CreateCube(const std::string& name,
+std::unique_ptr<Mesh> MeshFactory::CreateCube(const std::string &name,
                                               int resolution) {
   auto mesh = std::make_unique<Mesh>(name);
 
@@ -214,13 +214,14 @@ std::unique_ptr<Mesh> MeshFactory::CreateCube(const std::string& name,
 
   for (int subdivide = 0; subdivide < resolution; subdivide++) {
     size_t nbVertex = positions.size();
-    int** mat = new int*[nbVertex];
+    int **mat = new int *[nbVertex];
 
     for (size_t i = 0; i < nbVertex; i++) {
       mat[i] = new int[nbVertex];
     }
     for (size_t i = 0; i < nbVertex; i++)
-      for (size_t j = 0; j < nbVertex; j++) mat[i][j] = -1;
+      for (size_t j = 0; j < nbVertex; j++)
+        mat[i][j] = -1;
 
     unsigned int stIndex;
     unsigned int sndIndex;
@@ -298,7 +299,8 @@ std::unique_ptr<Mesh> MeshFactory::CreateCube(const std::string& name,
       faces.push_back(thNewIndex);
     }
 
-    for (unsigned int i = 0; i < nbVertex; i++) delete[] mat[i];
+    for (unsigned int i = 0; i < nbVertex; i++)
+      delete[] mat[i];
     delete[] mat;
   }
 
@@ -310,7 +312,7 @@ std::unique_ptr<Mesh> MeshFactory::CreateCube(const std::string& name,
   return mesh;
 }
 
-std::unique_ptr<Mesh> MeshFactory::ExtractMesh(const aiMesh& mesh) {
+std::unique_ptr<Mesh> MeshFactory::ExtractMesh(const aiMesh &mesh) {
   auto extracted_mesh = std::make_unique<Mesh>(mesh.mName.C_Str());
 
   std::vector<glm::vec3> vertices;
@@ -365,4 +367,4 @@ std::unique_ptr<Mesh> MeshFactory::ExtractMesh(const aiMesh& mesh) {
   return extracted_mesh;
 }
 
-}  // namespace orangutan
+} // namespace orangutan

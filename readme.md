@@ -1,16 +1,14 @@
-## Installation (For Ubuntu)
+# Installation
 
-`git clone https://github.com/PierreLeBlond/Orangutan.git --recursive`
+## Arch linux
+
+`git clone https://github.com/PierreLeBlond/Orangutan.git --recursive` \
+or \
+`git clone https://github.com/PierreLeBlond/Orangutan.git` \
+`git submodule update --init --recursive`
 
 ```
-mkdir build
-cd build
-cmake ..
+cmake .
 make
+./Orangutan
 ```
-
-### Dependencies
-
-#### OpenGL
-
-Install `libgl1-mesa-dev` package.

@@ -24,7 +24,7 @@
 namespace orangutan {
 
 class Window : public nanogui::Window {
- public:
+public:
   Window(nanogui::Widget *parent, const std::string &label);
 
   void clear();
@@ -82,7 +82,7 @@ class Window : public nanogui::Window {
                    const std::vector<std::string> &textures,
                    const std::function<void(int)> &callback);
 
- private:
+private:
   // Positioning relative to parent window.
   // A negative value indicates that the property has no effect.
   // Right and bottom values take precedence over left and top respectively.
@@ -92,6 +92,6 @@ class Window : public nanogui::Window {
   int bottom_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_UI_WINDOW_H
+#endif // ORANGUTAN_UI_WINDOW_H

@@ -5,7 +5,6 @@
 #include <iostream>
 #include <memory>
 
-#include "core/debug.h"
 #include "stb_image.h"
 
 namespace orangutan {
@@ -18,5 +17,4 @@ CubeTexture::CubeTexture(const std::string &name, TextureHandle handle)
 unsigned int CubeTexture::get_size() const { return size_; }
 void CubeTexture::set_size(unsigned int size) { size_ = size; }
 
-}  // namespace orangutan
-
+} // namespace orangutan

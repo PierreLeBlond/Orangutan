@@ -82,4 +82,4 @@ Signal<unsigned int> &CubeRenderTarget::get_drawing_signal() {
   return drawing_signal_;
 }
 
-}  // namespace orangutan
+} // namespace orangutan

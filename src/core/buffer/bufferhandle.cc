@@ -10,7 +10,7 @@ BufferHandle::BufferHandle() : Handle() {
   setId(id);
 }
 
-BufferHandle::BufferHandle(BufferHandle&& handle) noexcept : Handle() {
+BufferHandle::BufferHandle(BufferHandle &&handle) noexcept : Handle() {
   setId(handle.getId());
   handle.setId(0);
 }
@@ -20,7 +20,7 @@ BufferHandle::~BufferHandle() noexcept {
   glDeleteBuffers(1, &id);
 }
 
-BufferHandle& BufferHandle::operator=(BufferHandle&& handle) {
+BufferHandle &BufferHandle::operator=(BufferHandle &&handle) {
   unsigned int id = getId();
   glDeleteBuffers(1, &id);
   setId(handle.getId());
@@ -28,5 +28,4 @@ BufferHandle& BufferHandle::operator=(BufferHandle&& handle) {
   return *this;
 }
 
-}  // namespace orangutan
-
+} // namespace orangutan

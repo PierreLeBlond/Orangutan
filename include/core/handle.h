@@ -4,14 +4,14 @@
 namespace orangutan {
 
 class Handle {
- public:
+public:
   [[nodiscard]] unsigned int getId() const;
   void setId(unsigned int id);
 
- private:
+private:
   unsigned int _id;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_CORE_HANDLE_H
+#endif // ORANGUTAN_CORE_HANDLE_H

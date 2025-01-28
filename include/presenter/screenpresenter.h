@@ -10,24 +10,24 @@
 namespace orangutan {
 
 class ScreenPresenter : public Presenter {
- public:
-  ScreenPresenter(nanogui::Screen* screen, Universe* universe);
+public:
+  ScreenPresenter(nanogui::Screen *screen, Universe *universe);
   void Init() override;
   void Draw();
   void Resize(unsigned int width, unsigned int height) override;
   void Update() override;
 
-  [[nodiscard]] nanogui::Screen* get_screen() const;
+  [[nodiscard]] nanogui::Screen *get_screen() const;
 
   void ConnectToResizeSignal(
       std::function<void(unsigned int, unsigned int)> handler);
 
- private:
-  nanogui::Screen* screen_;
+private:
+  nanogui::Screen *screen_;
 
   Signal<unsigned int, unsigned int> resize_signal_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_PRESENTER_SCREEN_PRESENTER_H
+#endif // ORANGUTAN_PRESENTER_SCREEN_PRESENTER_H

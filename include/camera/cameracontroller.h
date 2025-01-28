@@ -8,20 +8,20 @@
 namespace orangutan {
 
 class CameraController {
- public:
-  CameraController(Camera* camera);
+public:
+  CameraController(Camera *camera);
 
-  void set_camera(Camera* camera);
+  void set_camera(Camera *camera);
   void Update(double delta_time);
 
   void SetSize(unsigned int width, unsigned int height);
 
- private:
-  Camera* camera_;
+private:
+  Camera *camera_;
   unsigned int width_;
   unsigned int height_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_CAMERA_CAMERA_CONTROLLER_H
+#endif // ORANGUTAN_CAMERA_CAMERA_CONTROLLER_H

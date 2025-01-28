@@ -1,5 +1,14 @@
+bin/
 build/
 CMakeFiles/
+lib/
+cmake_install.cmake
+CMakeCache.txt
+compile_commands.json
+Makefile
+Orangutan
 .cache/
 .clang-tidy
 .ycm_extra_conf.py
+
+

@@ -16,7 +16,7 @@ struct CubeRenderTargetOptions {
 };
 
 class CubeRenderTarget : public CubeTexture {
- public:
+public:
   CubeRenderTarget(
       const std::string &name, int size,
       const CubeRenderTargetOptions &options = CubeRenderTargetOptions());
@@ -25,11 +25,11 @@ class CubeRenderTarget : public CubeTexture {
 
   [[nodiscard]] Signal<unsigned int> &get_drawing_signal();
 
- private:
+private:
   unsigned int frame_buffer_object_;
   unsigned int render_buffer_object_;
   Signal<unsigned int> drawing_signal_;
 };
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_TEXTURE_CUBE_RENDER_TARGET_H
+#endif // ORANGUTAN_TEXTURE_CUBE_RENDER_TARGET_H

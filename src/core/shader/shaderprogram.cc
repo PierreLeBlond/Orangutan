@@ -29,12 +29,12 @@ bool ShaderProgram::Link() {
 
   int infologLength = 0;
   int charsWritten = 0;
-  char* infoLog;
+  char *infoLog;
 
   glGetProgramiv(handle_.getId(), GL_INFO_LOG_LENGTH, &infologLength);
 
   if (infologLength > 1) {
-    infoLog = (char*)malloc(infologLength);
+    infoLog = (char *)malloc(infologLength);
     glGetProgramInfoLog(handle_.getId(), infologLength, &charsWritten, infoLog);
 
     std::cerr << "Link message :" << infoLog;
@@ -49,15 +49,15 @@ bool ShaderProgram::Detach(unsigned int id) {
   return true;
 }
 
-bool ShaderProgram::Build(const std::vector<std::string>& defines) {
+bool ShaderProgram::Build(const std::vector<std::string> &defines) {
   return Build(defines, vertex_shader_.GetPath(), fragment_shader_.GetPath(),
                geometry_shader_.GetPath());
 }
 
-bool ShaderProgram::Build(const std::vector<std::string>& defines,
-                          const std::string& vertex_shader_path,
-                          const std::string& fragment_shader_path,
-                          const std::string& geometry_shader_path) {
+bool ShaderProgram::Build(const std::vector<std::string> &defines,
+                          const std::string &vertex_shader_path,
+                          const std::string &fragment_shader_path,
+                          const std::string &geometry_shader_path) {
   // Check if shader are already attached, and if so detach them first
   int numberOfAttachedShader = 0;
   unsigned int shaders[MAX_ATTACHED_SHADER];
@@ -97,4 +97,4 @@ void ShaderProgram::Stop() const { glUseProgram(0); }
 
 unsigned int ShaderProgram::GetId() const { return handle_.getId(); }
 
-}  // namespace orangutan
+} // namespace orangutan

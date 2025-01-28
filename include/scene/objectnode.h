@@ -20,31 +20,31 @@ namespace orangutan {
 class LightNode;
 
 class ObjectNode : public Transformable, public Asset {
- public:
-  ObjectNode(const std::string& name);
+public:
+  ObjectNode(const std::string &name);
 
-  void set_object(Object* object);
-  void AddChild(ObjectNode* node);
+  void set_object(Object *object);
+  void AddChild(ObjectNode *node);
 
-  void Draw(const glm::mat4& viewMatrix, const glm::vec3& camera_position,
-            const glm::mat4& projectionMatrix,
-            const std::vector<Light*>& lights, const Ibl& ibl,
-            const Texture& brdf) const;
-  void DrawRecursively(const glm::mat4& viewMatrix,
-                       const glm::vec3& camera_position,
-                       const glm::mat4& projectionMatrix,
-                       const std::vector<Light*>& lights, const Ibl& ibl,
-                       const Texture& brdf) const;
-  void UpdateRecursively(const glm::mat4& mat);
+  void Draw(const glm::mat4 &viewMatrix, const glm::vec3 &camera_position,
+            const glm::mat4 &projectionMatrix,
+            const std::vector<Light *> &lights, const Ibl &ibl,
+            const Texture &brdf) const;
+  void DrawRecursively(const glm::mat4 &viewMatrix,
+                       const glm::vec3 &camera_position,
+                       const glm::mat4 &projectionMatrix,
+                       const std::vector<Light *> &lights, const Ibl &ibl,
+                       const Texture &brdf) const;
+  void UpdateRecursively(const glm::mat4 &mat);
   void AnimateRecursively();
 
-  [[nodiscard]] std::vector<ObjectNode*> get_childs() const { return childs_; }
+  [[nodiscard]] std::vector<ObjectNode *> get_childs() const { return childs_; }
 
-  [[nodiscard]] const Transform& get_transform() const { return transform_; }
+  [[nodiscard]] const Transform &get_transform() const { return transform_; }
 
   // Inherit from transformable
-  void SetParentMatrix(const glm::mat4& parent_matrix) override;
-  void set_model_matrix(const glm::mat4& model_matrix) override;
+  void SetParentMatrix(const glm::mat4 &parent_matrix) override;
+  void set_model_matrix(const glm::mat4 &model_matrix) override;
 
   void SetXRotation(float angle) override;
   void SetYRotation(float angle) override;
@@ -58,18 +58,18 @@ class ObjectNode : public Transformable, public Asset {
   void SetYPos(float y) override;
   void SetZPos(float z) override;
 
-  void set_position(const glm::vec3& position) override;
+  void set_position(const glm::vec3 &position) override;
 
-  void Move(glm::vec3& direction) override;
+  void Move(glm::vec3 &direction) override;
   void Animate() override;
   void Update() override;
 
- private:
-  Object* object_;
-  std::vector<ObjectNode*> childs_;
+private:
+  Object *object_;
+  std::vector<ObjectNode *> childs_;
   Transform transform_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_SCENE_OBJECT_NODE_H
+#endif // ORANGUTAN_SCENE_OBJECT_NODE_H

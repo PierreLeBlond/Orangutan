@@ -22,44 +22,43 @@
 namespace orangutan {
 
 class Material : public Asset {
- public:
-  Material(const std::string& name);
+public:
+  Material(const std::string &name);
 
-  void set_shader_wrapper(ShaderWrapper* shader_wrapper);
-  [[nodiscard]] ShaderWrapper& get_shader_wrapper() const;
+  void set_shader_wrapper(ShaderWrapper *shader_wrapper);
+  [[nodiscard]] ShaderWrapper &get_shader_wrapper() const;
 
-  template <class T>
-  void BindUniform(const Uniform<T>& uniform) const {
+  template <class T> void BindUniform(const Uniform<T> &uniform) const {
     std::vector<std::string> names = shader_wrapper_->GetUniformsName();
     shader_wrapper_->BindUniform(uniform.getName(), uniform.getValue());
   }
 
-  void BindUniforms(const Material& material, const glm::mat4& model_matrix,
-                    const glm::mat4& view_matrix,
-                    const glm::vec3& camera_position,
-                    const glm::mat4& projection_matrix,
-                    const std::vector<Light*>& lights, const Ibl& ibl,
-                    const Texture& brdf) const;
+  void BindUniforms(const Material &material, const glm::mat4 &model_matrix,
+                    const glm::mat4 &view_matrix,
+                    const glm::vec3 &camera_position,
+                    const glm::mat4 &projection_matrix,
+                    const std::vector<Light *> &lights, const Ibl &ibl,
+                    const Texture &brdf) const;
 
-  void BindLightUniforms(const std::vector<Light*>& lights,
-                         const glm::mat4& view_matrix, const Ibl& ibl,
-                         const Texture& brdf) const;
-  void BindSceneUniforms(const glm::mat4& model_matrix,
-                         const glm::mat4& view_matrix,
-                         const glm::vec3& camera_position,
-                         const glm::mat4& projection_matrix) const;
+  void BindLightUniforms(const std::vector<Light *> &lights,
+                         const glm::mat4 &view_matrix, const Ibl &ibl,
+                         const Texture &brdf) const;
+  void BindSceneUniforms(const glm::mat4 &model_matrix,
+                         const glm::mat4 &view_matrix,
+                         const glm::vec3 &camera_position,
+                         const glm::mat4 &projection_matrix) const;
   void BindMaterialUniforms() const;
 
   template <class T>
-  void CreateUniform(const std::string& name, const T& value = T(),
-                     const T& minValue = T(), const T& maxValue = T()) {
+  void CreateUniform(const std::string &name, const T &value = T(),
+                     const T &minValue = T(), const T &maxValue = T()) {
     Uniform<T> uniform(name, value, minValue, maxValue);
-    AddUniform(uniform);  // implement move semantic
+    AddUniform(uniform); // implement move semantic
   }
 
   template <class T>
-  void AddUniform(const Uniform<T>& uniform,
-                  std::unordered_map<std::string, Uniform<T>>& uniforms) {
+  void AddUniform(const Uniform<T> &uniform,
+                  std::unordered_map<std::string, Uniform<T>> &uniforms) {
     if (uniforms.count(uniform.getName()) == 1) {
       std::cerr << "Uniform with name " << uniform.getName()
                 << " already exist on material " << getName() << std::endl;
@@ -67,21 +66,21 @@ class Material : public Asset {
     uniforms.insert(std::make_pair(uniform.getName(), uniform));
   }
 
-  void AddUniform(const Uniform<float>& u);
-  void AddUniform(const Uniform<int>& u);
-  void AddUniform(const Uniform<unsigned int>& u);
-  void AddUniform(const Uniform<bool>& u);
-  void AddUniform(const Uniform<glm::vec3>& u);
-  void AddUniform(const Uniform<glm::vec4>& u);
-  void AddUniform(const Uniform<glm::mat3>& u);
-  void AddUniform(const Uniform<glm::mat4>& u);
+  void AddUniform(const Uniform<float> &u);
+  void AddUniform(const Uniform<int> &u);
+  void AddUniform(const Uniform<unsigned int> &u);
+  void AddUniform(const Uniform<bool> &u);
+  void AddUniform(const Uniform<glm::vec3> &u);
+  void AddUniform(const Uniform<glm::vec4> &u);
+  void AddUniform(const Uniform<glm::mat3> &u);
+  void AddUniform(const Uniform<glm::mat4> &u);
 
-  void AddTexture(const std::string& name, const Texture* texture);
-  void AddCubeTexture(const std::string& name, const CubeTexture* texture);
+  void AddTexture(const std::string &name, const Texture *texture);
+  void AddCubeTexture(const std::string &name, const CubeTexture *texture);
 
   template <class T>
-  void SetUniform(const std::string& name, const T& value,
-                  std::unordered_map<std::string, Uniform<T>>& uniforms) {
+  void SetUniform(const std::string &name, const T &value,
+                  std::unordered_map<std::string, Uniform<T>> &uniforms) {
     auto it = uniforms.find(name);
     if (it == uniforms.end()) {
       std::cerr << "Uniform " << name << " does not exists on material "
@@ -90,22 +89,22 @@ class Material : public Asset {
     it->second.setValue(value);
   }
 
-  void SetUniform(const std::string& name, float value);
-  void SetUniform(const std::string& name, int value);
-  void SetUniform(const std::string& name, unsigned int value);
-  void SetUniform(const std::string& name, bool value);
-  void SetUniform(const std::string& name, const glm::vec3& value);
-  void SetUniform(const std::string& name, const glm::vec4& value);
-  void SetUniform(const std::string& name, const glm::mat3& value);
-  void SetUniform(const std::string& name, const glm::mat4& value);
+  void SetUniform(const std::string &name, float value);
+  void SetUniform(const std::string &name, int value);
+  void SetUniform(const std::string &name, unsigned int value);
+  void SetUniform(const std::string &name, bool value);
+  void SetUniform(const std::string &name, const glm::vec3 &value);
+  void SetUniform(const std::string &name, const glm::vec4 &value);
+  void SetUniform(const std::string &name, const glm::mat3 &value);
+  void SetUniform(const std::string &name, const glm::mat4 &value);
 
-  void SetTexture(const std::string& name, const Texture* texture);
-  void SetCubeTexture(const std::string& name, const CubeTexture* texture);
+  void SetTexture(const std::string &name, const Texture *texture);
+  void SetCubeTexture(const std::string &name, const CubeTexture *texture);
 
   template <class T>
   void GetUniform(
-      const std::string& name, T& value,
-      const std::unordered_map<std::string, Uniform<T>>& uniforms) const {
+      const std::string &name, T &value,
+      const std::unordered_map<std::string, Uniform<T>> &uniforms) const {
     auto it = uniforms.find(name);
     if (it == uniforms.end()) {
       std::cerr << "Uniform " << name << " does not exists on material "
@@ -114,43 +113,43 @@ class Material : public Asset {
     value = it->second.getValue();
   }
 
-  void GetUniform(const std::string& name, float& value) const;
-  void GetUniform(const std::string& name, int& value) const;
-  void GetUniform(const std::string& name, unsigned int& value) const;
-  void GetUniform(const std::string& name, bool& value) const;
-  void GetUniform(const std::string& name, glm::vec3& value) const;
-  void GetUniform(const std::string& name, glm::vec4& value) const;
-  void GetUniform(const std::string& name, glm::mat3& value) const;
-  void GetUniform(const std::string& name, glm::mat4& value) const;
+  void GetUniform(const std::string &name, float &value) const;
+  void GetUniform(const std::string &name, int &value) const;
+  void GetUniform(const std::string &name, unsigned int &value) const;
+  void GetUniform(const std::string &name, bool &value) const;
+  void GetUniform(const std::string &name, glm::vec3 &value) const;
+  void GetUniform(const std::string &name, glm::vec4 &value) const;
+  void GetUniform(const std::string &name, glm::mat3 &value) const;
+  void GetUniform(const std::string &name, glm::mat4 &value) const;
 
-  [[nodiscard]] const Texture& GetTexture(const std::string& name) const;
-  [[nodiscard]] const CubeTexture& GetCubeTexture(
-      const std::string& name) const;
+  [[nodiscard]] const Texture &GetTexture(const std::string &name) const;
+  [[nodiscard]] const CubeTexture &
+  GetCubeTexture(const std::string &name) const;
 
-  [[nodiscard]] const std::unordered_map<std::string, Uniform<float>>&
+  [[nodiscard]] const std::unordered_map<std::string, Uniform<float>> &
   get_uniforms_1f() const;
-  [[nodiscard]] const std::unordered_map<std::string, Uniform<int>>&
+  [[nodiscard]] const std::unordered_map<std::string, Uniform<int>> &
   get_uniforms_1i() const;
-  [[nodiscard]] const std::unordered_map<std::string, Uniform<unsigned int>>&
+  [[nodiscard]] const std::unordered_map<std::string, Uniform<unsigned int>> &
   get_uniforms_1ui() const;
-  [[nodiscard]] const std::unordered_map<std::string, Uniform<bool>>&
+  [[nodiscard]] const std::unordered_map<std::string, Uniform<bool>> &
   get_uniforms_1b() const;
-  [[nodiscard]] const std::unordered_map<std::string, Uniform<glm::vec3>>&
+  [[nodiscard]] const std::unordered_map<std::string, Uniform<glm::vec3>> &
   get_uniforms_3f() const;
-  [[nodiscard]] const std::unordered_map<std::string, Uniform<glm::vec4>>&
+  [[nodiscard]] const std::unordered_map<std::string, Uniform<glm::vec4>> &
   get_uniforms_4f() const;
-  [[nodiscard]] const std::unordered_map<std::string, Uniform<glm::mat3>>&
+  [[nodiscard]] const std::unordered_map<std::string, Uniform<glm::mat3>> &
   get_uniforms_3x3() const;
-  [[nodiscard]] const std::unordered_map<std::string, Uniform<glm::mat4>>&
+  [[nodiscard]] const std::unordered_map<std::string, Uniform<glm::mat4>> &
   get_uniforms_4x4() const;
 
-  [[nodiscard]] const std::unordered_map<std::string, const Texture*>&
+  [[nodiscard]] const std::unordered_map<std::string, const Texture *> &
   get_textures() const;
-  [[nodiscard]] const std::unordered_map<std::string, const CubeTexture*>&
+  [[nodiscard]] const std::unordered_map<std::string, const CubeTexture *> &
   get_cube_textures() const;
 
- private:
-  ShaderWrapper* shader_wrapper_;
+private:
+  ShaderWrapper *shader_wrapper_;
 
   std::unordered_map<std::string, Uniform<float>> uniforms_1f_;
   std::unordered_map<std::string, Uniform<int>> uniforms_1i_;
@@ -161,10 +160,10 @@ class Material : public Asset {
   std::unordered_map<std::string, Uniform<glm::mat3>> uniforms_3x3_;
   std::unordered_map<std::string, Uniform<glm::mat4>> uniforms_4x4_;
 
-  std::unordered_map<std::string, const Texture*> textures_;
-  std::unordered_map<std::string, const CubeTexture*> cube_textures_;
+  std::unordered_map<std::string, const Texture *> textures_;
+  std::unordered_map<std::string, const CubeTexture *> cube_textures_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_MATERIAL_MATERIAL_H
+#endif // ORANGUTAN_MATERIAL_MATERIAL_H

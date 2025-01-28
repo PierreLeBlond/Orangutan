@@ -14,7 +14,6 @@ struct Ibl {
   std::unique_ptr<CubeTexture> radiance;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_TEXTURE_IBL_H
-
+#endif // ORANGUTAN_TEXTURE_IBL_H

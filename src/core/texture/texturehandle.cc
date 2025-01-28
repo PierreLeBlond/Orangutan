@@ -10,7 +10,7 @@ TextureHandle::TextureHandle() : Handle() {
   setId(id);
 }
 
-TextureHandle::TextureHandle(TextureHandle&& handle) noexcept : Handle() {
+TextureHandle::TextureHandle(TextureHandle &&handle) noexcept : Handle() {
   setId(handle.getId());
   handle.setId(0);
 }
@@ -20,7 +20,7 @@ TextureHandle::~TextureHandle() noexcept {
   glDeleteTextures(1, &id);
 }
 
-TextureHandle& TextureHandle::operator=(TextureHandle&& handle) {
+TextureHandle &TextureHandle::operator=(TextureHandle &&handle) {
   unsigned int id = getId();
   glDeleteTextures(1, &id);
   setId(handle.getId());
@@ -28,5 +28,4 @@ TextureHandle& TextureHandle::operator=(TextureHandle&& handle) {
   return *this;
 }
 
-}  // namespace orangutan
-
+} // namespace orangutan

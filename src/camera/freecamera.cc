@@ -9,7 +9,7 @@ namespace orangutan {
 const float kNear = 0.001f;
 const float kFar = 1000.0f;
 
-FreeCamera::FreeCamera(const std::string& name) : Camera(name) {}
+FreeCamera::FreeCamera(const std::string &name) : Camera(name) {}
 
 void FreeCamera::Update() {
   const float fovy = get_fovy();
@@ -22,7 +22,7 @@ void FreeCamera::Update() {
   set_model_matrix(glm::inverse(get_view_matrix()));
 }
 
-void FreeCamera::Move(glm::vec3& direction) {
+void FreeCamera::Move(glm::vec3 &direction) {
   const float speed = get_speed();
   glm::vec3 camera_direction = glm::vec3(get_transform().get_model_matrix() *
                                          glm::vec4(direction, 0.0f));
@@ -30,4 +30,4 @@ void FreeCamera::Move(glm::vec3& direction) {
   ObjectNode::Move(scaled_camera_direction);
 }
 
-}  // namespace orangutan
+} // namespace orangutan

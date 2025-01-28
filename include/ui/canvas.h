@@ -12,7 +12,7 @@
 namespace orangutan {
 
 class Canvas : public nanogui::Canvas {
- public:
+public:
   Canvas(nanogui::Widget *parent);
 
   void start();
@@ -37,7 +37,7 @@ class Canvas : public nanogui::Canvas {
   bool mouse_button_event(const nanogui::Vector2i &p, int button, bool down,
                           int modifiers) override;
 
- private:
+private:
   bool _draw;
   nanogui::Vector2i _lastMousePosition;
   bool _mouseIsPressed;
@@ -47,6 +47,6 @@ class Canvas : public nanogui::Canvas {
   Signal<> after_draw_signal_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_UI_CANVAS_H
+#endif // ORANGUTAN_UI_CANVAS_H

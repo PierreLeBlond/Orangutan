@@ -19,6 +19,7 @@ void ShaderWrapper::Build(const std::vector<std::string> &defines,
     // TODO: print explicit error
     std::cerr << "build error" << std::endl;
   }
+
   StoreAttributeLocation();
   StoreUniformLocation();
 }
@@ -58,7 +59,7 @@ void ShaderWrapper::StoreAttributeLocation() {
 
   for (int i = 0; i < nbOfAttributes; i++) {
     GLint results[3];
-    glGetProgramResourceiv(shader_program_.GetId(), GL_PROGRAM_INPUT, i, 4,
+    glGetProgramResourceiv(shader_program_.GetId(), GL_PROGRAM_INPUT, i, 3,
                            properties, 3, NULL, results);
     GLint nameBufSize = results[0] + 1;
     char *name = new char[nameBufSize];
@@ -181,4 +182,4 @@ unsigned int ShaderWrapper::GetProgramId() const {
   return shader_program_.GetId();
 }
 
-}  // namespace orangutan
+} // namespace orangutan

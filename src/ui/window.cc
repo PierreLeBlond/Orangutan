@@ -7,10 +7,7 @@
 namespace orangutan {
 
 Window::Window(nanogui::Widget *parent, const std::string &label)
-    : nanogui::Window(parent, label),
-      left_(0),
-      top_(0),
-      right_(-1),
+    : nanogui::Window(parent, label), left_(0), top_(0), right_(-1),
       bottom_(-1) {}
 
 void Window::clear() {
@@ -61,10 +58,11 @@ void Window::addTextures(nanogui::Widget *widget, NVGcontext *context,
   imagePanel->set_callback(callback);
 }
 
-nanogui::ComboBox *Window::addComboBox(
-    nanogui::Widget *widget, nanogui::Popup::Side side, const std::string &name,
-    const std::vector<std::string> &items, int id,
-    const std::function<void(int)> &callback) {
+nanogui::ComboBox *
+Window::addComboBox(nanogui::Widget *widget, nanogui::Popup::Side side,
+                    const std::string &name,
+                    const std::vector<std::string> &items, int id,
+                    const std::function<void(int)> &callback) {
   new nanogui::Label(widget, name, "sans-bold");
 
   nanogui::ComboBox *comboBox = new nanogui::ComboBox(widget, items);
@@ -75,5 +73,4 @@ nanogui::ComboBox *Window::addComboBox(
   }
 }
 
-}  // namespace orangutan
-
+} // namespace orangutan

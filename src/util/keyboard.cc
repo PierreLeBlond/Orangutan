@@ -13,9 +13,9 @@ Keyboard Keyboard::_instance;
 Keyboard::Keyboard() { _keyboard.resize(kNumberOfKeys, kReleased); }
 Keyboard::~Keyboard() = default;
 
-Keyboard& Keyboard::instance() { return _instance; }
+Keyboard &Keyboard::instance() { return _instance; }
 
-const std::vector<KeyState>& Keyboard::getKeyboard() const { return _keyboard; }
+const std::vector<KeyState> &Keyboard::getKeyboard() const { return _keyboard; }
 
 void Keyboard::setState(int key, KeyState state) {
   if (key > -1 && key < kNumberOfKeys)
@@ -31,4 +31,4 @@ KeyState Keyboard::getState(int key) const {
     return kUnknow;
 }
 
-}  // namespace orangutan
+} // namespace orangutan

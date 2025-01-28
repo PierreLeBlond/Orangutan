@@ -8,7 +8,7 @@
 
 namespace orangutan {
 
-TextureManager::TextureManager(Universe* universe, Canvas* canvas, Scene* scene)
+TextureManager::TextureManager(Universe *universe, Canvas *canvas, Scene *scene)
     : universe_(universe), canvas_(canvas), scene_(scene) {
   // There should always be a current item, unless the library is empty
   auto texture_names = universe_->get_texture_library().GetNames();
@@ -23,45 +23,45 @@ TextureManager::TextureManager(Universe* universe, Canvas* canvas, Scene* scene)
 }
 
 void TextureManager::GetTextureNames(
-    std::vector<std::string>& texture_names) const {
+    std::vector<std::string> &texture_names) const {
   texture_names = universe_->get_texture_library().GetNames();
 }
 
 void TextureManager::GetCubeTextureNames(
-    std::vector<std::string>& cube_texture_names) const {
+    std::vector<std::string> &cube_texture_names) const {
   cube_texture_names = universe_->get_cube_texture_library().GetNames();
 }
 
-void TextureManager::GetIblNames(std::vector<std::string>& ibl_names) const {
+void TextureManager::GetIblNames(std::vector<std::string> &ibl_names) const {
   ibl_names = universe_->get_ibl_library().GetNames();
 }
 
-const std::string& TextureManager::GetCurrentTextureName() const {
+const std::string &TextureManager::GetCurrentTextureName() const {
   return current_texture_name_;
 }
 
-const std::string& TextureManager::GetCurrentCubeTextureName() const {
+const std::string &TextureManager::GetCurrentCubeTextureName() const {
   return current_cube_texture_name_;
 }
 
-const std::string& TextureManager::GetCurrentIblName() const {
+const std::string &TextureManager::GetCurrentIblName() const {
   return current_ibl_name_;
 }
 
-void TextureManager::SetCurrentTexture(const std::string& name,
-                                       const std::string& source_handler_uuid) {
+void TextureManager::SetCurrentTexture(const std::string &name,
+                                       const std::string &source_handler_uuid) {
   current_texture_name_ = name;
   state_change_signal_.Emit(source_handler_uuid);
 }
 
 void TextureManager::SetCurrentCubeTexture(
-    const std::string& name, const std::string& source_handler_uuid) {
+    const std::string &name, const std::string &source_handler_uuid) {
   current_cube_texture_name_ = name;
   state_change_signal_.Emit(source_handler_uuid);
 }
 
-void TextureManager::SetCurrentIbl(const std::string& name,
-                                   const std::string& source_handler_uuid) {
+void TextureManager::SetCurrentIbl(const std::string &name,
+                                   const std::string &source_handler_uuid) {
   current_ibl_name_ = name;
   scene_->SetIbl(universe_->get_ibl_library().GetItemByName(current_ibl_name_));
   state_change_signal_.Emit(source_handler_uuid);
@@ -137,9 +137,9 @@ void TextureManager::HideCurrentIblIrradiance() {
   display_ibl_irradiance_handler_id_.clear();
 }
 
-void TextureManager::LoadDdsIbl(const std::string& name,
-                                const std::string& path,
-                                const std::string& source_handler_uuid) {
+void TextureManager::LoadDdsIbl(const std::string &name,
+                                const std::string &path,
+                                const std::string &source_handler_uuid) {
   std::string irradiance_filename = path + "/" + name + "_irradiance.dds";
   std::string radiance_filename = path + "/" + name + "_radiance.dds";
 
@@ -152,9 +152,9 @@ void TextureManager::LoadDdsIbl(const std::string& name,
   state_change_signal_.Emit(source_handler_uuid);
 }
 
-void TextureManager::LoadHdrIbl(const std::string& name,
-                                const std::string& filename,
-                                const std::string& source_handler_uuid) {
+void TextureManager::LoadHdrIbl(const std::string &name,
+                                const std::string &filename,
+                                const std::string &source_handler_uuid) {
   auto ibl = TextureFactory::ImportIBLFromHdr(name, filename);
   universe_->AddIbl(std::move(ibl));
 
@@ -163,9 +163,9 @@ void TextureManager::LoadHdrIbl(const std::string& name,
   state_change_signal_.Emit(source_handler_uuid);
 }
 
-void TextureManager::ExportDdsIbl(const std::string& name,
-                                  const std::string& path,
-                                  const std::string& source_handler_uuid) {
+void TextureManager::ExportDdsIbl(const std::string &name,
+                                  const std::string &path,
+                                  const std::string &source_handler_uuid) {
   std::string irradiance_filename = path + "/" + name + "_irradiance.dds";
   std::string radiance_filename = path + "/" + name + "_radiance.dds";
 
@@ -174,9 +174,9 @@ void TextureManager::ExportDdsIbl(const std::string& name,
       *universe_->get_ibl_library().GetItemByName(current_ibl_name_));
 }
 
-void TextureManager::ExportDdsRgbdIbl(const std::string& name,
-                                      const std::string& path,
-                                      const std::string& source_handler_uuid) {
+void TextureManager::ExportDdsRgbdIbl(const std::string &name,
+                                      const std::string &path,
+                                      const std::string &source_handler_uuid) {
   std::string irradiance_filename = path + "/" + name + "_rgbd_irradiance.dds";
   std::string radiance_filename = path + "/" + name + "_rgbd_radiance.dds";
 
@@ -188,8 +188,8 @@ void TextureManager::ExportDdsRgbdIbl(const std::string& name,
       convert_to_rgbd);
 }
 
-Signal<>& TextureManager::GetStateChangeSignal() {
+Signal<> &TextureManager::GetStateChangeSignal() {
   return state_change_signal_;
 }
 
-}  // namespace orangutan
+} // namespace orangutan

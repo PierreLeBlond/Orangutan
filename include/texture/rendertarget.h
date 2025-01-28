@@ -9,16 +9,16 @@
 namespace orangutan {
 
 class RenderTarget : public Texture {
- public:
+public:
   RenderTarget(const std::string &name, int width, int height);
   void Draw();
 
   [[nodiscard]] Signal<> &get_drawing_signal();
 
- private:
+private:
   unsigned int frame_buffer_object_;
   Signal<> drawing_signal_;
 };
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_TEXTURE_RENDER_TARGET_H
+#endif // ORANGUTAN_TEXTURE_RENDER_TARGET_H

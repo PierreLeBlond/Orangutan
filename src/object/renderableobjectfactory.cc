@@ -11,8 +11,8 @@ namespace orangutan {
 
 std::unique_ptr<RenderableObject>
 RenderableObjectFactory::CreateRenderableObject(
-    const Universe& universe, const std::string& name,
-    const std::string& mesh_name, const std::string& material_name) {
+    const Universe &universe, const std::string &name,
+    const std::string &mesh_name, const std::string &material_name) {
   auto mesh = universe.get_mesh_library().GetItemByName(mesh_name);
   auto material = universe.get_material_library().GetItemByName(material_name);
 
@@ -20,9 +20,9 @@ RenderableObjectFactory::CreateRenderableObject(
 }
 
 std::unique_ptr<RenderableObject>
-RenderableObjectFactory::CreateRenderableObject(const std::string& name,
-                                                Mesh* mesh,
-                                                Material* material) {
+RenderableObjectFactory::CreateRenderableObject(const std::string &name,
+                                                Mesh *mesh,
+                                                Material *material) {
   auto renderable_object = std::make_unique<RenderableObject>(name);
   renderable_object->set_mesh(mesh);
   renderable_object->set_material(material);
@@ -31,4 +31,4 @@ RenderableObjectFactory::CreateRenderableObject(const std::string& name,
   return renderable_object;
 }
 
-}  // namespace orangutan
+} // namespace orangutan

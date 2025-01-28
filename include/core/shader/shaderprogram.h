@@ -14,7 +14,7 @@
 namespace orangutan {
 
 class ShaderProgram {
- public:
+public:
   ShaderProgram();
 
   bool Build(const std::vector<std::string> &defines);
@@ -32,7 +32,7 @@ class ShaderProgram {
 
   [[nodiscard]] unsigned int GetId() const;
 
- private:
+private:
   ShaderProgramHandle handle_;
 
   Shader vertex_shader_;
@@ -40,6 +40,6 @@ class ShaderProgram {
   Shader geometry_shader_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_CORE_SHADER_SHADER_PROGRAM_H
+#endif // ORANGUTAN_CORE_SHADER_SHADER_PROGRAM_H

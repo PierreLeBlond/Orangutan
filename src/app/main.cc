@@ -16,8 +16,8 @@ int main(int argc, char *argv[]) {
 
   glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 
   // Global opengl options
   glEnable(
-      GL_TEXTURE_CUBE_MAP_SEAMLESS);  // Avoid seams when precomputing cube maps
+      GL_TEXTURE_CUBE_MAP_SEAMLESS); // Avoid seams when precomputing cube maps
 
   while (!glfwWindowShouldClose(window)) {
     // Check if any events have been activated (key pressed, mouse moved etc.)

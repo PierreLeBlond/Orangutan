@@ -9,20 +9,20 @@ namespace orangutan {
 enum KeyState { kReleased, kPressed, kUnknow };
 
 class Keyboard {
- public:
-  static Keyboard& instance();
+public:
+  static Keyboard &instance();
 
-  Keyboard(Keyboard& keyboard) = delete;
-  Keyboard(Keyboard&& keyboard) = delete;
-  void operator=(const Keyboard& keyboard) = delete;
-  void operator=(const Keyboard&& keyboard) = delete;
+  Keyboard(Keyboard &keyboard) = delete;
+  Keyboard(Keyboard &&keyboard) = delete;
+  void operator=(const Keyboard &keyboard) = delete;
+  void operator=(const Keyboard &&keyboard) = delete;
 
-  [[nodiscard]] const std::vector<KeyState>& getKeyboard() const;
+  [[nodiscard]] const std::vector<KeyState> &getKeyboard() const;
 
   void setState(int key, KeyState state);
   [[nodiscard]] KeyState getState(int key) const;
 
- private:
+private:
   static Keyboard _instance;
   std::vector<KeyState> _keyboard;
 
@@ -30,6 +30,6 @@ class Keyboard {
   ~Keyboard();
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_UTIL_KEYBOARD_H
+#endif // ORANGUTAN_UTIL_KEYBOARD_H

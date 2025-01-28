@@ -2,11 +2,9 @@
 
 #include <iostream>
 
-#include "core/debug.h"
-
 namespace orangutan {
 
-RenderableObject::RenderableObject(const std::string& name)
+RenderableObject::RenderableObject(const std::string &name)
     : Object(name), mesh_(nullptr), material_(nullptr) {}
 
 void RenderableObject::UpdateVertexArrayObject() {
@@ -79,11 +77,11 @@ void RenderableObject::UpdateVertexArrayObject() {
   }
 }
 
-void RenderableObject::Draw(const glm::mat4& viewMatrix,
-                            const glm::vec3& camera_position,
-                            const glm::mat4& projectionMatrix,
-                            const std::vector<Light*>& lights, const Ibl& ibl,
-                            const Texture& brdf) {
+void RenderableObject::Draw(const glm::mat4 &viewMatrix,
+                            const glm::vec3 &camera_position,
+                            const glm::mat4 &projectionMatrix,
+                            const std::vector<Light *> &lights, const Ibl &ibl,
+                            const Texture &brdf) {
   material_->BindUniforms(*material_, getTransform().get_world_matrix(),
                           viewMatrix, camera_position, projectionMatrix, lights,
                           ibl, brdf);
@@ -106,16 +104,16 @@ void RenderableObject::Draw() {
   material_->get_shader_wrapper().Stop();
 }
 
-const Mesh& RenderableObject::get_mesh() const { return *mesh_; }
-void RenderableObject::set_mesh(const Mesh* mesh) {
+const Mesh &RenderableObject::get_mesh() const { return *mesh_; }
+void RenderableObject::set_mesh(const Mesh *mesh) {
   if (mesh_ != nullptr) {
     std::cerr << "Renderable object already has a attached mesh" << std::endl;
   }
   mesh_ = mesh;
 }
 
-Material& RenderableObject::get_material() const { return *material_; }
-void RenderableObject::set_material(Material* material) {
+Material &RenderableObject::get_material() const { return *material_; }
+void RenderableObject::set_material(Material *material) {
   material_ = material;
 }
 
@@ -133,16 +131,16 @@ unsigned int RenderableObject::get_normal_array_id() const {
 
 unsigned int RenderableObject::get_uv_array_id() const { return uv_array_id_; }
 
-const Vao& RenderableObject::get_vao() const { return vao_; }
+const Vao &RenderableObject::get_vao() const { return vao_; }
 
-void RenderableObject::SetTexture(const std::string& name,
-                                  const Texture* texture) {
+void RenderableObject::SetTexture(const std::string &name,
+                                  const Texture *texture) {
   material_->SetTexture(name, texture);
 }
 
-void RenderableObject::SetCubeTexture(const std::string& name,
-                                      const CubeTexture* texture) {
+void RenderableObject::SetCubeTexture(const std::string &name,
+                                      const CubeTexture *texture) {
   material_->SetCubeTexture(name, texture);
 }
 
-}  // namespace orangutan
+} // namespace orangutan

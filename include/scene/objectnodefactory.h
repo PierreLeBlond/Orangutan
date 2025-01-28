@@ -9,11 +9,11 @@
 namespace orangutan {
 
 class ObjectNodeFactory {
- public:
-  static std::unique_ptr<ObjectNode> ExtractObjectNode(
-      const aiNode& assimp_node);
+public:
+  static std::unique_ptr<ObjectNode>
+  ExtractObjectNode(const aiNode &assimp_node);
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_OBJECT_SCENE_OBJECT_NODE_FACTORY_H
+#endif // ORANGUTAN_OBJECT_SCENE_OBJECT_NODE_FACTORY_H

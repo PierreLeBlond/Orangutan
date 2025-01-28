@@ -8,7 +8,7 @@ ShaderProgramHandle::ShaderProgramHandle() : Handle() {
   setId(glCreateProgram());
 }
 
-ShaderProgramHandle::ShaderProgramHandle(const ShaderProgramHandle& handle)
+ShaderProgramHandle::ShaderProgramHandle(const ShaderProgramHandle &handle)
     : Handle() {
   setId(glCreateProgram());
 
@@ -21,10 +21,11 @@ ShaderProgramHandle::ShaderProgramHandle(const ShaderProgramHandle& handle)
 
   int isLinked;
   glGetProgramiv(handle.getId(), GL_LINK_STATUS, &isLinked);
-  if (isLinked) glLinkProgram(getId());
+  if (isLinked)
+    glLinkProgram(getId());
 }
 
-ShaderProgramHandle::ShaderProgramHandle(ShaderProgramHandle&& handle) noexcept
+ShaderProgramHandle::ShaderProgramHandle(ShaderProgramHandle &&handle) noexcept
     : Handle() {
   setId(handle.getId());
   handle.setId(0);
@@ -34,20 +35,20 @@ ShaderProgramHandle::~ShaderProgramHandle() noexcept {
   glDeleteProgram(getId());
 }
 
-ShaderProgramHandle& ShaderProgramHandle::operator=(
-    const ShaderProgramHandle& handle) {
+ShaderProgramHandle &
+ShaderProgramHandle::operator=(const ShaderProgramHandle &handle) {
   glDeleteProgram(getId());
   ShaderProgramHandle tmp(handle);
   *this = std::move(tmp);
   return *this;
 }
 
-ShaderProgramHandle& ShaderProgramHandle::operator=(
-    ShaderProgramHandle&& handle) {
+ShaderProgramHandle &
+ShaderProgramHandle::operator=(ShaderProgramHandle &&handle) {
   glDeleteProgram(getId());
   setId(handle.getId());
   handle.setId(0);
   return *this;
 }
 
-}  // namespace orangutan
+} // namespace orangutan

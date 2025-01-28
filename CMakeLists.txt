@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.10.0)
 cmake_policy(SET CMP0048 NEW)
 PROJECT(Orangutan
   DESCRIPTION
@@ -21,8 +21,8 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 
 # glm
 set(glm_DIR ${PROJECT_SOURCE_DIR}/ext/glm)
-find_package(glm REQUIRED)
-set(GLM_LIBRARY glm::glm)
+find_package(GLM REQUIRED)
+include_directories(${GLM_INCLUDE_DIR})
 
 # nanogui
 # Disable building extras we won't need (pure C++ project)
@@ -45,6 +45,9 @@ set_property(TARGET glfw glfw_objects nanogui PROPERTY FOLDER "dependencies")
 find_package(assimp 4.1 QUIET)
 if (NOT assimp_FOUND)
     message(STATUS "Assimp not installed. Compiling from source.")
+    set(ASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT OFF)
+    set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF)
+    set(ASSIMP_BUILD_GLTF_IMPORTER ON)
     set(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
     set(ASSIMP_BUILD_TESTS OFF)
     add_subdirectory ("ext/assimp")
@@ -67,7 +70,6 @@ link_directories(
 
 set(LIBS
   ${LIBS}
-  ${GLM_LIBRARY}
   nanogui
   ${NANOGUI_EXTRA_LIBS}
   assimp

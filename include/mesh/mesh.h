@@ -15,20 +15,20 @@
 namespace orangutan {
 
 class Mesh : public Asset {
- public:
-  Mesh(const std::string& name);
+public:
+  Mesh(const std::string &name);
 
-  void SetPositions(const std::vector<glm::vec3>& positions);
-  void SetPositions(const std::vector<float>& positions);
-  void SetNormals(const std::vector<glm::vec3>& normals);
-  void SetNormals(const std::vector<float>& normals);
-  void SetTangents(const std::vector<glm::vec3>& tangents);
-  void SetTangents(const std::vector<float>& tangents);
-  void SetUvs(const std::vector<glm::vec2>& uvs);
-  void SetUvs(const std::vector<float>& uvs);
-  void SetUvs2(const std::vector<glm::vec2>& uvs_2);
-  void SetUvs2(const std::vector<float>& uvs_2);
-  void SetFaces(const std::vector<unsigned int>& faces);
+  void SetPositions(const std::vector<glm::vec3> &positions);
+  void SetPositions(const std::vector<float> &positions);
+  void SetNormals(const std::vector<glm::vec3> &normals);
+  void SetNormals(const std::vector<float> &normals);
+  void SetTangents(const std::vector<glm::vec3> &tangents);
+  void SetTangents(const std::vector<float> &tangents);
+  void SetUvs(const std::vector<glm::vec2> &uvs);
+  void SetUvs(const std::vector<float> &uvs);
+  void SetUvs2(const std::vector<glm::vec2> &uvs_2);
+  void SetUvs2(const std::vector<float> &uvs_2);
+  void SetFaces(const std::vector<unsigned int> &faces);
 
   [[nodiscard]] unsigned int GetNumberOfPositions() const;
   [[nodiscard]] unsigned int GetNumberOfNormals() const;
@@ -37,14 +37,14 @@ class Mesh : public Asset {
   [[nodiscard]] unsigned int GetNumberOfUvs2() const;
   [[nodiscard]] unsigned int GetNumberOfFaces() const;
 
-  [[nodiscard]] const std::vector<float>& GetPositions() const;
-  [[nodiscard]] const std::vector<float>& GetNormals() const;
-  [[nodiscard]] const std::vector<float>& GetTangents() const;
-  [[nodiscard]] const std::vector<float>& GetUvs() const;
-  [[nodiscard]] const std::vector<float>& GetUvs2() const;
-  [[nodiscard]] const std::vector<unsigned int>& GetFaces() const;
+  [[nodiscard]] const std::vector<float> &GetPositions() const;
+  [[nodiscard]] const std::vector<float> &GetNormals() const;
+  [[nodiscard]] const std::vector<float> &GetTangents() const;
+  [[nodiscard]] const std::vector<float> &GetUvs() const;
+  [[nodiscard]] const std::vector<float> &GetUvs2() const;
+  [[nodiscard]] const std::vector<unsigned int> &GetFaces() const;
 
- private:
+private:
   std::vector<float> positions_;
   std::vector<float> normals_;
   std::vector<float> tangents_;
@@ -53,6 +53,6 @@ class Mesh : public Asset {
   std::vector<unsigned int> faces_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_MESH_MESH_H
+#endif // ORANGUTAN_MESH_MESH_H

@@ -6,16 +6,16 @@
 namespace orangutan {
 
 class Asset {
- public:
+public:
   Asset(const std::string &name);
 
   [[nodiscard]] const std::string &getName() const;
   void setName(const std::string &name);
 
- private:
+private:
   std::string _name;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_OBJECT_ASSET_H
+#endif // ORANGUTAN_OBJECT_ASSET_H

@@ -1,6 +1,15 @@
 #include "ui/canvas.h"
 
+#include <cmath>
 #include <iostream>
+#include <nanogui/button.h>
+#include <nanogui/canvas.h>
+#include <nanogui/layout.h>
+#include <nanogui/renderpass.h>
+#include <nanogui/screen.h>
+#include <nanogui/window.h>
+
+constexpr float Pi = 3.14159f;
 
 namespace orangutan {
 
@@ -8,14 +17,11 @@ const float kRedBackgroundComponent = 0.3f;
 const float kBlueBackgroundComponent = 0.56f;
 
 Canvas::Canvas(nanogui::Widget *parent)
-    : nanogui::Canvas(parent),
-      _draw(false),
-      _mouseIsPressed(false),
-      _drawCall([]() {}),
-      mouse_move_signal_() {
+    : nanogui::Canvas(parent), _draw(false), _mouseIsPressed(false),
+      _drawCall([]() {}), mouse_move_signal_() {
   // nanogui::Color color(kRedBackgroundComponent, 0.0f,
   // kBlueBackgroundComponent,
-  nanogui::Color color(1.0f, 1.0f, 1.0f, 1.0f);
+  nanogui::Color color(0.1f, 0.1f, 0.9f, 1.0f);
 
   set_background_color(color);
   set_draw_border(true);
@@ -86,5 +92,4 @@ bool Canvas::mouse_button_event(const nanogui::Vector2i &p, int button,
   return true;
 }
 
-}  // namespace orangutan
-
+} // namespace orangutan

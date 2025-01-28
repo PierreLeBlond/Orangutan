@@ -183,21 +183,21 @@ void App::InitUniverse() {
   const std::vector<std::string> albedo_texture_defines{"ALBEDO_TEXTURE"};
 
   auto skybox_shader_wrapper = ShaderFactory::CreateShaderWrapper(
-      "skybox_wrapper", no_defines, "../resources/shaders/skybox.vert",
-      "../resources/shaders/skybox.frag");
+      "skybox_wrapper", no_defines, "./resources/shaders/skybox.vert",
+      "./resources/shaders/skybox.frag");
   universe_->AddShaderWrapper(std::move(skybox_shader_wrapper));
 
   auto pbr_shader_wrapper = ShaderFactory::CreateShaderWrapper(
-      "pbr", no_defines, "../resources/shaders/pbr.vert",
-      "../resources/shaders/pbr.frag");
+      "pbr", no_defines, "./resources/shaders/pbr.vert",
+      "./resources/shaders/pbr.frag");
   universe_->AddShaderWrapper(std::move(pbr_shader_wrapper));
 
   auto brdf = TextureFactory::CreateBrdfMap();
   universe_->AddTexture(std::move(brdf));
 
   auto room_ibl = TextureFactory::ImportIBLFromDds(
-      "room", "../resources/images/ibl/room/room_irradiance.dds",
-      "../resources/images/ibl/room/room_radiance.dds");
+      "room", "./resources/images/ibl/room/room_irradiance.dds",
+      "./resources/images/ibl/room/room_radiance.dds");
   universe_->AddIbl(std::move(room_ibl));
 
   Assimp::Importer importer;
@@ -206,12 +206,12 @@ void App::InitUniverse() {
 
   // Chess
   auto chess_node = universe_->AddObjectNode(SceneFactory::ImportSceneTree(
-      importer, *universe_, "chess", "../resources/meshes/chess.gltf"));
+      importer, *universe_, "chess", "./resources/meshes/chess.gltf"));
   scene_tree.AddChild(chess_node);
 
   // Spheres
   // auto sphere_node = universe_->AddObjectNode(SceneFactory::ImportSceneTree(
-  // importer, *universe_, "sphere", "../resources/meshes/spheres.gltf"));
+  //    importer, *universe_, "sphere", "./resources/meshes/spheres.gltf"));
   // scene_tree.AddChild(sphere_node);
 
   auto sky_material = MaterialFactory::CreateSkyboxMaterial();
@@ -269,4 +269,4 @@ void App::InitUniverse() {
   scene_->SetBrdf(universe_->get_texture_library().GetItemByName("brdf"));
 }
 
-}  // namespace orangutan
+} // namespace orangutan

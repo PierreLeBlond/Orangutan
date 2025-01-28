@@ -11,9 +11,9 @@
 namespace orangutan {
 
 class Transformable {
- public:
-  virtual void SetParentMatrix(const glm::mat4& parentMatrix) = 0;
-  virtual void set_model_matrix(const glm::mat4& modelMatrix) = 0;
+public:
+  virtual void SetParentMatrix(const glm::mat4 &parentMatrix) = 0;
+  virtual void set_model_matrix(const glm::mat4 &modelMatrix) = 0;
 
   virtual void SetXRotation(float angle) = 0;
   virtual void SetYRotation(float angle) = 0;
@@ -23,23 +23,23 @@ class Transformable {
   virtual void SetYScale(float scale) = 0;
   virtual void SetZScale(float scale) = 0;
 
-  virtual void set_position(const glm::vec3& position) = 0;
+  virtual void set_position(const glm::vec3 &position) = 0;
 
   virtual void SetXPos(float x) = 0;
   virtual void SetYPos(float y) = 0;
   virtual void SetZPos(float z) = 0;
 
-  virtual void Move(glm::vec3& direction) = 0;
+  virtual void Move(glm::vec3 &direction) = 0;
   virtual void Animate() = 0;
   virtual void Update() = 0;
 };
 
 class Transform : public Transformable {
- public:
+public:
   Transform();
 
-  [[nodiscard]] const glm::mat4& get_world_matrix() const;
-  [[nodiscard]] const glm::mat4& get_model_matrix() const;
+  [[nodiscard]] const glm::mat4 &get_world_matrix() const;
+  [[nodiscard]] const glm::mat4 &get_model_matrix() const;
 
   [[nodiscard]] inline float GetXPos() const { return position_.x; }
   [[nodiscard]] inline float GetYPos() const { return position_.y; }
@@ -54,8 +54,8 @@ class Transform : public Transformable {
   [[nodiscard]] const glm::vec4 GetDirection() const;
 
   // inherit from transformable
-  void SetParentMatrix(const glm::mat4& parent_matrix) override;
-  void set_model_matrix(const glm::mat4& model_matrix) override;
+  void SetParentMatrix(const glm::mat4 &parent_matrix) override;
+  void set_model_matrix(const glm::mat4 &model_matrix) override;
 
   void SetXRotation(float angle) override;
   void SetYRotation(float angle) override;
@@ -69,13 +69,13 @@ class Transform : public Transformable {
   void SetYPos(float y) override;
   void SetZPos(float z) override;
 
-  void set_position(const glm::vec3& position) override;
+  void set_position(const glm::vec3 &position) override;
 
-  void Move(glm::vec3& direction) override;
+  void Move(glm::vec3 &direction) override;
   void Animate() override;
   void Update() override;
 
- private:
+private:
   glm::mat4 world_matrix_;
   glm::mat4 model_matrix_;
   glm::mat4 translation_matrix_;
@@ -89,6 +89,6 @@ class Transform : public Transformable {
   glm::vec3 position_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_PHYSICS_TRANSFORMABLE_H
+#endif // ORANGUTAN_PHYSICS_TRANSFORMABLE_H

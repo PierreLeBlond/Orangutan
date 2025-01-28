@@ -9,26 +9,26 @@
 namespace orangutan {
 
 class Presenter {
- public:
-  Presenter(Universe* universe, NVGcontext* context);
+public:
+  Presenter(Universe *universe, NVGcontext *context);
 
   virtual void Init() = 0;
   virtual void Update() = 0;
   virtual void Resize(unsigned int width, unsigned int height) = 0;
 
-  [[nodiscard]] Universe& get_universe() const;
+  [[nodiscard]] Universe &get_universe() const;
 
-  [[nodiscard]] NVGcontext* get_context() const;
+  [[nodiscard]] NVGcontext *get_context() const;
 
-  [[nodiscard]] const std::vector<Presenter*>& get_child_presenters() const;
-  void AddChildPresenter(Presenter& child_presenter);
+  [[nodiscard]] const std::vector<Presenter *> &get_child_presenters() const;
+  void AddChildPresenter(Presenter &child_presenter);
 
- private:
-  Universe* universe_;
-  NVGcontext* context_;
-  std::vector<Presenter*> child_presenters_;
+private:
+  Universe *universe_;
+  NVGcontext *context_;
+  std::vector<Presenter *> child_presenters_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_PRESENTER_PRESENTER_H
+#endif // ORANGUTAN_PRESENTER_PRESENTER_H

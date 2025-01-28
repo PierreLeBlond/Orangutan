@@ -1,16 +1,15 @@
-
 #include "scene/objectnode.h"
 
 #include <iostream>
 
 namespace orangutan {
 
-ObjectNode::ObjectNode(const std::string& name)
+ObjectNode::ObjectNode(const std::string &name)
     : Asset(name), object_(nullptr) {}
 
-void ObjectNode::set_object(Object* object) { object_ = object; }
+void ObjectNode::set_object(Object *object) { object_ = object; }
 
-void ObjectNode::AddChild(ObjectNode* node) {
+void ObjectNode::AddChild(ObjectNode *node) {
   if (node == nullptr) {
     std::cerr << "node is nullptr" << std::endl;
     exit(0);
@@ -18,16 +17,16 @@ void ObjectNode::AddChild(ObjectNode* node) {
   childs_.push_back(node);
 }
 
-void ObjectNode::DrawRecursively(const glm::mat4& viewMatrix,
-                                 const glm::vec3& camera_position,
-                                 const glm::mat4& projectionMatrix,
-                                 const std::vector<Light*>& lights,
-                                 const Ibl& ibl, const Texture& brdf) const {
+void ObjectNode::DrawRecursively(const glm::mat4 &viewMatrix,
+                                 const glm::vec3 &camera_position,
+                                 const glm::mat4 &projectionMatrix,
+                                 const std::vector<Light *> &lights,
+                                 const Ibl &ibl, const Texture &brdf) const {
   if (object_ != nullptr) {
     object_->Draw(viewMatrix, camera_position, projectionMatrix, lights, ibl,
                   brdf);
   }
-  for (auto& _child : childs_) {
+  for (auto &_child : childs_) {
     _child->DrawRecursively(viewMatrix, camera_position, projectionMatrix,
                             lights, ibl, brdf);
   }
@@ -38,12 +37,12 @@ void ObjectNode::AnimateRecursively() {
   if (object_ != nullptr) {
     object_->Animate();
   }
-  for (auto& child : childs_) {
+  for (auto &child : childs_) {
     child->AnimateRecursively();
   }
 }
 
-void ObjectNode::UpdateRecursively(const glm::mat4& mat) {
+void ObjectNode::UpdateRecursively(const glm::mat4 &mat) {
   /*if(_object)
       _object->update();
   _transform.update();*/
@@ -51,17 +50,17 @@ void ObjectNode::UpdateRecursively(const glm::mat4& mat) {
   if (object_ != nullptr) {
     object_->SetParentMatrix(mat * transform_.get_model_matrix());
   }
-  for (auto& child : childs_) {
+  for (auto &child : childs_) {
     child->UpdateRecursively(mat * transform_.get_model_matrix());
   }
 }
 
 // inherit from Transformable
-void ObjectNode::SetParentMatrix(const glm::mat4& parent_matrix) {
+void ObjectNode::SetParentMatrix(const glm::mat4 &parent_matrix) {
   transform_.SetParentMatrix(parent_matrix);
 }
 
-void ObjectNode::set_model_matrix(const glm::mat4& model_matrix) {
+void ObjectNode::set_model_matrix(const glm::mat4 &model_matrix) {
   transform_.set_model_matrix(model_matrix);
 }
 
@@ -83,14 +82,14 @@ void ObjectNode::SetYPos(float y) { transform_.SetYPos(y); }
 
 void ObjectNode::SetZPos(float z) { transform_.SetZPos(z); }
 
-void ObjectNode::set_position(const glm::vec3& position) {
+void ObjectNode::set_position(const glm::vec3 &position) {
   transform_.set_position(position);
 }
 
-void ObjectNode::Move(glm::vec3& direction) { transform_.Move(direction); }
+void ObjectNode::Move(glm::vec3 &direction) { transform_.Move(direction); }
 
 void ObjectNode::Animate() { transform_.Animate(); }
 
 void ObjectNode::Update() { transform_.Update(); }
 
-}  // namespace orangutan
+} // namespace orangutan

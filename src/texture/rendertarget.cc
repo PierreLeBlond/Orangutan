@@ -51,4 +51,4 @@ void RenderTarget::Draw() {
 
 Signal<> &RenderTarget::get_drawing_signal() { return drawing_signal_; }
 
-}  // namespace orangutan
+} // namespace orangutan

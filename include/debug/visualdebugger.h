@@ -9,12 +9,12 @@
 namespace orangutan {
 
 class VisualDebugger {
- public:
-  void DisplayTexture(const Texture& texture);
-  void DisplayCubeTexture(const CubeTexture& cube_texture, int width,
+public:
+  void DisplayTexture(const Texture &texture);
+  void DisplayCubeTexture(const CubeTexture &cube_texture, int width,
                           int height);
 
- private:
+private:
   std::unique_ptr<ShaderWrapper> texture_displayer_shader_wrapper_;
   std::unique_ptr<Material> texture_displayer_material_;
   std::unique_ptr<Mesh> texture_displayer_mesh_;
@@ -25,6 +25,6 @@ class VisualDebugger {
   std::unique_ptr<RenderableObject> cube_texture_displayer_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_DEBUG_DEBUG_H
+#endif // ORANGUTAN_DEBUG_DEBUG_H

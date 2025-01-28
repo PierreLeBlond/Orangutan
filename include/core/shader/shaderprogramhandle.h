@@ -8,18 +8,17 @@
 namespace orangutan {
 
 class ShaderProgramHandle : public Handle {
- public:
+public:
   ShaderProgramHandle();
-  ShaderProgramHandle(const ShaderProgramHandle& handle);
-  ShaderProgramHandle(ShaderProgramHandle&& handle) noexcept;
+  ShaderProgramHandle(const ShaderProgramHandle &handle);
+  ShaderProgramHandle(ShaderProgramHandle &&handle) noexcept;
 
   ~ShaderProgramHandle() noexcept;
 
-  ShaderProgramHandle& operator=(const ShaderProgramHandle& handle);
-  ShaderProgramHandle& operator=(ShaderProgramHandle&& handle);
+  ShaderProgramHandle &operator=(const ShaderProgramHandle &handle);
+  ShaderProgramHandle &operator=(ShaderProgramHandle &&handle);
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_CORE_SHADER_SHADER_PROGRAM_HANDLE_H
-
+#endif // ORANGUTAN_CORE_SHADER_SHADER_PROGRAM_HANDLE_H

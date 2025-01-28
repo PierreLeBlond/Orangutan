@@ -17,12 +17,12 @@ enum O_Bool { O_FALSE = 0, O_TRUE = 1 };
 enum O_Buffer_Type { O_ARRAY_BUFFER = 0, O_ELEMENT_ARRAY_BUFFER = 1 };
 
 class Vao {
- public:
+public:
   void bind() const;
   void unbind() const;
 
   void bindIndexBuffer() const;
-  void fillIndexBuffer(size_t size, const void* data);
+  void fillIndexBuffer(size_t size, const void *data);
   void unbindIndexBuffer() const;
 
   void setNumberOfElements(int nbElements);
@@ -31,13 +31,13 @@ class Vao {
   void removeBuffer(unsigned int id);
 
   void bindBuffer(unsigned int id) const;
-  void fillBuffer(unsigned int id, size_t size, const void* data);
+  void fillBuffer(unsigned int id, size_t size, const void *data);
   void attribBuffer(unsigned int id, int attributeLocation, int size, int type);
   void unbindBuffer() const;
 
   void drawElements() const;
 
- private:
+private:
   VertexArrayHandle _vaoHandle;
   std::vector<BufferHandle> _bufferHandles;
   BufferHandle _indexBufferHandle;
@@ -45,6 +45,6 @@ class Vao {
   int _nbElements;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_CORE_VERTEX_VAO_H
+#endif // ORANGUTAN_CORE_VERTEX_VAO_H

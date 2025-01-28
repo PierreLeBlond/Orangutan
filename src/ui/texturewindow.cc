@@ -171,4 +171,4 @@ void TextureWindow::Update() {
   screen()->perform_layout();
 }
 
-}  // namespace orangutan
+} // namespace orangutan

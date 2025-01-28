@@ -6,7 +6,7 @@
 
 namespace orangutan {
 
-ScreenPresenter::ScreenPresenter(nanogui::Screen* screen, Universe* universe)
+ScreenPresenter::ScreenPresenter(nanogui::Screen *screen, Universe *universe)
     : Presenter(universe, screen->nvg_context()), screen_(screen) {}
 
 void ScreenPresenter::Init() {
@@ -21,14 +21,14 @@ void ScreenPresenter::Init() {
 
 void ScreenPresenter::Draw() {
   screen_->draw_setup();
-  screen_->clear();  // glClear
+  screen_->clear(); // glClear
   screen_->draw_contents();
   screen_->draw_widgets();
   screen_->draw_teardown();
 }
 
 void ScreenPresenter::Resize(unsigned int width, unsigned int height) {
-  for (auto& childPresenter : get_child_presenters()) {
+  for (auto &childPresenter : get_child_presenters()) {
     childPresenter->Resize(width, height);
   }
 
@@ -38,7 +38,7 @@ void ScreenPresenter::Resize(unsigned int width, unsigned int height) {
 }
 
 void ScreenPresenter::Update() {
-  for (auto& childPresenter : get_child_presenters()) {
+  for (auto &childPresenter : get_child_presenters()) {
     childPresenter->Update();
   }
 
@@ -50,6 +50,6 @@ void ScreenPresenter::ConnectToResizeSignal(
   resize_signal_.Connect(handler);
 }
 
-nanogui::Screen* ScreenPresenter::get_screen() const { return screen_; }
+nanogui::Screen *ScreenPresenter::get_screen() const { return screen_; }
 
-}  // namespace orangutan
+} // namespace orangutan

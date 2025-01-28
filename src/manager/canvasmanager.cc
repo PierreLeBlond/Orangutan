@@ -3,15 +3,15 @@
 #include <memory>
 #include <new>
 
+constexpr float Pi = 3.14159f;
+
 namespace orangutan {
 
-CanvasManager::CanvasManager(Canvas* canvas, Camera* camera, Scene* scene)
-    : canvas_(canvas),
-      camera_(camera),
-      camera_controller_(camera_),
-      scene_(scene),
-      last_update_time_(glfwGetTime()) {
-  canvas_->get_mouse_move_signal().Connect([&](glm::vec2& displacement_vector) {
+CanvasManager::CanvasManager(Canvas *canvas, Camera *camera, Scene *scene)
+    : canvas_(canvas), camera_(camera), camera_controller_(camera_),
+      scene_(scene), last_update_time_(glfwGetTime()) {
+
+  canvas_->get_mouse_move_signal().Connect([&](glm::vec2 &displacement_vector) {
     float yaw_angle = displacement_vector.x * glm::pi<float>();
     float pitch_angle = displacement_vector.y * glm::pi<float>();
     camera_->Pitch(pitch_angle);
@@ -44,4 +44,4 @@ void CanvasManager::Resize(unsigned int width, unsigned int height) {
   camera_controller_.SetSize(width, height);
 }
 
-}  // namespace orangutan
+} // namespace orangutan

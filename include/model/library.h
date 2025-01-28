@@ -8,40 +8,36 @@
 
 namespace orangutan {
 
-template <class T>
-class Library {
- public:
-  std::vector<T*> get_items() const;
+template <class T> class Library {
+public:
+  std::vector<T *> get_items() const;
   std::vector<std::string> GetNames() const;
 
-  T* GetItemByName(const std::string& name) const;
+  T *GetItemByName(const std::string &name) const;
 
-  T* AddItem(const std::string& name, std::unique_ptr<T> item);
+  T *AddItem(const std::string &name, std::unique_ptr<T> item);
 
- private:
+private:
   std::unordered_map<std::string, std::unique_ptr<T>> items_;
 };
 
-template <class T>
-std::vector<T*> Library<T>::get_items() const {
-  std::vector<T*> items;
-  for (auto& item : items_) {
+template <class T> std::vector<T *> Library<T>::get_items() const {
+  std::vector<T *> items;
+  for (auto &item : items_) {
     items.push_back(item.second.get());
   }
   return items;
 }
 
-template <class T>
-std::vector<std::string> Library<T>::GetNames() const {
+template <class T> std::vector<std::string> Library<T>::GetNames() const {
   std::vector<std::string> items;
-  for (auto& item : items_) {
+  for (auto &item : items_) {
     items.push_back(item.first);
   }
   return items;
 }
 
-template <class T>
-T* Library<T>::GetItemByName(const std::string& name) const {
+template <class T> T *Library<T>::GetItemByName(const std::string &name) const {
   auto iterator = items_.find(name);
   if (iterator == items_.end()) {
     return NULL;
@@ -50,7 +46,7 @@ T* Library<T>::GetItemByName(const std::string& name) const {
 }
 
 template <class T>
-T* Library<T>::AddItem(const std::string& name, std::unique_ptr<T> item) {
+T *Library<T>::AddItem(const std::string &name, std::unique_ptr<T> item) {
   if (items_.count(name) > 0) {
     std::cerr << "Library::AddItem : Item with name " << name
               << " already exists" << std::endl;
@@ -59,6 +55,6 @@ T* Library<T>::AddItem(const std::string& name, std::unique_ptr<T> item) {
   return items_.at(name).get();
 }
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_MODEL_LIBRARY_H
+#endif // ORANGUTAN_MODEL_LIBRARY_H

@@ -8,13 +8,13 @@
 namespace orangutan {
 
 class MaterialFactory {
- public:
-  static std::unique_ptr<Material> CreatePbrMaterial(const std::string& name);
+public:
+  static std::unique_ptr<Material> CreatePbrMaterial(const std::string &name);
   static std::unique_ptr<Material> CreateSkyboxMaterial();
-  static std::unique_ptr<Material> ExtractMaterial(Universe& universe,
-                                                   aiMaterial& material);
+  static std::unique_ptr<Material> ExtractMaterial(Universe &universe,
+                                                   aiMaterial &material);
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_MATERIAL_MATERIAL_FACTORY
+#endif // ORANGUTAN_MATERIAL_MATERIAL_FACTORY

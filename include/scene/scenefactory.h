@@ -11,19 +11,19 @@
 namespace orangutan {
 
 class SceneFactory {
- public:
-  static std::unique_ptr<ObjectNode> ImportSceneTree(Assimp::Importer& importer,
-                                                     Universe& universe,
-                                                     const std::string& name,
-                                                     const std::string& url);
+public:
+  static std::unique_ptr<ObjectNode> ImportSceneTree(Assimp::Importer &importer,
+                                                     Universe &universe,
+                                                     const std::string &name,
+                                                     const std::string &url);
 
- private:
-  static std::unique_ptr<ObjectNode> ExtractSceneTree(Universe& universe,
-                                                      const aiScene& scene,
-                                                      const aiNode& node);
-  static void CleanAssimpScene(const aiScene* assimp_scene);
+private:
+  static std::unique_ptr<ObjectNode> ExtractSceneTree(Universe &universe,
+                                                      const aiScene &scene,
+                                                      const aiNode &node);
+  static void CleanAssimpScene(const aiScene *assimp_scene);
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_OBJECT_SCENE_SCENE_FACTORY_H
+#endif // ORANGUTAN_OBJECT_SCENE_SCENE_FACTORY_H

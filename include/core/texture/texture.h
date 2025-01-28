@@ -9,7 +9,7 @@
 namespace orangutan {
 
 class Texture : public Asset {
- public:
+public:
   Texture(const std::string &name);
   Texture(const std::string &name, TextureHandle handle);
 
@@ -25,13 +25,13 @@ class Texture : public Asset {
   [[nodiscard]] unsigned int get_height() const;
   void set_height(unsigned int height);
 
- private:
+private:
   unsigned int width_;
   unsigned int height_;
   TextureHandle _handle;
   std::string _path;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_CORE_TEXTURE_TEXTURE_H
+#endif // ORANGUTAN_CORE_TEXTURE_TEXTURE_H

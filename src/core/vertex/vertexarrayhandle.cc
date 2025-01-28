@@ -10,7 +10,7 @@ VertexArrayHandle::VertexArrayHandle() : Handle() {
   setId(id);
 }
 
-VertexArrayHandle::VertexArrayHandle(VertexArrayHandle&& handle) noexcept
+VertexArrayHandle::VertexArrayHandle(VertexArrayHandle &&handle) noexcept
     : Handle() {
   setId(handle.getId());
   handle.setId(0);
@@ -21,7 +21,7 @@ VertexArrayHandle::~VertexArrayHandle() noexcept {
   glDeleteVertexArrays(1, &id);
 }
 
-VertexArrayHandle& VertexArrayHandle::operator=(VertexArrayHandle&& handle) {
+VertexArrayHandle &VertexArrayHandle::operator=(VertexArrayHandle &&handle) {
   unsigned int id = getId();
   glDeleteVertexArrays(1, &id);
   setId(handle.getId());
@@ -29,4 +29,4 @@ VertexArrayHandle& VertexArrayHandle::operator=(VertexArrayHandle&& handle) {
   return *this;
 }
 
-}  // namespace orangutan
+} // namespace orangutan

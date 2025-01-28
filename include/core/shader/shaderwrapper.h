@@ -20,7 +20,7 @@
 namespace orangutan {
 
 class ShaderWrapper : public Asset {
- public:
+public:
   ShaderWrapper(const std::string &name);
 
   void Build(const std::vector<std::string> &defines,
@@ -76,7 +76,7 @@ class ShaderWrapper : public Asset {
 
   [[nodiscard]] unsigned int GetProgramId() const;
 
- private:
+private:
   ShaderProgram shader_program_;
 
   std::unordered_map<std::string, int> uniform_locations_;
@@ -87,6 +87,6 @@ class ShaderWrapper : public Asset {
   bool AssertUniformExists(const std::string &name) const;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_CORE_SHADER_SHADER_WRAPPER_H
+#endif // ORANGUTAN_CORE_SHADER_SHADER_WRAPPER_H

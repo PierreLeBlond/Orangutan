@@ -19,38 +19,30 @@ const glm::vec3 kDefaultYaw = glm::vec3(0.0f, 1.0f, 0.0f);
 const glm::vec3 kDefaultPitch = glm::vec3(1.0f, 0.0f, 0.0f);
 const glm::vec3 kDefaultRoll = glm::vec3(0.0f, 0.0f, 1.0f);
 
-Camera::Camera(const std::string& name)
-    : ObjectNode(name),
-      fovy_(kDefaultFovy),
-      aspect_ratio_(1.0f),
-      view_matrix_(glm::mat4(0.0f)),
-      projection_matrix_(glm::mat4(0.0f)),
-      focus_point_(glm::vec3(0.0f, 0.0f, 0.0f)),
-      yaw_angle_(0.0f),
-      pitch_angle_(0.0f),
-      roll_angle_(0.0f),
-      yaw_(kDefaultYaw),
-      pitch_(kDefaultPitch),
-      roll_(kDefaultRoll),
-      speed_(1.0f) {
+Camera::Camera(const std::string &name)
+    : ObjectNode(name), fovy_(kDefaultFovy), aspect_ratio_(1.0f),
+      view_matrix_(glm::mat4(0.0f)), projection_matrix_(glm::mat4(0.0f)),
+      focus_point_(glm::vec3(0.0f, 0.0f, 0.0f)), yaw_angle_(0.0f),
+      pitch_angle_(0.0f), roll_angle_(0.0f), yaw_(kDefaultYaw),
+      pitch_(kDefaultPitch), roll_(kDefaultRoll), speed_(1.0f) {
   // Focus();
   UpdateYawPitchRoll();
 }
 
-const glm::mat4& Camera::get_view_matrix() const { return view_matrix_; }
-void Camera::set_view_matrix(const glm::mat4& view_matrix) {
+const glm::mat4 &Camera::get_view_matrix() const { return view_matrix_; }
+void Camera::set_view_matrix(const glm::mat4 &view_matrix) {
   view_matrix_ = view_matrix;
 }
 
-const glm::mat4& Camera::get_projection_matrix() const {
+const glm::mat4 &Camera::get_projection_matrix() const {
   return projection_matrix_;
 }
-void Camera::set_projection_matrix(const glm::mat4& projection_matrix) {
+void Camera::set_projection_matrix(const glm::mat4 &projection_matrix) {
   projection_matrix_ = projection_matrix;
 }
 
-const glm::vec3& Camera::get_focus_point() const { return focus_point_; }
-void Camera::set_focus_point(const glm::vec3& focus_point) {
+const glm::vec3 &Camera::get_focus_point() const { return focus_point_; }
+void Camera::set_focus_point(const glm::vec3 &focus_point) {
   focus_point_ = focus_point;
 }
 void Camera::set_focus_object(std::shared_ptr<Object> focus_object) {
@@ -118,7 +110,7 @@ void Camera::UpdateYawPitchRoll() {
   pitch_ = glm::cross(yaw_, roll_);
 }
 
-const glm::vec3& Camera::get_pitch() const { return pitch_; }
+const glm::vec3 &Camera::get_pitch() const { return pitch_; }
 void Camera::Pitch(float pitch_angle) {
   pitch_angle_ = pitch_angle_ + pitch_angle;
   pitch_angle_ =
@@ -127,16 +119,16 @@ void Camera::Pitch(float pitch_angle) {
   UpdateYawPitchRoll();
 }
 
-const glm::vec3& Camera::get_yaw() const { return yaw_; }
+const glm::vec3 &Camera::get_yaw() const { return yaw_; }
 void Camera::Yaw(float yawAngle) {
   yaw_angle_ = fmod(yaw_angle_ + yawAngle, 2.0f * glm::pi<float>());
   UpdateYawPitchRoll();
 }
 
-const glm::vec3& Camera::get_roll() const { return roll_; }
+const glm::vec3 &Camera::get_roll() const { return roll_; }
 void Camera::Roll(float rollAngle) {
   roll_angle_ = fmod(roll_angle_ + rollAngle, 2.0f * glm::pi<float>());
   UpdateYawPitchRoll();
 }
 
-}  // namespace orangutan
+} // namespace orangutan

@@ -14,7 +14,7 @@ const std::unordered_map<int, KeyState> kGlfwActionToKeyState = {
     {GLFW_REPEAT, kPressed},
     {GLFW_KEY_UNKNOWN, kUnknow}};
 
-Screen::Screen(GLFWwindow* window) : nanogui::Screen() {
+Screen::Screen(GLFWwindow *window) : nanogui::Screen() {
   initialize(window, true);
 }
 
@@ -24,4 +24,4 @@ bool Screen::keyboard_event(int key, int scancode, int action, int modifiers) {
   return true;
 }
 
-}  // namespace orangutan
+} // namespace orangutan

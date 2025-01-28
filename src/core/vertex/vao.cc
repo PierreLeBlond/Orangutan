@@ -1,4 +1,5 @@
 #include "core/vertex/vao.h"
+#include "core/debug.h"
 
 #include <nanogui/opengl.h>
 
@@ -15,7 +16,7 @@ void Vao::bindIndexBuffer() const {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBufferHandle.getId());
 }
 
-void Vao::fillIndexBuffer(size_t size, const void* data) {
+void Vao::fillIndexBuffer(size_t size, const void *data) {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBufferHandle.getId());
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -41,7 +42,7 @@ void Vao::bindBuffer(unsigned int id) const {
   glBindBuffer(GL_ARRAY_BUFFER, _bufferHandles.at(id).getId());
 }
 
-void Vao::fillBuffer(unsigned int id, size_t size, const void* data) {
+void Vao::fillBuffer(unsigned int id, size_t size, const void *data) {
   bindBuffer(id);
   glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
   unbindBuffer();
@@ -52,15 +53,15 @@ void Vao::attribBuffer(unsigned int id, int attributeLocation, int size,
   bind();
   unsigned int t;
   switch (type) {
-    case O_FLOAT:
-      t = GL_FLOAT;
-      break;
-    case O_INT:
-      t = GL_INT;
-      break;
-    default:
-      t = GL_FLOAT;
-      break;
+  case O_FLOAT:
+    t = GL_FLOAT;
+    break;
+  case O_INT:
+    t = GL_INT;
+    break;
+  default:
+    t = GL_FLOAT;
+    break;
   }
   glEnableVertexAttribArray(attributeLocation);
   bindBuffer(id);
@@ -74,8 +75,9 @@ void Vao::unbindBuffer() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
 
 void Vao::drawElements() const {
   bind();
-  glDrawElements(GL_TRIANGLES, _nbElements, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+  GL_CHECK_ERROR(glDrawElements(GL_TRIANGLES, _nbElements, GL_UNSIGNED_INT,
+                                BUFFER_OFFSET(0)));
   unbind();
 }
 
-}  // namespace orangutan
+} // namespace orangutan

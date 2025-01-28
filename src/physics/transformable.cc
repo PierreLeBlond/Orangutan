@@ -10,16 +10,10 @@ const glm::vec3 kNormalizedRightVector = glm::vec3(1.0f, 0.0f, 0.0f);
 const glm::vec3 kNormalizedForwardVector = glm::vec3(0.0f, 0.0f, 1.0f);
 
 Transform::Transform()
-    : world_matrix_(1.0f),
-      model_matrix_(1.0f),
-      translation_matrix_(1.0f),
-      x_scale_matrix_(1.0f),
-      y_scale_matrix_(1.0f),
-      z_scale_matrix_(1.0f),
-      x_rotation_matrix_(1.0f),
-      y_rotation_matrix_(1.0f),
-      z_rotation_matrix_(1.0f),
-      position_(1.0f) {}
+    : world_matrix_(1.0f), model_matrix_(1.0f), translation_matrix_(1.0f),
+      x_scale_matrix_(1.0f), y_scale_matrix_(1.0f), z_scale_matrix_(1.0f),
+      x_rotation_matrix_(1.0f), y_rotation_matrix_(1.0f),
+      z_rotation_matrix_(1.0f), position_(1.0f) {}
 
 const glm::mat4 &Transform::get_world_matrix() const { return world_matrix_; }
 const glm::mat4 &Transform::get_model_matrix() const { return model_matrix_; }
@@ -105,4 +99,4 @@ void Transform::Update() {
                   y_scale_matrix_ * z_scale_matrix_;
 }
 
-}  // namespace orangutan
+} // namespace orangutan

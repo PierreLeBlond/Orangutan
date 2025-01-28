@@ -17,6 +17,6 @@ enum shaderProgramType {
   GAUSSIANBLURFILTER
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_UTIL_UTIL_H
+#endif // ORANGUTAN_UTIL_UTIL_H

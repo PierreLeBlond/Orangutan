@@ -14,21 +14,21 @@ namespace orangutan {
 class Light;
 
 class Object : public Asset, public Transformable {
- public:
-  Object(const std::string& name);
+public:
+  Object(const std::string &name);
 
-  [[nodiscard]] const Transform& getTransform() const;
-  void setTransform(const Transform& transform);
+  [[nodiscard]] const Transform &getTransform() const;
+  void setTransform(const Transform &transform);
 
-  virtual void Draw(const glm::mat4& viewMatrix,
-                    const glm::vec3& camera_position,
-                    const glm::mat4& projectionMatrix,
-                    const std::vector<Light*>& lights, const Ibl& ibl,
-                    const Texture& brdf);
+  virtual void Draw(const glm::mat4 &viewMatrix,
+                    const glm::vec3 &camera_position,
+                    const glm::mat4 &projectionMatrix,
+                    const std::vector<Light *> &lights, const Ibl &ibl,
+                    const Texture &brdf);
 
   // Inherit from transformable
-  void SetParentMatrix(const glm::mat4& parent_matrix) override;
-  void set_model_matrix(const glm::mat4& model_matrix) override;
+  void SetParentMatrix(const glm::mat4 &parent_matrix) override;
+  void set_model_matrix(const glm::mat4 &model_matrix) override;
 
   void SetXRotation(float angle) override;
   void SetYRotation(float angle) override;
@@ -42,16 +42,16 @@ class Object : public Asset, public Transformable {
   void SetYPos(float y) override;
   void SetZPos(float z) override;
 
-  void set_position(const glm::vec3& position) override;
+  void set_position(const glm::vec3 &position) override;
 
-  void Move(glm::vec3& position) override;
+  void Move(glm::vec3 &position) override;
   void Animate() override;
   void Update() override;
 
- private:
+private:
   Transform _transform;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_OBJECT_OBJECT_H
+#endif // ORANGUTAN_OBJECT_OBJECT_H

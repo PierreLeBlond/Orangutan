@@ -6,17 +6,17 @@
 namespace orangutan {
 
 class TextureHandle : public Handle {
- public:
+public:
   TextureHandle();
-  TextureHandle(const TextureHandle& handle) = delete;
-  TextureHandle(TextureHandle&& handle) noexcept;
+  TextureHandle(const TextureHandle &handle) = delete;
+  TextureHandle(TextureHandle &&handle) noexcept;
 
   ~TextureHandle() noexcept;
 
-  TextureHandle& operator=(const TextureHandle& handle) = delete;
-  TextureHandle& operator=(TextureHandle&& handle);
+  TextureHandle &operator=(const TextureHandle &handle) = delete;
+  TextureHandle &operator=(TextureHandle &&handle);
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // TEXTURE_HANDLE_H
+#endif // TEXTURE_HANDLE_H

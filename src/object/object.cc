@@ -4,26 +4,26 @@
 
 namespace orangutan {
 
-Object::Object(const std::string& name) : Asset(name) {}
+Object::Object(const std::string &name) : Asset(name) {}
 
-const Transform& Object::getTransform() const { return _transform; }
+const Transform &Object::getTransform() const { return _transform; }
 
-void Object::setTransform(const Transform& transform) {
+void Object::setTransform(const Transform &transform) {
   _transform = transform;
 }
 
-void Object::Draw(const glm::mat4& viewMatrix, const glm::vec3& camera_position,
-                  const glm::mat4& projectionMatrix,
-                  const std::vector<Light*>& lights, const Ibl& ibl,
-                  const Texture& brdf) {
+void Object::Draw(const glm::mat4 &viewMatrix, const glm::vec3 &camera_position,
+                  const glm::mat4 &projectionMatrix,
+                  const std::vector<Light *> &lights, const Ibl &ibl,
+                  const Texture &brdf) {
   // By default, nothing to draw
 }
 
-void Object::SetParentMatrix(const glm::mat4& parent_matrix) {
+void Object::SetParentMatrix(const glm::mat4 &parent_matrix) {
   _transform.SetParentMatrix(parent_matrix);
 }
 
-void Object::set_model_matrix(const glm::mat4& model_matrix) {
+void Object::set_model_matrix(const glm::mat4 &model_matrix) {
   _transform.set_model_matrix(model_matrix);
 }
 
@@ -45,14 +45,14 @@ void Object::SetYPos(float y) { _transform.SetYPos(y); }
 
 void Object::SetZPos(float z) { _transform.SetZPos(z); }
 
-void Object::set_position(const glm::vec3& position) {
+void Object::set_position(const glm::vec3 &position) {
   _transform.set_position(position);
 }
 
-void Object::Move(glm::vec3& direction) { _transform.Move(direction); }
+void Object::Move(glm::vec3 &direction) { _transform.Move(direction); }
 
 void Object::Animate() { _transform.Animate(); }
 
 void Object::Update() { _transform.Update(); }
 
-}  // namespace orangutan
+} // namespace orangutan

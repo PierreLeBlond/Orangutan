@@ -9,16 +9,15 @@
 
 namespace orangutan {
 
-template <typename... Arguments>
-class Signal {
+template <typename... Arguments> class Signal {
   using Handler = std::function<void(Arguments...)>;
 
- public:
+public:
   void Emit(const std::string &source_handler_uuid, Arguments... arguments);
   std::string Connect(Handler handler);
   void Disconnect(const std::string &uuid_str);
 
- private:
+private:
   std::unordered_map<std::string, Handler> handlers_;
 };
 
@@ -56,7 +55,6 @@ void Signal<Arguments...>::Disconnect(const std::string &uuid_str) {
   uuid_clear(uuid);
 }
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_PATTERNS_OBSERVER_SIGNAL_H
-
+#endif // ORANGUTAN_PATTERNS_OBSERVER_SIGNAL_H

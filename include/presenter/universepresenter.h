@@ -7,16 +7,16 @@
 namespace orangutan {
 
 class UniversePresenter : public Presenter {
- public:
-  UniversePresenter(Universe* universe, NVGcontext* context, Window* window);
+public:
+  UniversePresenter(Universe *universe, NVGcontext *context, Window *window);
   void Init() override;
   void Resize(unsigned int width, unsigned int height) override;
   void Update() override;
 
- private:
-  Window* window_;
+private:
+  Window *window_;
 };
 
-}  // namespace orangutan
+} // namespace orangutan
 
-#endif  // ORANGUTAN_PRESENTER_UNIVERSE_PRESENTER_H
+#endif // ORANGUTAN_PRESENTER_UNIVERSE_PRESENTER_H

@@ -24,10 +24,10 @@ const std::unordered_map<int, float> kYawRotations = {{GLFW_KEY_LEFT, 1.0f},
 const std::unordered_map<int, float> kPitchRotations = {{GLFW_KEY_DOWN, -1.0f},
                                                         {GLFW_KEY_UP, 1.0f}};
 
-CameraController::CameraController(Camera* camera)
+CameraController::CameraController(Camera *camera)
     : camera_(camera), width_(0), height_(0) {}
 
-void CameraController::set_camera(Camera* camera) { camera_ = camera; }
+void CameraController::set_camera(Camera *camera) { camera_ = camera; }
 
 void CameraController::Update(double delta_time) {
   auto translation_vector = glm::vec3(0.0f);
@@ -66,4 +66,4 @@ void CameraController::SetSize(unsigned int width, unsigned int height) {
   camera_->set_aspect_ratio((float)width / (float)height);
 }
 
-}  // namespace orangutan
+} // namespace orangutan

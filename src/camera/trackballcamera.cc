@@ -27,4 +27,4 @@ void TrackBallCamera::Move(glm::vec3 &direction) {
   const float speed = get_speed();
 }
 
-}  // namespace orangutan
+} // namespace orangutan
