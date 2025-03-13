@@ -47,6 +47,7 @@ MaterialFactory::CreatePbrMaterial(const std::string &name) {
   material->AddTexture("pbr_texture", NULL);
   material->AddTexture("normal_texture", NULL);
   material->AddTexture("occlusion_texture", NULL);
+  material->AddTexture("emissive_texture", NULL);
 
   return material;
 }
@@ -58,7 +59,8 @@ std::unique_ptr<Material> MaterialFactory::CreateSkyboxMaterial() {
 
 std::unique_ptr<Material>
 MaterialFactory::ExtractMaterial(Universe &universe,
-                                 aiMaterial &assimp_material) {
+                                 aiMaterial &assimp_material,
+                                 const std::string &base_path) {
   auto material = CreatePbrMaterial(assimp_material.GetName().C_Str());
 
   // scalar & vector properties
@@ -85,8 +87,7 @@ MaterialFactory::ExtractMaterial(Universe &universe,
     aiString path;
     assimp_material.GetTexture(aiTextureType_DIFFUSE, 0, &path);
     std::string texture_name = material->getName() + "_color_texture";
-    std::string texture_path =
-        "./resources/meshes/" + std::string(path.C_Str());
+    std::string texture_path = base_path + std::string(path.C_Str());
     auto texture = universe.AddTexture(
         TextureFactory::ImportTexture(texture_name, texture_path));
     material->SetTexture("albedo_texture", texture);
@@ -100,8 +101,7 @@ MaterialFactory::ExtractMaterial(Universe &universe,
     aiString path;
     assimp_material.GetTexture(aiTextureType_NORMALS, 0, &path);
     std::string texture_name = material->getName() + "_normal_texture";
-    std::string texture_path =
-        "./resources/meshes/" + std::string(path.C_Str());
+    std::string texture_path = base_path + std::string(path.C_Str());
     auto texture = universe.AddTexture(
         TextureFactory::ImportTexture(texture_name, texture_path));
     // material->SetTexture("normal_texture", texture);
@@ -115,8 +115,7 @@ MaterialFactory::ExtractMaterial(Universe &universe,
     aiString path;
     assimp_material.GetTexture(aiTextureType_UNKNOWN, 0, &path);
     std::string texture_name = material->getName() + "_pbr_texture";
-    std::string texture_path =
-        "./resources/meshes/" + std::string(path.C_Str());
+    std::string texture_path = base_path + std::string(path.C_Str());
     auto texture = universe.AddTexture(
         TextureFactory::ImportTexture(texture_name, texture_path));
     material->SetTexture("pbr_texture", texture);
@@ -130,12 +129,25 @@ MaterialFactory::ExtractMaterial(Universe &universe,
     aiString path;
     assimp_material.GetTexture(aiTextureType_LIGHTMAP, 0, &path);
     std::string texture_name = material->getName() + "_occlusion_texture";
-    std::string texture_path =
-        "./resources/meshes/" + std::string(path.C_Str());
+    std::string texture_path = base_path + std::string(path.C_Str());
     auto texture = universe.AddTexture(
         TextureFactory::ImportTexture(texture_name, texture_path));
     material->SetTexture("occlusion_texture", texture);
     defines.push_back("OCCLUSION_TEXTURE");
+  }
+
+  // emissive
+  unsigned int emissive_texture_count =
+      assimp_material.GetTextureCount(aiTextureType_EMISSIVE);
+  if (emissive_texture_count > 0) {
+    aiString path;
+    assimp_material.GetTexture(aiTextureType_EMISSIVE, 0, &path);
+    std::string texture_name = material->getName() + "_emissive_texture";
+    std::string texture_path = base_path + std::string(path.C_Str());
+    auto texture = universe.AddTexture(
+        TextureFactory::ImportTexture(texture_name, texture_path));
+    material->SetTexture("emissive_texture", texture);
+    defines.push_back("EMISSIVE_TEXTURE");
   }
 
   material->set_shader_wrapper(

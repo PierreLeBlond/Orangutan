@@ -52,6 +52,10 @@ uniform float metalness;
   uniform sampler2D occlusion_texture;
 #endif
 
+#if defined(EMISSIVE_TEXTURE)
+  uniform sampler2D emissive_texture;
+#endif
+
 out vec4 color_out;
 
 float GetSquareFalloffAttenuation(vec3 position_to_light, float light_inverse_radius) {
@@ -179,6 +183,12 @@ void main() {
   vec3 ambient = mix(GetDielectricMultipleScattering(n_dot_v, roughness_factor, color, irradiance, radiance),
                      GetConductorMultipleScattering(n_dot_v, roughness_factor, color, irradiance, radiance),
                      metalness_factor);
+
+  #if defined(EMISSIVE_TEXTURE)
+    vec4 emissive_sample = texture(emissive_texture, uv_out);
+    ambient = pow(emissive_sample.rgb, vec3(2.2));
+  #endif
+
   #if defined(OCCLUSION_TEXTURE)
     vec3 occlusion = texture(occlusion_texture, uv_2_out).rgb;
     ambient *= occlusion;

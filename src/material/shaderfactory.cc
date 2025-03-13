@@ -27,6 +27,10 @@ ShaderWrapper *ShaderFactory::CreateOrGetShaderWrapperFromMaterial(
 
   name << vertex_filename << fragment_filename << geometry_filename;
 
+  for (auto define : defines) {
+    name << define;
+  }
+
   auto shader_wrapper =
       universe.get_shader_wrapper_library().GetItemByName(name.str());
   if (shader_wrapper != NULL) {

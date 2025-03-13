@@ -48,11 +48,12 @@ public:
                         const std::string &radiance_filename, const Ibl &ibl,
                         bool convert_to_rgbd = false);
 
-private:
   static unsigned int ImportEquirectangularHDR(const std::string &filename);
   static std::unique_ptr<CubeTexture>
   TransformEquirectangularToCube(const std::string &name,
                                  unsigned int equirectangular_handle);
+
+private:
   static std::unique_ptr<CubeTexture>
   CreateIrradianceMap(const CubeTexture &cube_texture);
   static std::unique_ptr<CubeTexture>

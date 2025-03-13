@@ -183,10 +183,20 @@ void App::InitUniverse() {
   auto brdf = TextureFactory::CreateBrdfMap();
   universe_->AddTexture(std::move(brdf));
 
-  auto room_ibl = TextureFactory::ImportIBLFromRgbdDds(
-      "room", "./resources/images/ibl/portfolio/portfolio_rgbd_irradiance.dds",
-      "./resources/images/ibl/portfolio/portfolio_rgbd_radiance.dds");
+  // auto room_ibl = TextureFactory::ImportIBLFromRgbdDds(
+  //    "room",
+  //    "./resources/images/ibl/room/rgbd/room_rgbd_rgbd_irradiance.dds",
+  //   "./resources/images/ibl/room/rgbd/room_rgbd_rgbd_radiance.dds");
+  auto room_ibl = TextureFactory::ImportIBLFromHdr(
+      "room", "./resources/images/ibl/room/room.hdr");
   universe_->AddIbl(std::move(room_ibl));
+
+  /*auto room_hdr = TextureFactory::ImportEquirectangularHDR(
+      "./resources/images/ibl/room/room.hdr");
+  auto room_cube =
+      TextureFactory::TransformEquirectangularToCube("room_hdr", room_hdr);*/
+
+  // universe_->AddCubeTexture(std::move(room_cube));
 
   Assimp::Importer importer;
 
@@ -194,8 +204,13 @@ void App::InitUniverse() {
 
   // Chess
   auto chess_node = universe_->AddObjectNode(SceneFactory::ImportSceneTree(
-      importer, *universe_, "chess", "./resources/meshes/chess.gltf"));
+      importer, *universe_, "chess", "./resources/meshes/", "chess.gltf"));
   scene_tree.AddChild(chess_node);
+
+  // Spheres
+  auto spheres_node = universe_->AddObjectNode(SceneFactory::ImportSceneTree(
+      importer, *universe_, "sphere", "./resources/meshes/", "spheres.gltf"));
+  scene_tree.AddChild(spheres_node);
 
   auto sky_material = MaterialFactory::CreateSkyboxMaterial();
   sky_material->set_shader_wrapper(

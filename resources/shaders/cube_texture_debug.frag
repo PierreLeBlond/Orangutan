@@ -48,5 +48,10 @@ void main() {
 
   cube_uv.xy = cube_uv.xy*2.0 - 1.0;
 
-  color_out = textureLod(source_map, cube_uv, 0.0);
+  vec4 texture_sample = textureLod(source_map, cube_uv, 0.0);
+  vec3 final_color = texture_sample.rgb/texture_sample.a;
+
+  final_color = pow(final_color, vec3(1.0/2.2));
+
+  color_out = vec4(final_color, 1.0);
 }

@@ -11,8 +11,9 @@ class MaterialFactory {
 public:
   static std::unique_ptr<Material> CreatePbrMaterial(const std::string &name);
   static std::unique_ptr<Material> CreateSkyboxMaterial();
-  static std::unique_ptr<Material> ExtractMaterial(Universe &universe,
-                                                   aiMaterial &material);
+  static std::unique_ptr<Material>
+  ExtractMaterial(Universe &universe, aiMaterial &material,
+                  const std::string &base_path);
 };
 
 } // namespace orangutan

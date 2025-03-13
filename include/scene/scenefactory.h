@@ -12,10 +12,10 @@ namespace orangutan {
 
 class SceneFactory {
 public:
-  static std::unique_ptr<ObjectNode> ImportSceneTree(Assimp::Importer &importer,
-                                                     Universe &universe,
-                                                     const std::string &name,
-                                                     const std::string &url);
+  static std::unique_ptr<ObjectNode>
+  ImportSceneTree(Assimp::Importer &importer, Universe &universe,
+                  const std::string &name, const std::string &base_path,
+                  const std::string &file_name);
 
 private:
   static std::unique_ptr<ObjectNode> ExtractSceneTree(Universe &universe,

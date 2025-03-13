@@ -11,18 +11,19 @@
 
 namespace orangutan {
 
-std::unique_ptr<ObjectNode>
-SceneFactory::ImportSceneTree(Assimp::Importer &importer, Universe &universe,
-                              const std::string &name, const std::string &url) {
-  const aiScene *scene =
-      importer.ReadFile(url, aiProcess_Triangulate | aiProcess_FlipUVs |
-                                 aiProcess_CalcTangentSpace);
+std::unique_ptr<ObjectNode> SceneFactory::ImportSceneTree(
+    Assimp::Importer &importer, Universe &universe, const std::string &name,
+    const std::string &base_path, const std::string &file_name) {
+  const aiScene *scene = importer.ReadFile(
+      base_path + file_name,
+      aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
   CleanAssimpScene(scene);
 
   // Extract materials
   for (unsigned int i = 0; i < scene->mNumMaterials; i++) {
     aiMaterial *material = scene->mMaterials[i];
-    universe.AddMaterial(MaterialFactory::ExtractMaterial(universe, *material));
+    universe.AddMaterial(
+        MaterialFactory::ExtractMaterial(universe, *material, base_path));
   }
 
   std::unique_ptr<ObjectNode> scene_tree =
