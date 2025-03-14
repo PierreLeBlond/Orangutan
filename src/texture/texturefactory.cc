@@ -83,7 +83,7 @@ TextureFactory::ImportTexture(const std::string &name,
   GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, id));
   texture->setPath(filename);
 
-  // stbi_set_flip_vertically_on_load(true);
+  stbi_set_flip_vertically_on_load(false);
 
   int width = 0;
   int height = 0;
