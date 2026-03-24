@@ -12,3 +12,13 @@ cmake .
 make
 ./Orangutan
 ```
+
+## Dependencies
+
+### libktx
+
+https://github.khronos.org/KTX-Software/index.html
+
+#### Arck linux
+
+Install [ktx-software](https://aur.archlinux.org/packages/ktx-software) from aur

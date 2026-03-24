@@ -2,7 +2,6 @@
 #define ORANGUTAN_UI_TEXTURE_WINDOW_H
 
 #include "manager/texturemanager.h"
-#include "presenter/presenter.h"
 #include "ui/window.h"
 
 namespace orangutan {
@@ -34,6 +33,8 @@ private:
   nanogui::Button *load_dds_button_;
   nanogui::Button *export_button_;
   nanogui::Button *export_rgbd_button_;
+  nanogui::Button *export_ktx_button_;
+  nanogui::Button *export_ktx_uastc_button_;
 };
 
 } // namespace orangutan

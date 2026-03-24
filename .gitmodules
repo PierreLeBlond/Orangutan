@@ -1,10 +1,12 @@
 [submodule "ext/nanogui"]
 	path = ext/nanogui
 	url = https://github.com/mitsuba-renderer/nanogui.git
-[submodule "ext/assimp"]
-	path = ext/assimp
-	url = https://github.com/assimp/assimp.git
-	branch = assimp_5.0_release
 [submodule "ext/gli"]
 	path = ext/gli
 	url = git@github.com:g-truc/gli.git
+[submodule "ext/assimp"]
+	path = ext/assimp
+	url = git@github.com:assimp/assimp.git
+[submodule "ext/basis_universal"]
+	path = ext/basis_universal
+	url = git@github.com:BinomialLLC/basis_universal.git

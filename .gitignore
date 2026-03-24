@@ -10,5 +10,5 @@ Orangutan
 .cache/
 .clang-tidy
 .ycm_extra_conf.py
-
-
+libbasisu.a
+.vscode

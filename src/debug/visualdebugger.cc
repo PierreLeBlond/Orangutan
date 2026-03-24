@@ -34,6 +34,7 @@ void VisualDebugger::DisplayTexture(const Texture &texture) {
     texture_displayer_->UpdateVertexArrayObject();
   }
 
+  std::cout << texture.getId() << std::endl;
   texture_displayer_->get_material().get_shader_wrapper().BindTexture(
       "source_map", texture.getId());
   texture_displayer_->Draw();

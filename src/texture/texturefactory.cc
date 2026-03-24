@@ -9,11 +9,7 @@
 #include <memory>
 
 #include "core/shader/shaderwrapper.h"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "mesh/mesh.h"
 #include "mesh/meshfactory.h"
-#include "nanogui/opengl.h"
 #include "object/renderableobject.h"
 #include "stb_image.h"
 #include "stb_image_write.h"

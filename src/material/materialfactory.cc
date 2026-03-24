@@ -1,13 +1,10 @@
 #include "material/materialfactory.h"
 
-#include <algorithm>
 #include <functional>
 #include <iostream>
 #include <memory>
 
 #include "assimp/material.h"
-#include "core/texture/cubetexture.h"
-#include "core/texture/texture.h"
 #include "material/shaderfactory.h"
 #include "texture/texturefactory.h"
 
@@ -18,20 +15,29 @@ const std::unordered_map<
                                     const aiMaterialProperty &assimp_property,
                                     Material &material)>>
     properties_map = {
-        {"$mat.gltf.pbrMetallicRoughness.metallicFactor",
+        {"$mat.metallicFactor",
          [](const aiMaterial &assimp_material,
             const aiMaterialProperty &assimp_property, Material &material) {
            float metalness;
            assimp_material.Get(assimp_property.mKey.C_Str(), 0, 0, metalness);
            material.SetUniform("metalness", metalness);
          }},
-        {"$mat.gltf.pbrMetallicRoughness.roughnessFactor",
+        {"$mat.roughnessFactor",
          [](const aiMaterial &assimp_material,
             const aiMaterialProperty &assimp_property, Material &material) {
            float roughness;
            assimp_material.Get(assimp_property.mKey.C_Str(), 0, 0, roughness);
            material.SetUniform("roughness", roughness);
-         }}};
+         }},
+        {"$clr.diffuse",
+         [](const aiMaterial &assimp_material,
+            const aiMaterialProperty &assimp_property, Material &material) {
+           aiColor3D diffuse(0.f, 0.f, 0.f);
+           assimp_material.Get(assimp_property.mKey.C_Str(), 0, 0, diffuse);
+           glm::vec3 albedo(diffuse.r, diffuse.g, diffuse.b);
+           material.SetUniform("albedo", albedo);
+         }},
+};
 
 std::unique_ptr<Material>
 MaterialFactory::CreatePbrMaterial(const std::string &name) {
@@ -69,8 +75,6 @@ MaterialFactory::ExtractMaterial(Universe &universe,
     const std::string assimp_property_name = assimp_property->mKey.C_Str();
 
     if (properties_map.count(assimp_property_name)) {
-      float value;
-      assimp_material.Get(assimp_property->mKey.C_Str(), 0, 0, value);
       properties_map.at(assimp_property_name)(assimp_material, *assimp_property,
                                               *material.get());
     }

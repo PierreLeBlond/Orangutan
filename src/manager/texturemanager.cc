@@ -3,7 +3,8 @@
 #include <memory>
 #include <utility>
 
-#include "nanogui/common.h"
+#include "texture/basisutexturefactory.h"
+#include "texture/ktxtexturefactory.h"
 #include "texture/texturefactory.h"
 
 namespace orangutan {
@@ -164,8 +165,7 @@ void TextureManager::LoadHdrIbl(const std::string &name,
 }
 
 void TextureManager::ExportDdsIbl(const std::string &name,
-                                  const std::string &path,
-                                  const std::string &source_handler_uuid) {
+                                  const std::string &path) {
   std::string irradiance_filename = path + "/" + name + "_irradiance.dds";
   std::string radiance_filename = path + "/" + name + "_radiance.dds";
 
@@ -175,8 +175,7 @@ void TextureManager::ExportDdsIbl(const std::string &name,
 }
 
 void TextureManager::ExportDdsRgbdIbl(const std::string &name,
-                                      const std::string &path,
-                                      const std::string &source_handler_uuid) {
+                                      const std::string &path) {
   std::string irradiance_filename = path + "/" + name + "_rgbd_irradiance.dds";
   std::string radiance_filename = path + "/" + name + "_rgbd_radiance.dds";
 
@@ -188,6 +187,28 @@ void TextureManager::ExportDdsRgbdIbl(const std::string &name,
       convert_to_rgbd);
 }
 
+void TextureManager::ExportKtxIbl(const std::string &name,
+                                  const std::string &path) {
+  std::string irradiance_filename = path + "/" + name + "_irradiance.ktx2";
+  std::string radiance_filename = path + "/" + name + "_radiance.ktx2";
+
+  KtxTextureFactory::ExportIbl(
+      irradiance_filename, radiance_filename,
+      *universe_->get_ibl_library().GetItemByName(current_ibl_name_),
+      *universe_->get_texture_library().GetItemByName("brdf"));
+}
+
+void TextureManager::ExportKtxUastcIbl(const std::string &name,
+                                       const std::string &path) {
+  std::string irradiance_filename =
+      path + "/" + name + "_irradiance_uastc.ktx2";
+  std::string radiance_filename = path + "/" + name + "_radiance_uastc.ktx2";
+
+  BasisUTextureFactory::ExportIbl(
+      irradiance_filename, radiance_filename,
+      *universe_->get_ibl_library().GetItemByName(current_ibl_name_),
+      *universe_->get_texture_library().GetItemByName("brdf"));
+}
 Signal<> &TextureManager::GetStateChangeSignal() {
   return state_change_signal_;
 }

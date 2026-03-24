@@ -4,7 +4,6 @@
 #include <memory>
 
 #include "core/texture/cubetexture.h"
-#include "core/texture/texture.h"
 
 namespace orangutan {
 

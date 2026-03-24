@@ -31,7 +31,7 @@ TextureWindow::TextureWindow(nanogui::Widget *parent, const std::string &label,
     }
   });
 
-  cube_texture_combo_box_ = new nanogui::ComboBox(this);
+  /*cube_texture_combo_box_ = new nanogui::ComboBox(this);
   cube_texture_combo_box_->set_side(nanogui::Popup::Left);
   cube_texture_combo_box_->set_callback([&](unsigned int index) {
     texture_manager_->SetCurrentCubeTexture(cube_texture_names_[index],
@@ -46,7 +46,7 @@ TextureWindow::TextureWindow(nanogui::Widget *parent, const std::string &label,
     } else {
       texture_manager_->HideCurrentCubeTexture();
     }
-  });
+    });*/
 
   ibl_combo_box_ = new nanogui::ComboBox(this);
   ibl_combo_box_->set_side(nanogui::Popup::Left);
@@ -103,12 +103,13 @@ TextureWindow::TextureWindow(nanogui::Widget *parent, const std::string &label,
     texture_manager_->LoadDdsIbl(name, path);
   });
 
-  export_button_ = new nanogui::Button(this, "Export");
+  export_button_ = new nanogui::Button(this, "Export to .dds (RGBA32)");
   export_button_->set_callback([&]() {
-    const std::vector<std::pair<std::string, std::string>> file_types{
-        std::make_pair("dds", "Radiance or Irradiance cube map"),
-        std::make_pair("png", "Brdf lookup texture")};
-    const std::string filename = nanogui::file_dialog(file_types, true);
+    // const std::vector<std::pair<std::string, std::string>> file_types{
+    //     std::make_pair("dds", "Radiance or Irradiance cube map"),
+    //     std::make_pair("png", "Brdf lookup texture")};
+    // const std::string filename = nanogui::file_dialog(file_types, true);
+    const std::string filename = "./studio.dds";
     const auto last_slash = filename.find_last_of("/\\");
     const auto last_dot = filename.find_last_of('.');
     const std::string path = filename.substr(0, last_slash);
@@ -117,18 +118,50 @@ TextureWindow::TextureWindow(nanogui::Widget *parent, const std::string &label,
     texture_manager_->ExportDdsIbl(name, path);
   });
 
-  export_rgbd_button_ = new nanogui::Button(this, "Export RGBD");
+  export_rgbd_button_ = new nanogui::Button(this, "Export to .dds (RGBD8)");
   export_rgbd_button_->set_callback([&]() {
-    const std::vector<std::pair<std::string, std::string>> file_types{
-        std::make_pair("dds", "Radiance or Irradiance cube map"),
-        std::make_pair("png", "Brdf lookup texture")};
-    const std::string filename = nanogui::file_dialog(file_types, true);
+    // const std::vector<std::pair<std::string, std::string>> file_types{
+    // std::make_pair("dds", "Radiance or Irradiance cube map"),
+    //    std::make_pair("png", "Brdf lookup texture")};
+    // const std::string filename = nanogui::file_dialog(file_types, true);
+    const std::string filename = "./studio_rgbd.dds";
     const auto last_slash = filename.find_last_of("/\\");
     const auto last_dot = filename.find_last_of('.');
     const std::string path = filename.substr(0, last_slash);
     const std::string name =
         filename.substr(last_slash + 1, last_dot - (last_slash + 1));
     texture_manager_->ExportDdsRgbdIbl(name, path);
+  });
+
+  export_ktx_button_ = new nanogui::Button(this, "Export to .ktx2 (RGBA16)");
+  export_ktx_button_->set_callback([&]() {
+    // const std::vector<std::pair<std::string, std::string>> file_types{
+    // std::make_pair("dds", "Radiance or Irradiance cube map"),
+    //    std::make_pair("png", "Brdf lookup texture")};
+    // const std::string filename = nanogui::file_dialog(file_types, true);
+    const std::string filename = "./studio.ktx2";
+    const auto last_slash = filename.find_last_of("/\\");
+    const auto last_dot = filename.find_last_of('.');
+    const std::string path = filename.substr(0, last_slash);
+    const std::string name =
+        filename.substr(last_slash + 1, last_dot - (last_slash + 1));
+    texture_manager_->ExportKtxIbl(name, path);
+  });
+
+  export_ktx_uastc_button_ =
+      new nanogui::Button(this, "Export to .ktx2 (UASTC16)");
+  export_ktx_uastc_button_->set_callback([&]() {
+    // const std::vector<std::pair<std::string, std::string>> file_types{
+    // std::make_pair("dds", "Radiance or Irradiance cube map"),
+    //    std::make_pair("png", "Brdf lookup texture")};
+    // const std::string filename = nanogui::file_dialog(file_types, true);
+    const std::string filename = "./studio_uastc.ktx2";
+    const auto last_slash = filename.find_last_of("/\\");
+    const auto last_dot = filename.find_last_of('.');
+    const std::string path = filename.substr(0, last_slash);
+    const std::string name =
+        filename.substr(last_slash + 1, last_dot - (last_slash + 1));
+    texture_manager_->ExportKtxUastcIbl(name, path);
   });
 
   Update();
@@ -147,7 +180,7 @@ void TextureWindow::Update() {
                                            texture_names_.begin());
   }
 
-  texture_manager_->GetCubeTextureNames(cube_texture_names_);
+  /*texture_manager_->GetCubeTextureNames(cube_texture_names_);
   cube_texture_combo_box_->set_items(cube_texture_names_);
   if (!cube_texture_names_.empty()) {
     auto current_cube_texture_iterator =
@@ -155,7 +188,7 @@ void TextureWindow::Update() {
                   texture_manager_->GetCurrentCubeTextureName());
     cube_texture_combo_box_->set_selected_index(current_cube_texture_iterator -
                                                 cube_texture_names_.begin());
-  }
+                                                }*/
 
   texture_manager_->GetIblNames(ibl_names_);
   ibl_combo_box_->set_items(ibl_names_);

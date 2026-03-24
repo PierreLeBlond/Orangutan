@@ -1,8 +1,6 @@
 #ifndef ORANGUTAN_MANAGER_TEXTURE_MANAGER_H
 #define ORANGUTAN_MANAGER_TEXTURE_MANAGER_H
 
-#include <memory>
-
 #include "debug/visualdebugger.h"
 #include "model/universe.h"
 #include "ui/canvas.h"
@@ -43,10 +41,11 @@ public:
                   const std::string &state_change_signal_uuid = "");
   void LoadHdrIbl(const std::string &name, const std::string &filename,
                   const std::string &state_change_signal_uuid = "");
-  void ExportDdsIbl(const std::string &name, const std::string &path,
-                    const std::string &state_change_signal_uuid = "");
-  void ExportDdsRgbdIbl(const std::string &name, const std::string &path,
-                        const std::string &state_change_signal_uuid = "");
+
+  void ExportDdsIbl(const std::string &name, const std::string &path);
+  void ExportDdsRgbdIbl(const std::string &name, const std::string &path);
+  void ExportKtxIbl(const std::string &name, const std::string &path);
+  void ExportKtxUastcIbl(const std::string &name, const std::string &path);
 
   Signal<> &GetStateChangeSignal();
 

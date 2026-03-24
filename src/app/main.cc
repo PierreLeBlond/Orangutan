@@ -1,8 +1,8 @@
 #include <GLFW/glfw3.h>
 #include <nanogui/nanogui.h>
 
+#include "basisu_comp.h"
 #include <iostream>
-#include <memory>
 
 #include "app/app.h"
 
@@ -55,6 +55,8 @@ int main(int argc, char *argv[]) {
   // Global opengl options
   glEnable(
       GL_TEXTURE_CUBE_MAP_SEAMLESS); // Avoid seams when precomputing cube maps
+
+  basisu::basisu_encoder_init();
 
   while (!glfwWindowShouldClose(window)) {
     // Check if any events have been activated (key pressed, mouse moved etc.)

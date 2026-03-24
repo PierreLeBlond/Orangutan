@@ -61,7 +61,28 @@ include_directories( ${STB_INCLUDE_DIR} )
 find_package(GLI REQUIRED)
 include_directories( ${GLI_INCLUDE_DIR} )
 
-set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -lGL -luuid")
+file(GLOB_RECURSE BASISU_ENCODER_SOURCES
+    ext/basis_universal/encoder/*.cpp
+)
+
+set(BASISU_TRANSCODER_SOURCES
+    ext/basis_universal/transcoder/basisu_transcoder.cpp
+)
+
+# basis_universalis
+add_library(basisu STATIC
+    ${BASISU_ENCODER_SOURCES}
+    ${BASISU_TRANSCODER_SOURCES}
+)
+
+target_include_directories(basisu PUBLIC
+    ext/basis_universal
+    ext/basis_universal/encoder
+    ext/basis_universal/encoder/3rdparty
+    ext/basis_universal/transcoder
+)
+
+set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE} -lGL -luuid -lktx")
 
 link_directories(
   /usr/local/lib
@@ -73,6 +94,7 @@ set(LIBS
   nanogui
   ${NANOGUI_EXTRA_LIBS}
   assimp
+  basisu
   )
 
 file (GLOB_RECURSE SRC_FILES src/*.cc)

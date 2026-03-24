@@ -28,13 +28,10 @@ void App::Init(GLFWwindow *window) {
   // nanogui will take ownership via its own reference counter
   auto *screen = new Screen(window);
 
-  // Init Screen presenter
   screen_presenter_ =
       std::make_unique<ScreenPresenter>(screen, universe_.get());
 
   BindEvents(window, screen);
-
-  // Init Canvas
 
   // nanogui will take ownership via its own reference counter
   auto *canvas = new Canvas(screen);
@@ -183,47 +180,33 @@ void App::InitUniverse() {
   auto brdf = TextureFactory::CreateBrdfMap();
   universe_->AddTexture(std::move(brdf));
 
-  // auto room_ibl = TextureFactory::ImportIBLFromRgbdDds(
-  //    "room",
-  //    "./resources/images/ibl/room/rgbd/room_rgbd_rgbd_irradiance.dds",
-  //   "./resources/images/ibl/room/rgbd/room_rgbd_rgbd_radiance.dds");
   auto room_ibl = TextureFactory::ImportIBLFromHdr(
-      "room", "./resources/images/ibl/room/room.hdr");
+      "room", "./resources/images/ibl/studio.hdr");
   universe_->AddIbl(std::move(room_ibl));
 
-  /*auto room_hdr = TextureFactory::ImportEquirectangularHDR(
-      "./resources/images/ibl/room/room.hdr");
-  auto room_cube =
-      TextureFactory::TransformEquirectangularToCube("room_hdr", room_hdr);*/
-
-  // universe_->AddCubeTexture(std::move(room_cube));
-
   Assimp::Importer importer;
-
-  universe_->AddMesh(MeshFactory::CreateCube("cube_mesh"));
-
-  // Chess
-  auto chess_node = universe_->AddObjectNode(SceneFactory::ImportSceneTree(
-      importer, *universe_, "chess", "./resources/meshes/", "chess.gltf"));
-  scene_tree.AddChild(chess_node);
 
   // Spheres
   auto spheres_node = universe_->AddObjectNode(SceneFactory::ImportSceneTree(
       importer, *universe_, "sphere", "./resources/meshes/", "spheres.gltf"));
   scene_tree.AddChild(spheres_node);
 
-  auto sky_material = MaterialFactory::CreateSkyboxMaterial();
-  sky_material->set_shader_wrapper(
-      universe_->get_shader_wrapper_library().GetItemByName("skybox_wrapper"));
-  universe_->AddMaterial(std::move(sky_material));
-
   // Cameras
   auto freeCamera = std::make_unique<FreeCamera>("free_camera");
   freeCamera->set_speed(10.0f);
   freeCamera->set_position(glm::vec3(0.0f, 0.0f, 20.0f));
   universe_->AddCamera(std::move(freeCamera));
+  scene_tree.AddChild(
+      universe_->get_camera_library().GetItemByName("free_camera"));
 
   // Sky
+  universe_->AddMesh(MeshFactory::CreateCube("cube_mesh"));
+
+  auto sky_material = MaterialFactory::CreateSkyboxMaterial();
+  sky_material->set_shader_wrapper(
+      universe_->get_shader_wrapper_library().GetItemByName("skybox_wrapper"));
+  universe_->AddMaterial(std::move(sky_material));
+
   auto sky = RenderableObjectFactory::CreateRenderableObject(
       *universe_, "skybox_renderable_object", "cube_mesh", "skybox_material");
 
@@ -232,6 +215,8 @@ void App::InitUniverse() {
 
   universe_->AddRenderableObject(std::move(sky));
   universe_->AddObjectNode(std::move(sky_node));
+  scene_tree.AddChild(
+      universe_->get_object_node_library().GetItemByName("skybox_node"));
 
   // Lights
   for (int i = 0; i < 2; i++) {
@@ -252,14 +237,6 @@ void App::InitUniverse() {
       universe_->AddObjectNode(std::move(light_node));
     }
   }
-
-  // Cameras
-  scene_tree.AddChild(
-      universe_->get_camera_library().GetItemByName("free_camera"));
-
-  // Sky
-  scene_tree.AddChild(
-      universe_->get_object_node_library().GetItemByName("skybox_node"));
 
   scene_->set_is_ready(true);
 
