@@ -4,9 +4,6 @@
 [submodule "ext/gli"]
 	path = ext/gli
 	url = git@github.com:g-truc/gli.git
-[submodule "ext/assimp"]
-	path = ext/assimp
-	url = git@github.com:assimp/assimp.git
 [submodule "ext/basis_universal"]
 	path = ext/basis_universal
 	url = git@github.com:BinomialLLC/basis_universal.git

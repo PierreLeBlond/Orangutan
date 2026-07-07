@@ -81,7 +81,7 @@ void BasisUTextureFactory::ExportCubeTexture(const std::string &filename,
                                              const CubeTexture &cube_texture,
                                              bool with_mipmaps) {
   unsigned int size = cube_texture.get_size();
-  unsigned int mip_levels = with_mipmaps ? log2(size) + 1 - 2 : 1;
+  unsigned int mip_levels = with_mipmaps ? log2(size) + 1 : 1;
   std::cout << size << " / " << mip_levels << std::endl;
 
   basisu::basis_compressor_params params;
