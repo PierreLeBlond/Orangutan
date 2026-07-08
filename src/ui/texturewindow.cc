@@ -160,7 +160,7 @@ TextureWindow::TextureWindow(nanogui::Widget *parent, const std::string &label,
     // const std::string path = filename.substr(0, last_slash);
     // const std::string name =
     //    filename.substr(last_slash + 1, last_dot - (last_slash + 1));
-    const std::string path = "./output/";
+    const std::string path = "./output";
     const std::string name = "studio";
     texture_manager_->ExportKtxUastcIbl(name, path);
   });

@@ -167,7 +167,7 @@ void KtxTextureFactory::ExportCubeTexture(const std::string &filename,
 void KtxTextureFactory::ExportIbl(const std::string &irradiance_filename,
                                   const std::string &radiance_filename,
                                   const Ibl &ibl, const Texture &brdf) {
-  ExportTexture("brdf.ktx2", brdf);
+  ExportTexture("./output/brdf.ktx2", brdf);
   ExportCubeTexture(irradiance_filename, *ibl.irradiance.get());
   ExportCubeTexture(radiance_filename, *ibl.radiance.get(), true);
 }

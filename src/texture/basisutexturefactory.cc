@@ -162,7 +162,7 @@ void BasisUTextureFactory::ExportCubeTexture(const std::string &filename,
 void BasisUTextureFactory::ExportIbl(const std::string &irradiance_filename,
                                      const std::string &radiance_filename,
                                      const Ibl &ibl, const Texture &brdf) {
-  ExportTexture("brdf_uastc.ktx2", brdf);
+  ExportTexture("./output/brdf_uastc.ktx2", brdf);
   ExportCubeTexture(irradiance_filename, *ibl.irradiance.get());
   ExportCubeTexture(radiance_filename, *ibl.radiance.get(), true);
 }
