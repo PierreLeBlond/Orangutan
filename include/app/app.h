@@ -1,36 +1,40 @@
 #ifndef ORANGUTAN_APP_APP_H
 #define ORANGUTAN_APP_APP_H
 
+#include <glad/glad.h>
+
+#include <GLFW/glfw3.h>
+
 #include <memory>
 
-#include "manager/canvasmanager.h"
+#include "camera/camera.h"
+#include "camera/cameracontroller.h"
 #include "manager/texturemanager.h"
 #include "model/universe.h"
-#include "presenter/screenpresenter.h"
 #include "scene/scene.h"
-#include "ui/screen.h"
-#include "ui/texturewindow.h"
 
 namespace orangutan {
 
 class App {
 public:
-  void Init(GLFWwindow *window);
+  void Init();
 
-  void Draw();
+  void Draw(int width, int height);
 
-  void BindEvents(GLFWwindow *window, Screen *screen);
   void InitUniverse();
 
-private:
-  std::unique_ptr<ScreenPresenter> screen_presenter_;
-  std::unique_ptr<CanvasManager> canvas_manager_;
+  [[nodiscard]] TextureManager *get_texture_manager() const;
 
+private:
   std::unique_ptr<TextureManager> texture_manager_;
-  TextureWindow *texture_window_;
 
   std::unique_ptr<Universe> universe_;
+
   std::unique_ptr<Scene> scene_;
+  std::unique_ptr<Camera> camera_;
+  std::unique_ptr<CameraController> camera_controller_;
+
+  double last_update_time_;
 };
 
 } // namespace orangutan

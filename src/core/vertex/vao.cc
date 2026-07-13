@@ -1,8 +1,6 @@
 #include "core/vertex/vao.h"
 #include "core/debug.h"
 
-#include <nanogui/opengl.h>
-
 #include <algorithm>
 #include <iostream>
 

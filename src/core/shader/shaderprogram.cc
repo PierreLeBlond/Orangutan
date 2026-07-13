@@ -1,8 +1,6 @@
 #include "core/shader/shaderprogram.h"
 #include "core/debug.h"
 
-#include <nanogui/opengl.h>
-
 #include <iostream>
 
 namespace orangutan {

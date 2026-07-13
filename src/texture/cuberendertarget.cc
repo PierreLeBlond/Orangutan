@@ -1,7 +1,7 @@
+#include <cmath>
+
 #include "texture/cuberendertarget.h"
 #include "core/debug.h"
-
-#include "nanogui/opengl.h"
 
 namespace orangutan {
 

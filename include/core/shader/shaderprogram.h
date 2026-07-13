@@ -1,6 +1,8 @@
 #ifndef ORANGUTAN_CORE_SHADER_SHADER_PROGRAM_H
 #define ORANGUTAN_CORE_SHADER_SHADER_PROGRAM_H
 
+#include <glad/glad.h>
+
 #include "core/shader/shader.h"
 #include "core/shader/shaderprogramhandle.h"
 #include "glm/glm.hpp"

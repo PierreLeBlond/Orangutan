@@ -1,6 +1,8 @@
 #ifndef ORANGUTAN_TEXTURE_RENDER_TARGET_H
 #define ORANGUTAN_TEXTURE_RENDER_TARGET_H
 
+#include "glad/glad.h"
+
 #include <memory>
 
 #include "core/texture/texture.h"

@@ -1,7 +1,7 @@
 #ifndef ORANGUTAN_CORE_DEBUG_H
 #define ORANGUTAN_CORE_DEBUG_H
 
-#include <nanogui/opengl.h>
+#include <glad/glad.h>
 
 #include <iostream>
 #include <map>

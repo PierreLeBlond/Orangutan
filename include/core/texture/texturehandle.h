@@ -1,6 +1,8 @@
 #ifndef TEXTURE_HANDLE_H
 #define TEXTURE_HANDLE_H
 
+#include <glad/glad.h>
+
 #include "core/handle.h"
 
 namespace orangutan {

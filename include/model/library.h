@@ -1,7 +1,6 @@
 #ifndef ORANGUTAN_MODEL_LIBRARY_H
 #define ORANGUTAN_MODEL_LIBRARY_H
 
-#include <iostream>
 #include <memory>
 #include <unordered_map>
 #include <vector>

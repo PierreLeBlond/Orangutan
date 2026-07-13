@@ -1,11 +1,9 @@
 #ifndef ORANGUTAN_TEXTURE_CUBE_RENDER_TARGET_H
 #define ORANGUTAN_TEXTURE_CUBE_RENDER_TARGET_H
 
-#include <memory>
-#include <optional>
+#include "glad/glad.h"
 
 #include "core/texture/cubetexture.h"
-#include "nanogui/opengl.h"
 #include "patterns/observer/signal.h"
 
 namespace orangutan {

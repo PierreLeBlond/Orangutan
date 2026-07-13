@@ -7,3 +7,6 @@
 [submodule "ext/basis_universal"]
 	path = ext/basis_universal
 	url = git@github.com:BinomialLLC/basis_universal.git
+[submodule "ext/imgui"]
+	path = ext/imgui
+	url = git@github.com:ocornut/imgui.git

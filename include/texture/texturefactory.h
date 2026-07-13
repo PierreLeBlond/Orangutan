@@ -1,6 +1,8 @@
 #ifndef ORANGUTAN_TEXTURE_TEXTURE_FACTORY_H
 #define ORANGUTAN_TEXTURE_TEXTURE_FACTORY_H
 
+#include "glad/glad.h"
+
 #include <memory>
 
 #include "core/texture/cubetexture.h"
@@ -43,10 +45,8 @@ public:
   ImportIBLFromRgbdDds(const std::string &name,
                        const std::string &irradiance_filename,
                        const std::string &radiance_filename);
-  static void ExportIbl(const std::string &name,
-                        const std::string &irradiance_filename,
-                        const std::string &radiance_filename, const Ibl &ibl,
-                        bool convert_to_rgbd = false);
+  static void ExportIbl(const std::string &path, const std::string &base_path,
+                        const Ibl &ibl, bool convert_to_rgbd = false);
 
   static unsigned int ImportEquirectangularHDR(const std::string &filename);
   static std::unique_ptr<CubeTexture>

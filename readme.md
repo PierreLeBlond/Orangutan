@@ -20,6 +20,12 @@ make
 
 ## Dependencies
 
+### glfw
+
+#### archlinux
+
+`sudo pacman -S glfw`
+
 ### assimp
 
 assimp is expected to be found under `/usr/`
@@ -29,6 +35,12 @@ Should it be not the case, you can modify `./cmake/Findassimp.cmake`
 
 `sudo pacman -S assimp`
 
+### nfd (nativefiledialog-extended)
+
+#### archlinux
+
+`sudo yay nativefiledialog-extended`
+ 
 ### libktx
 
 https://github.khronos.org/KTX-Software/index.html

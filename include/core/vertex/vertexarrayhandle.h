@@ -1,8 +1,6 @@
 #ifndef ORANGUTAN_CORE_VERTEX_VERTEX_ARRAY_HANDLE_H
 #define ORANGUTAN_CORE_VERTEX_VERTEX_ARRAY_HANDLE_H
 
-#include <nanogui/opengl.h>
-
 #include "core/handle.h"
 
 namespace orangutan {

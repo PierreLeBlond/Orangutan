@@ -159,11 +159,17 @@ void BasisUTextureFactory::ExportCubeTexture(const std::string &filename,
   }
 }
 
-void BasisUTextureFactory::ExportIbl(const std::string &irradiance_filename,
-                                     const std::string &radiance_filename,
+void BasisUTextureFactory::ExportIbl(const std::string &path,
+                                     const std::string &base_name,
                                      const Ibl &ibl, const Texture &brdf) {
-  ExportTexture("./output/brdf_uastc.ktx2", brdf);
-  ExportCubeTexture(irradiance_filename, *ibl.irradiance.get());
-  ExportCubeTexture(radiance_filename, *ibl.radiance.get(), true);
+  std::string brdf_file_path = path + "/" + "brdf_uastc.ktx2";
+  std::string irradiance_file_path =
+      path + "/" + base_name + "_irradiance_uastc.ktx2";
+  std::string radiance_file_path =
+      path + "/" + base_name + "_radiance_uastc.ktx2";
+  ExportTexture(brdf_file_path, brdf);
+  ExportCubeTexture(irradiance_file_path, *ibl.irradiance.get());
+  ExportCubeTexture(radiance_file_path, *ibl.radiance.get(), true);
 }
+
 } // namespace orangutan

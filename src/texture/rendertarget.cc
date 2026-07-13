@@ -1,8 +1,6 @@
 #include "texture/rendertarget.h"
 #include "core/debug.h"
 
-#include "nanogui/opengl.h"
-
 namespace orangutan {
 
 RenderTarget::RenderTarget(const std::string &name, int width, int height)

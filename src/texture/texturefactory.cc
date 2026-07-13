@@ -108,7 +108,7 @@ TextureFactory::ImportTexture(const std::string &name,
   GL_CHECK_ERROR(
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
   GL_CHECK_ERROR(
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8.0));
+      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, 8.0));
 
   GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, 0));
 
@@ -864,10 +864,14 @@ TextureFactory::ImportIBLFromRgbdDds(const std::string &name,
       Ibl({name, std::move(irradiance), std::move(radiance)}));
 }
 
-void TextureFactory::ExportIbl(const std::string &name,
-                               const std::string &irradiance_filename,
-                               const std::string &radiance_filename,
-                               const Ibl &ibl, bool convert_to_rgbd) {
+void TextureFactory::ExportIbl(const std::string &path,
+                               const std::string &base_name, const Ibl &ibl,
+                               bool convert_to_rgbd) {
+  std::string rgbd_suffix = convert_to_rgbd ? "_rgbd" : "";
+  std::string irradiance_filename =
+      path + "/" + base_name + "_irradiance" + rgbd_suffix + ".dds";
+  std::string radiance_filename =
+      path + "/" + base_name + "_radiance" + rgbd_suffix + ".dds";
   ExportIrradiance(irradiance_filename, *ibl.irradiance.get(), convert_to_rgbd);
   ExportRadiance(radiance_filename, *ibl.radiance.get(), convert_to_rgbd);
 }

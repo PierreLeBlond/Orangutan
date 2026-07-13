@@ -1,7 +1,5 @@
 #include "core/texture/texture.h"
 
-#include <nanogui/opengl.h>
-
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 

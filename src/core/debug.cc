@@ -1,7 +1,5 @@
 #include "core/debug.h"
 
-#include <nanogui/opengl.h>
-
 #include <iostream>
 #include <map>
 #include <sstream>

@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "object/asset.h"
+#include "camera/camera.h"
 #include "scene/objectnode.h"
 #include "texture/ibl.h"
 

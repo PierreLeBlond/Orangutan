@@ -1,7 +1,10 @@
 #ifndef ORANGUTAN_CORE_SHADER_SHADER_H
 #define ORANGUTAN_CORE_SHADER_SHADER_H
 
+#include "glad/glad.h"
+
 #include <string>
+#include <vector>
 
 #include "core/shader/shaderhandle.h"
 

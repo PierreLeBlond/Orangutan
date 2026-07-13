@@ -1,164 +1,25 @@
 #include "app/app.h"
 
-#include <nanogui/layout.h>
-
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "GLFW/glfw3.h"
 #include "camera/freecamera.h"
-#include "camera/trackballcamera.h"
+#include "core/debug.h"
 #include "material/materialfactory.h"
 #include "material/shaderfactory.h"
 #include "mesh/meshfactory.h"
-#include "nanogui/formhelper.h"
-#include "nanogui/vector.h"
-#include "object/renderableobject.h"
 #include "object/renderableobjectfactory.h"
 #include "scene/scenefactory.h"
 #include "texture/texturefactory.h"
-#include "ui/screen.h"
 
 namespace orangutan {
 
-void App::Init(GLFWwindow *window) {
-  InitUniverse();
-
-  // nanogui will take ownership via its own reference counter
-  auto *screen = new Screen(window);
-
-  screen_presenter_ =
-      std::make_unique<ScreenPresenter>(screen, universe_.get());
-
-  BindEvents(window, screen);
-
-  // nanogui will take ownership via its own reference counter
-  auto *canvas = new Canvas(screen);
-
-  canvas_manager_ = std::make_unique<CanvasManager>(
-      canvas, universe_->get_camera_library().GetItemByName("free_camera"),
-      scene_.get());
-  screen_presenter_->ConnectToResizeSignal(
-      [&](unsigned int width, unsigned int height) {
-        canvas_manager_->Resize(width, height);
-      });
-
-  texture_manager_ =
-      std::make_unique<TextureManager>(universe_.get(), canvas, scene_.get());
-
-  // nanogui will take ownership via its own reference counter
-  texture_window_ =
-      new TextureWindow(screen, "texture", texture_manager_.get());
-  texture_window_->set_top(20);
-  texture_window_->set_right(20);
-  screen_presenter_->ConnectToResizeSignal(
-      [&](unsigned int width, unsigned int height) {
-        texture_window_->Resize(width, height);
-      });
-
-  screen_presenter_->Init();
+TextureManager *App::get_texture_manager() const {
+  return texture_manager_.get();
 }
 
-void App::Draw() { screen_presenter_->Draw(); }
-
-void App::BindEvents(GLFWwindow *window, Screen *screen) {
-  // Cheers to http://www.alecjacobson.com/weblog/?p=3779
-
-  // cursor_pos_callback_event
-  static std::function<void(GLFWwindow *, double x, double y)>
-      cursor_pos_callback_bounce;
-  auto cursor_pos_callback = [](GLFWwindow *window, double x, double y) {
-    cursor_pos_callback_bounce(window, x, y);
-  };
-  cursor_pos_callback_bounce = [screen](GLFWwindow *, double x, double y) {
-    screen->cursor_pos_callback_event(x, y);
-  };
-
-  glfwSetCursorPosCallback(window, cursor_pos_callback);
-
-  // mouse_button_callback_event
-  static std::function<void(GLFWwindow *, int button, int action,
-                            int modifiers)>
-      mouse_button_callback_bounce;
-  auto mouse_button_callback = [](GLFWwindow *window, int button, int action,
-                                  int modifiers) {
-    mouse_button_callback_bounce(window, button, action, modifiers);
-  };
-  mouse_button_callback_bounce = [screen](GLFWwindow *, int button, int action,
-                                          int modifiers) {
-    screen->mouse_button_callback_event(button, action, modifiers);
-  };
-
-  glfwSetMouseButtonCallback(window, mouse_button_callback);
-
-  // key_callback_event
-  static std::function<void(GLFWwindow *, int key, int scancode, int action,
-                            int mods)>
-      key_callback_bounce;
-  auto key_callback = [](GLFWwindow *window, int key, int scancode, int action,
-                         int mods) {
-    key_callback_bounce(window, key, scancode, action, mods);
-  };
-  key_callback_bounce = [screen](GLFWwindow *, int key, int scancode,
-                                 int action, int mods) {
-    screen->key_callback_event(key, scancode, action, mods);
-  };
-
-  glfwSetKeyCallback(window, key_callback);
-
-  // char_callback_event
-  static std::function<void(GLFWwindow *, unsigned int codepoint)>
-      char_callback_bounce;
-  auto char_callback = [](GLFWwindow *window, unsigned int codepoint) {
-    char_callback_bounce(window, codepoint);
-  };
-  char_callback_bounce = [screen](GLFWwindow *, unsigned int codepoint) {
-    screen->char_callback_event(codepoint);
-  };
-
-  glfwSetCharCallback(window, char_callback);
-
-  // drop_callback_event
-  static std::function<void(GLFWwindow *, int count, const char **filenames)>
-      drop_callback_bounce;
-  auto drop_callback = [](GLFWwindow *window, int count,
-                          const char **filenames) {
-    drop_callback_bounce(window, count, filenames);
-  };
-  drop_callback_bounce = [screen](GLFWwindow *, int count,
-                                  const char **filenames) {
-    screen->drop_callback_event(count, filenames);
-  };
-
-  glfwSetDropCallback(window, drop_callback);
-
-  // scroll_callback_event
-  static std::function<void(GLFWwindow *, double x, double y)>
-      scroll_callback_bounce;
-  auto scroll_callback = [](GLFWwindow *window, double x, double y) {
-    scroll_callback_bounce(window, x, y);
-  };
-  scroll_callback_bounce = [screen](GLFWwindow *, double x, double y) {
-    screen->scroll_callback_event(x, y);
-  };
-
-  glfwSetScrollCallback(window, scroll_callback);
-
-  // resize_callback_event
-  static std::function<void(GLFWwindow *, int width, int height)>
-      resize_callback_bounce;
-  auto resize_callback = [](GLFWwindow *window, int width, int height) {
-    resize_callback_bounce(window, width, height);
-  };
-  resize_callback_bounce = [screen](GLFWwindow *, int width, int height) {
-    screen->resize_callback_event(width, height);
-  };
-
-  glfwSetFramebufferSizeCallback(window, resize_callback);
-}
-
-void App::InitUniverse() {
+void App::Init() {
   universe_ = std::make_unique<Universe>();
 
   scene_ = std::make_unique<Scene>("scene");
@@ -180,9 +41,13 @@ void App::InitUniverse() {
   auto brdf = TextureFactory::CreateBrdfMap();
   universe_->AddTexture(std::move(brdf));
 
-  auto room_ibl = TextureFactory::ImportIBLFromHdr(
-      "room", "./resources/images/ibl/studio.hdr");
-  universe_->AddIbl(std::move(room_ibl));
+  auto sky_ibl = TextureFactory::ImportIBLFromHdr(
+      "sky", "./resources/images/ibl/rustig_koppie_puresky_1k.hdr");
+  universe_->AddIbl(std::move(sky_ibl));
+
+  auto studio_ibl = TextureFactory::ImportIBLFromHdr(
+      "studio", "./resources/images/ibl/studio.hdr");
+  universe_->AddIbl(std::move(studio_ibl));
 
   Assimp::Importer importer;
 
@@ -192,12 +57,12 @@ void App::InitUniverse() {
   scene_tree.AddChild(spheres_node);
 
   // Cameras
-  auto freeCamera = std::make_unique<FreeCamera>("free_camera");
-  freeCamera->set_speed(10.0f);
-  freeCamera->set_position(glm::vec3(0.0f, 0.0f, 20.0f));
-  universe_->AddCamera(std::move(freeCamera));
-  scene_tree.AddChild(
-      universe_->get_camera_library().GetItemByName("free_camera"));
+  camera_ = std::make_unique<FreeCamera>("free_camera");
+  camera_->set_speed(10.0f);
+  camera_->set_position(glm::vec3(0.0f, 0.0f, 20.0f));
+  camera_controller_ = std::make_unique<CameraController>(camera_.get());
+
+  scene_tree.AddChild(camera_.get());
 
   // Sky
   universe_->AddMesh(MeshFactory::CreateCube("cube_mesh"));
@@ -240,8 +105,34 @@ void App::InitUniverse() {
 
   scene_->set_is_ready(true);
 
-  scene_->SetIbl(universe_->get_ibl_library().GetItemByName("room"));
+  scene_->SetIbl(universe_->get_ibl_library().GetItemByName("studio"));
   scene_->SetBrdf(universe_->get_texture_library().GetItemByName("brdf"));
+
+  texture_manager_ =
+      std::make_unique<TextureManager>(universe_.get(), scene_.get());
+}
+
+void App::Draw(int width, int height) {
+  double current_time = glfwGetTime();
+  double delta_time = current_time - last_update_time_;
+  last_update_time_ = current_time;
+
+  camera_controller_->SetSize(width, height);
+  camera_controller_->Update(delta_time);
+  camera_->Update();
+
+  scene_->Animate();
+  scene_->Update();
+
+  GL_CHECK_ERROR(glEnable(GL_DEPTH_TEST));
+  GL_CHECK_ERROR(glDisable(GL_BLEND));
+  GL_CHECK_ERROR(glDisable(GL_CULL_FACE));
+  // For sky box to render properly
+  GL_CHECK_ERROR(glDepthFunc(GL_LEQUAL));
+
+  scene_->Draw(camera_->get_view_matrix(),
+               camera_->get_transform().get_position(),
+               camera_->get_projection_matrix());
 }
 
 } // namespace orangutan

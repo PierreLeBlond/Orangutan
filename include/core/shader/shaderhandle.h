@@ -1,7 +1,7 @@
 #ifndef ORANGUTAN_CORE_SHADER_SHADER_HANDLE_H
 #define ORANGUTAN_CORE_SHADER_SHADER_HANDLE_H
 
-#include <nanogui/opengl.h>
+#include <glad/glad.h>
 
 #include "core/handle.h"
 

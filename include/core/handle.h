@@ -1,6 +1,8 @@
 #ifndef ORANGUTAN_CORE_HANDLE_H
 #define ORANGUTAN_CORE_HANDLE_H
 
+#include "glad/glad.h"
+
 namespace orangutan {
 
 class Handle {

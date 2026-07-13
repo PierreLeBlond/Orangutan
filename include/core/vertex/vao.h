@@ -1,6 +1,8 @@
 #ifndef ORANGUTAN_CORE_VERTEX_VAO_H
 #define ORANGUTAN_CORE_VERTEX_VAO_H
 
+#include <glad/glad.h>
+
 #include <iostream>
 #include <vector>
 

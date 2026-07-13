@@ -1,5 +1,7 @@
 #pragma once
 
+#include "glad/glad.h"
+
 #include "core/texture/cubetexture.h"
 #include "texture/ibl.h"
 
@@ -12,8 +14,7 @@ public:
   static void ExportCubeTexture(const std::string &filename,
                                 const CubeTexture &cube_texture,
                                 bool with_mipmaps = false);
-  static void ExportIbl(const std::string &irradiance_filename,
-                        const std::string &radiance_filename, const Ibl &ibl,
-                        const Texture &brdf);
+  static void ExportIbl(const std::string &path, const std::string &base_name,
+                        const Ibl &ibl, const Texture &brdf);
 };
 } // namespace orangutan

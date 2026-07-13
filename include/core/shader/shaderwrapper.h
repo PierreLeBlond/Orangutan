@@ -1,6 +1,8 @@
 #ifndef ORANGUTAN_CORE_SHADER_SHADER_WRAPPER_H
 #define ORANGUTAN_CORE_SHADER_SHADER_WRAPPER_H
 
+#include <glad/glad.h>
+
 #include <iostream>
 #include <sstream>
 #include <unordered_map>

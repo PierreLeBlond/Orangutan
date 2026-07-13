@@ -1,6 +1,8 @@
 #ifndef ORANGUTAN_TEXTURE_IBL_H
 #define ORANGUTAN_TEXTURE_IBL_H
 
+#include "glad/glad.h"
+
 #include <memory>
 
 #include "core/texture/cubetexture.h"

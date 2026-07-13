@@ -1,8 +1,6 @@
 #include "core/vertex/vertexarrayhandle.h"
 #include "core/debug.h"
 
-#include <nanogui/opengl.h>
-
 namespace orangutan {
 
 VertexArrayHandle::VertexArrayHandle() : Handle() {

@@ -1,7 +1,5 @@
 #include "core/texture/cubetexture.h"
 
-#include <nanogui/opengl.h>
-
 #include <iostream>
 #include <memory>
 

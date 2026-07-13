@@ -1,6 +1,8 @@
 #ifndef ORANGUTAN_CORE_TEXTURE_TEXTURE_H
 #define ORANGUTAN_CORE_TEXTURE_TEXTURE_H
 
+#include <glad/glad.h>
+
 #include <vector>
 
 #include "core/texture/texturehandle.h"

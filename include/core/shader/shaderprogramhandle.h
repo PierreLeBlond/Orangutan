@@ -3,6 +3,8 @@
 
 #define MAX_ATTACHED_SHADER 3
 
+#include <glad/glad.h>
+
 #include "core/handle.h"
 
 namespace orangutan {

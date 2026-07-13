@@ -1,8 +1,6 @@
 #include "core/texture/texturehandle.h"
 #include "core/debug.h"
 
-#include <nanogui/opengl.h>
-
 namespace orangutan {
 
 TextureHandle::TextureHandle() : Handle() {

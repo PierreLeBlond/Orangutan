@@ -1,8 +1,6 @@
 #include "core/shader/shaderwrapper.h"
 #include "core/debug.h"
 
-#include <nanogui/opengl.h>
-
 namespace orangutan {
 
 ShaderWrapper::ShaderWrapper(const std::string &name) : Asset(name) {}

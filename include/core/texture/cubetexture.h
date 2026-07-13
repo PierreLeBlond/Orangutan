@@ -1,6 +1,8 @@
 #ifndef ORANGUTAN_CORE_TEXTURE_CUBETEXTURE_H
 #define ORANGUTAN_CORE_TEXTURE_CUBETEXTURE_H
 
+#include <glad/glad.h>
+
 #include "core/texture/texture.h"
 
 namespace orangutan {

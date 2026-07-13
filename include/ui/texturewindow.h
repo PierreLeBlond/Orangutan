@@ -1,40 +1,40 @@
 #ifndef ORANGUTAN_UI_TEXTURE_WINDOW_H
 #define ORANGUTAN_UI_TEXTURE_WINDOW_H
 
+#include <glad/glad.h>
+
+#include <GLFW/glfw3.h>
+
+#include "nfd.h"
+
 #include "manager/texturemanager.h"
-#include "ui/window.h"
 
 namespace orangutan {
 
-class TextureWindow : public Window {
+class TextureWindow {
 public:
-  TextureWindow(nanogui::Widget *parent, const std::string &label,
-                TextureManager *texture_manager);
-  void Update();
+  TextureWindow(TextureManager *texture_manager);
+  void Draw(GLFWwindow *window);
 
 private:
+  void DrawTextureCombo(
+      const std::string &label, const std::vector<std::string> &texture_names,
+      const std::string &current_texture_name, unsigned int current_texture_id,
+      const std::function<void(const std::string &)> &on_texture_picked);
+
+  void OpenLoadDialog(
+      const std::string &label, const nfdu8filteritem_t *filters,
+      unsigned int filterCount, GLFWwindow *window,
+      const std::function<void(const std::string &, const std::string &)>
+          &on_path_picked);
+
+  void OpenSaveDialog(
+      const std::string &label, const nfdu8filteritem_t *filters,
+      unsigned int filterCount, GLFWwindow *window,
+      const std::function<void(const std::string &, const std::string &)>
+          &on_path_picked);
+
   TextureManager *texture_manager_;
-
-  std::string state_change_signal_uuid_;
-
-  std::vector<std::string> texture_names_;
-  nanogui::ComboBox *texture_combo_box_;
-  nanogui::Button *display_texture_button_;
-
-  std::vector<std::string> cube_texture_names_;
-  nanogui::ComboBox *cube_texture_combo_box_;
-  nanogui::Button *display_cube_texture_button_;
-
-  std::vector<std::string> ibl_names_;
-  nanogui::ComboBox *ibl_combo_box_;
-  nanogui::Button *display_irradiance_button_;
-  nanogui::Button *display_radiance_button_;
-  nanogui::Button *load_hdr_button_;
-  nanogui::Button *load_dds_button_;
-  nanogui::Button *export_button_;
-  nanogui::Button *export_rgbd_button_;
-  nanogui::Button *export_ktx_button_;
-  nanogui::Button *export_ktx_uastc_button_;
 };
 
 } // namespace orangutan
